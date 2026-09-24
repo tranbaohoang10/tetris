@@ -1,0 +1,46 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #ddd;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.game-container {
+  max-width: 1000px;
+  margin: 30px auto;
+}
+
+.game-container h1 {
+  text-align: center;
+}
+
+.game-layout {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 30px;
+}
+
+.board {
+  width: 300px;
+  height: 600px;
+  background-color: #111;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(20, 1fr);
+  border: 2px solid #333;
+}
+
+.game-info {
+  width: 180px;
+  font-size: 20px;
+}
+
+.level,
+.score,
+.next {
+  margin-bottom: 15px;
+}
+.matrix {
+  border: 1px solid #333;
+}
