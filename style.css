@@ -44,3 +44,9 @@ body {
 .matrix {
   border: 1px solid #333;
 }
+.block {
+  border: 1px solid #222;
+}
+.block-square {
+  background-color: yellow;
+}
