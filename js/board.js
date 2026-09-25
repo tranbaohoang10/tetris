@@ -30,6 +30,15 @@ function drawSquare() {
   matrixs[position + 10].classList.add("block", "block-square");
   matrixs[position + 11].classList.add("block", "block-square");
 }
+// hàm để restart game duyệt qua các matrix và loại bỏ các class
+function restart() {
+  for (let matrix of matrixs) {
+    matrix.classList.remove("block", "block-square", "fixed");
+  }
+  position = 4;
+  gameover = false;
+  drawSquare();
+}
 // sau khi hình vuông chạm đáy hoặc chạm vào các ô vuông đã có vật cản khác thì cần khóa các ô vuông hiện tại lại và tạo một hình vuông mới ở vị trí ban đầu.
 function lockSquare() {
   matrixs[position].classList.add("fixed");
@@ -45,7 +54,9 @@ function lockSquare() {
     matrixs[position + 11].classList.contains("fixed")
   ) {
     gameover = true;
-    alert("Game Over");
+    if (confirm("Game Over")) {
+      restart();
+    }
   } else {
     drawSquare();
   }
