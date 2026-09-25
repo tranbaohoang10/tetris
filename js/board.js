@@ -29,6 +29,35 @@ function drawSquare() {
   matrixs[position + 10].classList.add("block", "block-square");
   matrixs[position + 11].classList.add("block", "block-square");
 }
+// sau khi hình vuông chạm đáy hoặc chạm vào các ô vuông đã có vật cản khác thì cần khóa các ô vuông hiện tại lại và tạo một hình vuông mới ở vị trí ban đầu.
+function lockSquare() {
+  matrixs[position].classList.add("fixed");
+  matrixs[position + 1].classList.add("fixed");
+  matrixs[position + 10].classList.add("fixed");
+  matrixs[position + 11].classList.add("fixed");
+  // tạo hình vuông mới ở vị trí ban đầu
+  position = 4;
+  drawSquare();
+}
+// Phương thức này để để kiểm tra xem hình vuông nó có thể đi xuống ko nếu có thì làm bình thường còn nếu ko có thì gọi phương thức lockSquare() để khóa các ô vuông hiện tại lại và tạo một hình vuông mới ở vị trí ban đầu.
+function moveDown() {
+  if (position + 20 < row * col && position + 21 < row * col) {
+    if (
+      !matrixs[position + 20].classList.contains("fixed") &&
+      !matrixs[position + 21].classList.contains("fixed")
+    ) {
+      clearSquare();
+
+      position += 10;
+
+      drawSquare();
+    } else {
+      lockSquare();
+    }
+  } else {
+    lockSquare();
+  }
+}
 drawSquare();
 document.addEventListener("keydown", function (event) {
   if (event.key === "ArrowDown") {
