@@ -16,6 +16,7 @@ const matrixs = document.querySelectorAll(".matrix");
 // xu ly nut di xuong
 // nghĩa là ban đầu vị trí của hình vuông là 4 và khi nhấn nút xuốngvị trí sẽ tăng lên 10 (vì có 10 cột) do đó hình vuông sẽ di chuyển xuống một hàng. Khi nhấn nút xuống thì cần xóa các ô vuông hiện tại và thêm các ô vuông mới ở vị trí mới.
 let position = 4;
+let gameover = false;
 function clearSquare() {
   matrixs[position].classList.remove("block", "block-square");
   matrixs[position + 1].classList.remove("block", "block-square");
@@ -37,8 +38,19 @@ function lockSquare() {
   matrixs[position + 11].classList.add("fixed");
   // tạo hình vuông mới ở vị trí ban đầu
   position = 4;
-  drawSquare();
+  if (
+    matrixs[position].classList.contains("fixed") ||
+    matrixs[position + 1].classList.contains("fixed") ||
+    matrixs[position + 10].classList.contains("fixed") ||
+    matrixs[position + 11].classList.contains("fixed")
+  ) {
+    gameover = true;
+    alert("Game Over");
+  } else {
+    drawSquare();
+  }
 }
+drawSquare();
 // Phương thức này để để kiểm tra xem hình vuông nó có thể đi xuống ko nếu có thì làm bình thường còn nếu ko có thì gọi phương thức lockSquare() để khóa các ô vuông hiện tại lại và tạo một hình vuông mới ở vị trí ban đầu.
 function moveDown() {
   if (position + 20 < row * col && position + 21 < row * col) {
@@ -58,8 +70,10 @@ function moveDown() {
     lockSquare();
   }
 }
-drawSquare();
 document.addEventListener("keydown", function (event) {
+  if (gameover) {
+    return;
+  }
   if (event.key === "ArrowDown") {
     moveDown();
   }
@@ -89,5 +103,7 @@ document.addEventListener("keydown", function (event) {
   }
 });
 setInterval(function () {
-  moveDown();
+  if (!gameover) {
+    moveDown();
+  }
 }, 800);
