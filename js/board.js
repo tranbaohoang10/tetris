@@ -61,23 +61,27 @@ function moveDown() {
 drawSquare();
 document.addEventListener("keydown", function (event) {
   if (event.key === "ArrowDown") {
-    if (position + 20 < row * col && position + 21 < row * col) {
-      clearSquare();
-      position += 10;
-      drawSquare();
-    }
+    moveDown();
   }
-  // col = 10(nếu position chia col dư 0 thì hình đang sát mép trái)
+  // col = 10(nếu position chia col dư 0 thì hình đang sát mép trái và xử lý thêm điều kiện nếu bên trái có vật cản thì ko cho di chuyển sang trái nữa)
   if (event.key === "ArrowLeft") {
-    if (position % col !== 0) {
+    if (
+      position % col !== 0 &&
+      !matrixs[position - 1].classList.contains("fixed") &&
+      !matrixs[position + 9].classList.contains("fixed")
+    ) {
       clearSquare();
       position -= 1;
       drawSquare();
     }
   }
-  // col = 10(nếu sát mép phải nghĩa là position đang = 8)
+  // col = 10(nếu sát mép phải nghĩa là position đang = 8 và xử lý thêm điều kiện nếu bên phải có vật cản thì ko cho di chuyển sang phải nữa)
   if (event.key === "ArrowRight") {
-    if (position % col < col - 2) {
+    if (
+      position % col < col - 2 &&
+      !matrixs[position + 2].classList.contains("fixed") &&
+      !matrixs[position + 12].classList.contains("fixed")
+    ) {
       clearSquare();
       position += 1;
       drawSquare();
@@ -85,9 +89,5 @@ document.addEventListener("keydown", function (event) {
   }
 });
 setInterval(function () {
-  if (position + 20 < row * col && position + 21 < row * col) {
-    clearSquare();
-    position += 10;
-    drawSquare();
-  }
+  moveDown();
 }, 800);
