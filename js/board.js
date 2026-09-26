@@ -14,9 +14,11 @@ const matrixs = document.querySelectorAll(".matrix");
 // matrixs[15].classList.add("block", "block-square");
 //
 // xu ly nut di xuong
-// nghĩa là ban đầu vị trí của hình vuông là 4 và khi nhấn nút xuốngvị trí sẽ tăng lên 10 (vì có 10 cột) do đó hình vuông sẽ di chuyển xuống một hàng. Khi nhấn nút xuống thì cần xóa các ô vuông hiện tại và thêm các ô vuông mới ở vị trí mới.
+
 let position = 4;
 let gameover = false;
+let line = 0;
+// nghĩa là ban đầu vị trí của hình vuông là 4 và khi nhấn nút xuốngvị trí sẽ tăng lên 10 (vì có 10 cột) do đó hình vuông sẽ di chuyển xuống một hàng. Khi nhấn nút xuống thì cần xóa các ô vuông hiện tại và thêm các ô vuông mới ở vị trí mới và xử lý ở hàm moveDown().
 function clearSquare() {
   matrixs[position].classList.remove("block", "block-square");
   matrixs[position + 1].classList.remove("block", "block-square");
@@ -118,3 +120,18 @@ setInterval(function () {
     moveDown();
   }
 }, 800);
+function checkRow() {
+  for (let r = 0; r < row; r++) {
+    let start = r * col;
+    let countrow = 0;
+    for (let i = start; i < start + col; i++) {
+      if (matrixs[i].classList.contains("fixed")) {
+        countrow++;
+      }
+    }
+    if (countrow === col) {
+      clearRow(r);
+      line++;
+    }
+  }
+}
