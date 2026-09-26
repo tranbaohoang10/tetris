@@ -6,6 +6,8 @@ for (let i = 0; i < row * col; i++) {
   matrix.classList.add("matrix");
   board.appendChild(matrix);
 }
+// đếm dòng
+const lineElement = document.querySelector(".line");
 // xu ly mau hinh vuong(test hình trước)
 const matrixs = document.querySelectorAll(".matrix");
 // matrixs[4].classList.add("block", "block-square");
@@ -41,6 +43,7 @@ function restart() {
   let position = 4;
   let gameover = false;
   let line = 0;
+  lineElement.textContent = "Line: 0 / 10";
   drawSquare();
 }
 // sau khi hình vuông chạm đáy hoặc chạm vào các ô vuông đã có vật cản khác thì cần khóa các ô vuông hiện tại lại và tạo một hình vuông mới ở vị trí ban đầu.
@@ -137,10 +140,11 @@ function checkRow() {
     if (countrow === col) {
       clearRow(r);
       line++;
+      lineElement.textContent = "Line: " + line + " / 10";
     }
   }
 }
-// hàm này là để xoá row đầy và kéo các tất cả row phía trên xuống 1 hàng và row đầu tiên(0) sẽ là row trống
+// hàm này là để xoá row đầy và kéo các tất cả row phía trên xuống 1 hàng và row đầu tiên(1) sẽ là row trống
 function clearRow(r) {
   let start = r * col;
   for (let i = start; i < start + col; i++) {
