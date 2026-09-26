@@ -21,6 +21,12 @@ let position = 4;
 let gameover = false;
 // đồ án sử dụng line ko sử dụng score, line = 10 thì qua level khác
 let line = 0;
+function drawSquare() {
+  matrixs[position].classList.add("block", "block-square");
+  matrixs[position + 1].classList.add("block", "block-square");
+  matrixs[position + 10].classList.add("block", "block-square");
+  matrixs[position + 11].classList.add("block", "block-square");
+}
 // nghĩa là ban đầu vị trí của hình vuông là 4 và khi nhấn nút xuốngvị trí sẽ tăng lên 10 (vì có 10 cột) do đó hình vuông sẽ di chuyển xuống một hàng. Khi nhấn nút xuống thì cần xóa các ô vuông hiện tại và thêm các ô vuông mới ở vị trí mới và xử lý ở hàm moveDown().
 function clearSquare() {
   matrixs[position].classList.remove("block", "block-square");
@@ -28,21 +34,27 @@ function clearSquare() {
   matrixs[position + 10].classList.remove("block", "block-square");
   matrixs[position + 11].classList.remove("block", "block-square");
 }
-
-function drawSquare() {
-  matrixs[position].classList.add("block", "block-square");
-  matrixs[position + 1].classList.add("block", "block-square");
-  matrixs[position + 10].classList.add("block", "block-square");
-  matrixs[position + 11].classList.add("block", "block-square");
+function drawI() {
+  matrixs[position].classList.add("block", "block-i");
+  matrixs[position + 1].classList.add("block", "block-i");
+  matrixs[position + 2].classList.add("block", "block-i");
+  matrixs[position + 3].classList.add("block", "block-i");
+}
+// nghĩa là ban đầu vị trí của hình chữ I là 3(để nó nằm ở giữa)và khi nhấn nút xuốngvị trí sẽ tăng lên 10 (vì có 10 cột) do đó hình vuông sẽ di chuyển xuống một hàng. Khi nhấn nút xuống thì cần xóa các ô vuông hiện tại và thêm các ô vuông mới ở vị trí mới và xử lý ở hàm moveDown().
+function clearI() {
+  matrixs[position].classList.remove("block", "block-i");
+  matrixs[position + 1].classList.remove("block", "block-i");
+  matrixs[position + 2].classList.remove("block", "block-i");
+  matrixs[position + 3].classList.remove("block", "block-i");
 }
 // hàm để restart game duyệt qua các matrix và loại bỏ các class
 function restart() {
   for (let matrix of matrixs) {
     matrix.classList.remove("block", "block-square", "fixed");
   }
-  let position = 4;
-  let gameover = false;
-  let line = 0;
+  position = 4;
+  gameover = false;
+  line = 0;
   lineElement.textContent = "Line: 0 / 10";
   drawSquare();
 }
