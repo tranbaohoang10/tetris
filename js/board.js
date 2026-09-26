@@ -34,30 +34,6 @@ function clearSquare() {
   matrixs[position + 10].classList.remove("block", "block-square");
   matrixs[position + 11].classList.remove("block", "block-square");
 }
-function drawI() {
-  matrixs[position].classList.add("block", "block-i");
-  matrixs[position + 1].classList.add("block", "block-i");
-  matrixs[position + 2].classList.add("block", "block-i");
-  matrixs[position + 3].classList.add("block", "block-i");
-}
-// nghĩa là ban đầu vị trí của hình chữ I là 3(để nó nằm ở giữa)và khi nhấn nút xuốngvị trí sẽ tăng lên 10 (vì có 10 cột) do đó hình vuông sẽ di chuyển xuống một hàng. Khi nhấn nút xuống thì cần xóa các ô vuông hiện tại và thêm các ô vuông mới ở vị trí mới và xử lý ở hàm moveDown().
-function clearI() {
-  matrixs[position].classList.remove("block", "block-i");
-  matrixs[position + 1].classList.remove("block", "block-i");
-  matrixs[position + 2].classList.remove("block", "block-i");
-  matrixs[position + 3].classList.remove("block", "block-i");
-}
-// hàm để restart game duyệt qua các matrix và loại bỏ các class
-function restart() {
-  for (let matrix of matrixs) {
-    matrix.classList.remove("block", "block-square", "fixed");
-  }
-  position = 4;
-  gameover = false;
-  line = 0;
-  lineElement.textContent = "Line: 0 / 10";
-  drawSquare();
-}
 // sau khi hình vuông chạm đáy hoặc chạm vào các ô vuông đã có vật cản khác thì cần khóa các ô vuông hiện tại lại và tạo một hình vuông mới ở vị trí ban đầu.
 function lockSquare() {
   matrixs[position].classList.add("fixed");
@@ -81,9 +57,56 @@ function lockSquare() {
     drawSquare();
   }
 }
+function drawI() {
+  matrixs[position].classList.add("block", "block-i");
+  matrixs[position + 1].classList.add("block", "block-i");
+  matrixs[position + 2].classList.add("block", "block-i");
+  matrixs[position + 3].classList.add("block", "block-i");
+}
+// nghĩa là ban đầu vị trí của hình chữ I là 3(để nó nằm ở giữa)và khi nhấn nút xuốngvị trí sẽ tăng lên 10 (vì có 10 cột) do đó hình vuông sẽ di chuyển xuống một hàng. Khi nhấn nút xuống thì cần xóa các ô vuông hiện tại và thêm các ô vuông mới ở vị trí mới và xử lý ở hàm moveDown().
+function clearI() {
+  matrixs[position].classList.remove("block", "block-i");
+  matrixs[position + 1].classList.remove("block", "block-i");
+  matrixs[position + 2].classList.remove("block", "block-i");
+  matrixs[position + 3].classList.remove("block", "block-i");
+}
+// sau khi hình I chạm đáy hoặc chạm vào các ô đã có vật cản khác thì cần khóa các ô hiện tại lại và tạo một hình I mới ở vị trí ban đầu.
+function lockI() {
+  matrixs[position].classList.add("fixed");
+  matrixs[position + 1].classList.add("fixed");
+  matrixs[position + 2].classList.add("fixed");
+  matrixs[position + 3].classList.add("fixed");
+  checkRow();
+  // tạo khối I mới ở vị trí ban đầu
+  position = 3;
+  if (
+    matrixs[position].classList.contains("fixed") ||
+    matrixs[position + 1].classList.contains("fixed") ||
+    matrixs[position + 2].classList.contains("fixed") ||
+    matrixs[position + 3].classList.contains("fixed")
+  ) {
+    gameover = true;
+    if (confirm("Game Over")) {
+      restart();
+    }
+  } else {
+    drawI();
+  }
+}
+// hàm để restart game duyệt qua các matrix và loại bỏ các class
+function restart() {
+  for (let matrix of matrixs) {
+    matrix.classList.remove("block", "block-square", "fixed");
+  }
+  position = 4;
+  gameover = false;
+  line = 0;
+  lineElement.textContent = "Line: 0 / 10";
+  drawSquare();
+}
 drawSquare();
 // Phương thức này để để kiểm tra xem hình vuông nó có thể đi xuống ko nếu có thì làm bình thường còn nếu ko có thì gọi phương thức lockSquare() để khóa các ô vuông hiện tại lại và tạo một hình vuông mới ở vị trí ban đầu.
-function moveDown() {
+function moveDownSquare() {
   if (position + 20 < row * col && position + 21 < row * col) {
     if (
       !matrixs[position + 20].classList.contains("fixed") &&
