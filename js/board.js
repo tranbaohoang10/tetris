@@ -17,6 +17,7 @@ const matrixs = document.querySelectorAll(".matrix");
 
 let position = 4;
 let gameover = false;
+// đồ án sử dụng line ko sử dụng score, line = 10 thì qua level khác
 let line = 0;
 // nghĩa là ban đầu vị trí của hình vuông là 4 và khi nhấn nút xuốngvị trí sẽ tăng lên 10 (vì có 10 cột) do đó hình vuông sẽ di chuyển xuống một hàng. Khi nhấn nút xuống thì cần xóa các ô vuông hiện tại và thêm các ô vuông mới ở vị trí mới và xử lý ở hàm moveDown().
 function clearSquare() {
@@ -37,8 +38,9 @@ function restart() {
   for (let matrix of matrixs) {
     matrix.classList.remove("block", "block-square", "fixed");
   }
-  position = 4;
-  gameover = false;
+  let position = 4;
+  let gameover = false;
+  let line = 0;
   drawSquare();
 }
 // sau khi hình vuông chạm đáy hoặc chạm vào các ô vuông đã có vật cản khác thì cần khóa các ô vuông hiện tại lại và tạo một hình vuông mới ở vị trí ban đầu.
@@ -47,6 +49,7 @@ function lockSquare() {
   matrixs[position + 1].classList.add("fixed");
   matrixs[position + 10].classList.add("fixed");
   matrixs[position + 11].classList.add("fixed");
+  checkRow();
   // tạo hình vuông mới ở vị trí ban đầu
   position = 4;
   if (
@@ -120,6 +123,8 @@ setInterval(function () {
     moveDown();
   }
 }, 800);
+// Kiểm tra row đầy chưa ví dụ:
+// r= 19 nghĩa là đang(190,191,192,193,194,195,196,197,198,199), nếu các ô này có class fixed nghĩa là row này đầy thì từng ô tăng tương ứng với countrow và nếu countrow = col thì xoá row đó và tăng line lên 1(đọc dòng 20), các row khác tương tự
 function checkRow() {
   for (let r = 0; r < row; r++) {
     let start = r * col;
@@ -133,5 +138,20 @@ function checkRow() {
       clearRow(r);
       line++;
     }
+  }
+}
+// hàm này là để xoá row đầy và kéo các tất cả row phía trên xuống 1 hàng và row đầu tiên(0) sẽ là row trống
+function clearRow(r) {
+  let start = r * col;
+  for (let i = start; i < start + col; i++) {
+    matrixs[i].className = "matrix";
+  }
+  // kéo row trên xuống
+  for (let i = start - 1; i >= 0; i--) {
+    matrixs[i + col].className = matrixs[i].className;
+  }
+  // xử lý row đầu tiên
+  for (let i = 0; i < col; i++) {
+    matrixs[i].className = "matrix";
   }
 }
