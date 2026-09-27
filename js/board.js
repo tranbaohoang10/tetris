@@ -114,15 +114,37 @@ function moveDownSquare() {
       !matrixs[position + 21].classList.contains("fixed")
     ) {
       clearSquare();
-
       position += 10;
-
       drawSquare();
     } else {
       lockSquare();
     }
   } else {
     lockSquare();
+  }
+}
+// col = 10(nếu position chia col dư 0 thì hình đang sát mép trái và xử lý thêm điều kiện nếu bên trái có vật cản thì ko cho di chuyển sang trái nữa)
+function moveLeftSquare() {
+  if (
+    position % col !== 0 &&
+    !matrixs[position - 1].classList.contains("fixed") &&
+    !matrixs[position + 9].classList.contains("fixed")
+  ) {
+    clearSquare();
+    position -= 1;
+    drawSquare();
+  }
+}
+// col = 10(nếu sát mép phải nghĩa là position đang = 8 và xử lý thêm điều kiện nếu bên phải có vật cản thì ko cho di chuyển sang phải nữa)
+function moveRightSquare() {
+  if (
+    position % col < col - 2 &&
+    !matrixs[position + 2].classList.contains("fixed") &&
+    !matrixs[position + 12].classList.contains("fixed")
+  ) {
+    clearSquare();
+    position += 1;
+    drawSquare();
   }
 }
 // Phương thức này để để kiểm tra xem hình I nó có thể đi xuống ko nếu có thì làm bình thường còn nếu ko có thì gọi phương thức lockI() để khóa các ô I hiện tại lại và tạo một hình I mới ở vị trí ban đầu.
@@ -135,9 +157,7 @@ function moveDownI() {
       !matrixs[position + 13].classList.contains("fixed")
     ) {
       clearI();
-
       position += 10;
-
       drawI();
     } else {
       lockI();
@@ -153,9 +173,7 @@ function moveLeftI() {
     !matrixs[position - 1].classList.contains("fixed")
   ) {
     clearI();
-
     position -= 1;
-
     drawI();
   }
 }
@@ -166,9 +184,7 @@ function moveRightI() {
     !matrixs[position + 4].classList.contains("fixed")
   ) {
     clearI();
-
     position += 1;
-
     drawI();
   }
 }
@@ -179,29 +195,11 @@ document.addEventListener("keydown", function (event) {
   if (event.key === "ArrowDown") {
     moveDownI();
   }
-  // col = 10(nếu position chia col dư 0 thì hình đang sát mép trái và xử lý thêm điều kiện nếu bên trái có vật cản thì ko cho di chuyển sang trái nữa)
   if (event.key === "ArrowLeft") {
-    if (
-      position % col !== 0 &&
-      !matrixs[position - 1].classList.contains("fixed") &&
-      !matrixs[position + 9].classList.contains("fixed")
-    ) {
-      clearSquare();
-      position -= 1;
-      drawSquare();
-    }
+    moveLeftI();
   }
-  // col = 10(nếu sát mép phải nghĩa là position đang = 8 và xử lý thêm điều kiện nếu bên phải có vật cản thì ko cho di chuyển sang phải nữa)
   if (event.key === "ArrowRight") {
-    if (
-      position % col < col - 2 &&
-      !matrixs[position + 2].classList.contains("fixed") &&
-      !matrixs[position + 12].classList.contains("fixed")
-    ) {
-      clearSquare();
-      position += 1;
-      drawSquare();
-    }
+    moveRightI();
   }
 });
 setInterval(function () {
