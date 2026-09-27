@@ -96,15 +96,16 @@ function lockI() {
 // hàm để restart game duyệt qua các matrix và loại bỏ các class
 function restart() {
   for (let matrix of matrixs) {
-    matrix.classList.remove("block", "block-square", "fixed");
+    matrix.classList.remove("block", "block-square", "block-i", "fixed");
   }
-  position = 4;
+  position = 3;
   gameover = false;
   line = 0;
   lineElement.textContent = "Line: 0 / 10";
-  drawSquare();
+  drawI();
 }
-drawSquare();
+position = 3;
+drawI();
 // Phương thức này để để kiểm tra xem hình vuông nó có thể đi xuống ko nếu có thì làm bình thường còn nếu ko có thì gọi phương thức lockSquare() để khóa các ô vuông hiện tại lại và tạo một hình vuông mới ở vị trí ban đầu.
 function moveDownSquare() {
   if (position + 20 < row * col && position + 21 < row * col) {
@@ -145,12 +146,38 @@ function moveDownI() {
     lockI();
   }
 }
+// phương thức moveLeftI() để kiểm tra có thể sang trái không nếu có thì làm bình thường còn ko thì tiếp tục khối
+function moveLeftI() {
+  if (
+    position % col !== 0 &&
+    !matrixs[position - 1].classList.contains("fixed")
+  ) {
+    clearI();
+
+    position -= 1;
+
+    drawI();
+  }
+}
+// phương thức moveRightI() để kiểm tra có thể sang phải không nếu có thì làm bình thường còn ko thì tiếp tục khối. Col -4 ở đây nghĩa là nếu muốn ô I nằm full ngang thì position nó đang = 6(6,7,8,9 cùng 1 hàng và có 10 cột từ 0->9) nếu position = 7 thì ô I sẽ vượt ra ngoài khung nên cần xử lý điều kiện này.
+function moveRightI() {
+  if (
+    position % col < col - 4 &&
+    !matrixs[position + 4].classList.contains("fixed")
+  ) {
+    clearI();
+
+    position += 1;
+
+    drawI();
+  }
+}
 document.addEventListener("keydown", function (event) {
   if (gameover) {
     return;
   }
   if (event.key === "ArrowDown") {
-    moveDownSquare();
+    moveDownI();
   }
   // col = 10(nếu position chia col dư 0 thì hình đang sát mép trái và xử lý thêm điều kiện nếu bên trái có vật cản thì ko cho di chuyển sang trái nữa)
   if (event.key === "ArrowLeft") {
@@ -179,7 +206,7 @@ document.addEventListener("keydown", function (event) {
 });
 setInterval(function () {
   if (!gameover) {
-    moveDownSquare();
+    moveDownI();
   }
 }, 800);
 // Kiểm tra row đầy chưa ví dụ:
