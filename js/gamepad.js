@@ -22,6 +22,7 @@ let gameover = false;
 // đồ án sử dụng line ko sử dụng score, line = 10 thì qua level khác
 let line = 0;
 let spinI = 0;
+let spinT = 0;
 let currentShape = "";
 function drawSquare() {
   matrixs[position].classList.add("block", "block-square");
@@ -121,6 +122,46 @@ function lockI() {
   checkRow();
   // random
   newShape();
+}
+function drawT() {
+  // T hướng ban đầu(ví dụ position = 4 thì các ô T sẽ là 4,5,6,15 tức:
+  // xxx(4,5,6)
+  //  x(15))
+  if (spinT === 0) {
+    matrixs[position].classList.add("block", "block-t");
+    matrixs[position + 1].classList.add("block", "block-t");
+    matrixs[position + 2].classList.add("block", "block-t");
+    matrixs[position + 11].classList.add("block", "block-t");
+  }
+  // T xoay 90 độ (ví dụ position = 4 thì sẽ lấy 5 là vị trí ban đầu tức position + 1 và các ô sẽ là 5,15,25,14 tức:
+  //  x(5)
+  // xx(14,15)
+  //  x(25))
+  if (spinT === 1) {
+    matrixs[position + 1].classList.add("block", "block-t");
+    matrixs[position + 10].classList.add("block", "block-t");
+    matrixs[position + 11].classList.add("block", "block-t");
+    matrixs[position + 21].classList.add("block", "block-t");
+  }
+  // T xoay 180 độ (ví dụ position = 4 thì sẽ lấy 5 là vị trí ban đầu tức position + 1 và các ô sẽ là 5,15,14,16 tức:
+  //  x(5)
+  // xxx(14,15,16)
+  if (spinT === 2) {
+    matrixs[position + 1].classList.add("block", "block-t");
+    matrixs[position + 10].classList.add("block", "block-t");
+    matrixs[position + 11].classList.add("block", "block-t");
+    matrixs[position + 12].classList.add("block", "block-t");
+  }
+  // T xoay 270 độ (ví dụ position = 4 thì sẽ lấy 4 là vị trí ban đầu thì các ô sẽ là 4,14,24,15 tức:
+  //  x(4)
+  //  xx(14,15)
+  //  x(24))
+  if (spinT === 3) {
+    matrixs[position].classList.add("block", "block-t");
+    matrixs[position + 10].classList.add("block", "block-t");
+    matrixs[position + 11].classList.add("block", "block-t");
+    matrixs[position + 20].classList.add("block", "block-t");
+  }
 }
 // hàm để restart game duyệt qua các matrix và loại bỏ các class
 function restart() {
