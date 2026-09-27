@@ -21,6 +21,7 @@ let position = 4;
 let gameover = false;
 // đồ án sử dụng line ko sử dụng score, line = 10 thì qua level khác
 let line = 0;
+let spinI = 0;
 function drawSquare() {
   matrixs[position].classList.add("block", "block-square");
   matrixs[position + 1].classList.add("block", "block-square");
@@ -58,26 +59,51 @@ function lockSquare() {
   }
 }
 function drawI() {
-  matrixs[position].classList.add("block", "block-i");
-  matrixs[position + 1].classList.add("block", "block-i");
-  matrixs[position + 2].classList.add("block", "block-i");
-  matrixs[position + 3].classList.add("block", "block-i");
+  if (spinI === 0) {
+    matrixs[position].classList.add("block", "block-i");
+    matrixs[position + 1].classList.add("block", "block-i");
+    matrixs[position + 2].classList.add("block", "block-i");
+    matrixs[position + 3].classList.add("block", "block-i");
+  }
+  if (spinI === 1) {
+    matrixs[position].classList.add("block", "block-i");
+    matrixs[position + 10].classList.add("block", "block-i");
+    matrixs[position + 20].classList.add("block", "block-i");
+    matrixs[position + 30].classList.add("block", "block-i");
+  }
 }
 // nghĩa là ban đầu vị trí của hình chữ I là 3(để nó nằm ở giữa)và khi nhấn nút xuốngvị trí sẽ tăng lên 10 (vì có 10 cột) do đó hình vuông sẽ di chuyển xuống một hàng. Khi nhấn nút xuống thì cần xóa các ô vuông hiện tại và thêm các ô vuông mới ở vị trí mới và xử lý ở hàm moveDown().
 function clearI() {
-  matrixs[position].classList.remove("block", "block-i");
-  matrixs[position + 1].classList.remove("block", "block-i");
-  matrixs[position + 2].classList.remove("block", "block-i");
-  matrixs[position + 3].classList.remove("block", "block-i");
+  if (spinI === 0) {
+    matrixs[position].classList.remove("block", "block-i");
+    matrixs[position + 1].classList.remove("block", "block-i");
+    matrixs[position + 2].classList.remove("block", "block-i");
+    matrixs[position + 3].classList.remove("block", "block-i");
+  }
+  if (spinI === 1) {
+    matrixs[position].classList.remove("block", "block-i");
+    matrixs[position + 10].classList.remove("block", "block-i");
+    matrixs[position + 20].classList.remove("block", "block-i");
+    matrixs[position + 30].classList.remove("block", "block-i");
+  }
 }
 // sau khi hình I chạm đáy hoặc chạm vào các ô đã có vật cản khác thì cần khóa các ô hiện tại lại và tạo một hình I mới ở vị trí ban đầu.
 function lockI() {
-  matrixs[position].classList.add("fixed");
-  matrixs[position + 1].classList.add("fixed");
-  matrixs[position + 2].classList.add("fixed");
-  matrixs[position + 3].classList.add("fixed");
+  if (spinI === 0) {
+    matrixs[position].classList.add("fixed");
+    matrixs[position + 1].classList.add("fixed");
+    matrixs[position + 2].classList.add("fixed");
+    matrixs[position + 3].classList.add("fixed");
+  }
+  if (spinI === 1) {
+    matrixs[position].classList.add("fixed");
+    matrixs[position + 10].classList.add("fixed");
+    matrixs[position + 20].classList.add("fixed");
+    matrixs[position + 30].classList.add("fixed");
+  }
   checkRow();
-  // tạo khối I mới ở vị trí ban đầu
+  // hình I mới mặc định nằm ngang
+  spinI = 0;
   position = 3;
   if (
     matrixs[position].classList.contains("fixed") ||
