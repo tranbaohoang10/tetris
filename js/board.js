@@ -124,12 +124,33 @@ function moveDownSquare() {
     lockSquare();
   }
 }
+// Phương thức này để để kiểm tra xem hình I nó có thể đi xuống ko nếu có thì làm bình thường còn nếu ko có thì gọi phương thức lockI() để khóa các ô I hiện tại lại và tạo một hình I mới ở vị trí ban đầu.
+function moveDownI() {
+  if (position + 13 < row * col) {
+    if (
+      !matrixs[position + 10].classList.contains("fixed") &&
+      !matrixs[position + 11].classList.contains("fixed") &&
+      !matrixs[position + 12].classList.contains("fixed") &&
+      !matrixs[position + 13].classList.contains("fixed")
+    ) {
+      clearI();
+
+      position += 10;
+
+      drawI();
+    } else {
+      lockI();
+    }
+  } else {
+    lockI();
+  }
+}
 document.addEventListener("keydown", function (event) {
   if (gameover) {
     return;
   }
   if (event.key === "ArrowDown") {
-    moveDown();
+    moveDownSquare();
   }
   // col = 10(nếu position chia col dư 0 thì hình đang sát mép trái và xử lý thêm điều kiện nếu bên trái có vật cản thì ko cho di chuyển sang trái nữa)
   if (event.key === "ArrowLeft") {
@@ -158,7 +179,7 @@ document.addEventListener("keydown", function (event) {
 });
 setInterval(function () {
   if (!gameover) {
-    moveDown();
+    moveDownSquare();
   }
 }, 800);
 // Kiểm tra row đầy chưa ví dụ:
