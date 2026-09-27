@@ -22,6 +22,7 @@ let gameover = false;
 // đồ án sử dụng line ko sử dụng score, line = 10 thì qua level khác
 let line = 0;
 let spinI = 0;
+let currentShape = "";
 function drawSquare() {
   matrixs[position].classList.add("block", "block-square");
   matrixs[position + 1].classList.add("block", "block-square");
@@ -42,21 +43,8 @@ function lockSquare() {
   matrixs[position + 10].classList.add("fixed");
   matrixs[position + 11].classList.add("fixed");
   checkRow();
-  // tạo hình vuông mới ở vị trí ban đầu
-  position = 4;
-  if (
-    matrixs[position].classList.contains("fixed") ||
-    matrixs[position + 1].classList.contains("fixed") ||
-    matrixs[position + 10].classList.contains("fixed") ||
-    matrixs[position + 11].classList.contains("fixed")
-  ) {
-    gameover = true;
-    if (confirm("Game Over")) {
-      restart();
-    }
-  } else {
-    drawSquare();
-  }
+  // random
+  newShape();
 }
 function drawI() {
   if (spinI === 0) {
@@ -131,36 +119,22 @@ function lockI() {
     matrixs[position + 30].classList.add("fixed");
   }
   checkRow();
-  // hình I mới mặc định nằm ngang
-  spinI = 0;
-  position = 3;
-  if (
-    matrixs[position].classList.contains("fixed") ||
-    matrixs[position + 1].classList.contains("fixed") ||
-    matrixs[position + 2].classList.contains("fixed") ||
-    matrixs[position + 3].classList.contains("fixed")
-  ) {
-    gameover = true;
-    if (confirm("Game Over")) {
-      restart();
-    }
-  } else {
-    drawI();
-  }
+  // random
+  newShape();
 }
 // hàm để restart game duyệt qua các matrix và loại bỏ các class
 function restart() {
   for (let matrix of matrixs) {
     matrix.classList.remove("block", "block-square", "block-i", "fixed");
   }
-  position = 3;
   gameover = false;
   line = 0;
+  spinI = 0;
+  currentShape = "";
   lineElement.textContent = "Line: 0 / 10";
-  drawI();
+  newShape();
 }
-position = 3;
-drawI();
+newShape();
 // Phương thức này để để kiểm tra xem hình vuông nó có thể đi xuống ko nếu có thì làm bình thường còn nếu ko có thì gọi phương thức lockSquare() để khóa các ô vuông hiện tại lại và tạo một hình vuông mới ở vị trí ban đầu.
 function moveDownSquare() {
   if (position + 20 < row * col && position + 21 < row * col) {
@@ -298,18 +272,46 @@ document.addEventListener("keydown", function (event) {
     return;
   }
   if (event.key === "ArrowDown") {
-    moveDownI();
+    if (currentShape === "O") {
+      moveDownSquare();
+    }
+    if (currentShape === "I") {
+      moveDownI();
+    }
   }
   if (event.key === "ArrowLeft") {
-    moveLeftI();
+    if (currentShape === "O") {
+      moveLeftSquare();
+    }
+    if (currentShape === "I") {
+      moveLeftI();
+    }
   }
   if (event.key === "ArrowRight") {
-    moveRightI();
+    if (currentShape === "O") {
+      moveRightSquare();
+    }
+
+    if (currentShape === "I") {
+      moveRightI();
+    }
+  }
+  // xoay
+  if (event.key === "ArrowUp") {
+    if (currentShape === "I") {
+      rotateI();
+    }
   }
 });
 setInterval(function () {
   if (!gameover) {
-    moveDownI();
+    if (currentShape === "O") {
+      moveDownSquare();
+    }
+
+    if (currentShape === "I") {
+      moveDownI();
+    }
   }
 }, 800);
 // Kiểm tra row đầy chưa ví dụ:
@@ -343,5 +345,47 @@ function clearRow(r) {
   // xử lý row đầu tiên
   for (let i = 0; i < col; i++) {
     matrixs[i].className = "matrix";
+  }
+}
+function newShape() {
+  let random = Math.floor(Math.random() * 2);
+  // random ra khối O
+  if (random === 0) {
+    currentShape = "O";
+    position = 4;
+    // kiểm tra vị trí sinh khối O có bị chiếm chưa
+    if (
+      matrixs[position].classList.contains("fixed") ||
+      matrixs[position + 1].classList.contains("fixed") ||
+      matrixs[position + 10].classList.contains("fixed") ||
+      matrixs[position + 11].classList.contains("fixed")
+    ) {
+      gameover = true;
+      if (confirm("Game Over")) {
+        restart();
+      }
+    } else {
+      drawSquare();
+    }
+  }
+  // random ra khối I
+  else {
+    currentShape = "I";
+    position = 3;
+    spinI = 0;
+    // kiểm tra vị trí sinh khối I có bị chiếm chưa
+    if (
+      matrixs[position].classList.contains("fixed") ||
+      matrixs[position + 1].classList.contains("fixed") ||
+      matrixs[position + 2].classList.contains("fixed") ||
+      matrixs[position + 3].classList.contains("fixed")
+    ) {
+      gameover = true;
+      if (confirm("Game Over")) {
+        restart();
+      }
+    } else {
+      drawI();
+    }
   }
 }
