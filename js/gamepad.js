@@ -163,6 +163,100 @@ function drawT() {
     matrixs[position + 20].classList.add("block", "block-t");
   }
 }
+// hàm clearT để xoá các ô T hiện tại và điều kiện như drawT theo từng hướng xoay T
+function clearT() {
+  // T hướng ban đầu
+  if (spinT === 0) {
+    matrixs[position].classList.remove("block", "block-t");
+    matrixs[position + 1].classList.remove("block", "block-t");
+    matrixs[position + 2].classList.remove("block", "block-t");
+    matrixs[position + 11].classList.remove("block", "block-t");
+  }
+  // T xoay 90 độ
+  if (spinT === 1) {
+    matrixs[position + 1].classList.remove("block", "block-t");
+    matrixs[position + 10].classList.remove("block", "block-t");
+    matrixs[position + 11].classList.remove("block", "block-t");
+    matrixs[position + 21].classList.remove("block", "block-t");
+  }
+  // T xoay 180 độ
+  if (spinT === 2) {
+    matrixs[position + 1].classList.remove("block", "block-t");
+    matrixs[position + 10].classList.remove("block", "block-t");
+    matrixs[position + 11].classList.remove("block", "block-t");
+    matrixs[position + 12].classList.remove("block", "block-t");
+  }
+  // T xoay 270 độ
+  if (spinT === 3) {
+    matrixs[position].classList.remove("block", "block-t");
+    matrixs[position + 10].classList.remove("block", "block-t");
+    matrixs[position + 11].classList.remove("block", "block-t");
+    matrixs[position + 20].classList.remove("block", "block-t");
+  }
+}
+// phương thức rotateT này để xử lý sự kiện khi xoay hình T và kiểm tra điều kiện các ô xung quanh(điều kiện thì lấy như drawT) và kiểm tra thêm điều kiện chạm đáy đối với TH 0->1 và 2->3 còn TH 1->2 và 3->0
+function rotateT() {
+  // từ 0 -> 1   x
+  // xxx =>     xx
+  //  x          x
+  if (spinT === 0) {
+    if (
+      position + 21 < row * col &&
+      !matrixs[position + 1].classList.contains("fixed") &&
+      !matrixs[position + 10].classList.contains("fixed") &&
+      !matrixs[position + 11].classList.contains("fixed") &&
+      !matrixs[position + 21].classList.contains("fixed")
+    ) {
+      clearT();
+      spinT = 1;
+      drawT();
+    }
+  }
+  // từ 1 -> 2
+  else if (spinT === 1) {
+    if (
+      position % col < col - 2 &&
+      !matrixs[position + 1].classList.contains("fixed") &&
+      !matrixs[position + 10].classList.contains("fixed") &&
+      !matrixs[position + 11].classList.contains("fixed") &&
+      !matrixs[position + 12].classList.contains("fixed")
+    ) {
+      clearT();
+      spinT = 2;
+      drawT();
+    }
+  }
+
+  // từ 2 -> 3
+  else if (spinT === 2) {
+    if (
+      position + 20 < row * col &&
+      !matrixs[position].classList.contains("fixed") &&
+      !matrixs[position + 10].classList.contains("fixed") &&
+      !matrixs[position + 11].classList.contains("fixed") &&
+      !matrixs[position + 20].classList.contains("fixed")
+    ) {
+      clearT();
+      spinT = 3;
+      drawT();
+    }
+  }
+
+  // từ 3 -> 0
+  else {
+    if (
+      position % col < col - 2 &&
+      !matrixs[position].classList.contains("fixed") &&
+      !matrixs[position + 1].classList.contains("fixed") &&
+      !matrixs[position + 2].classList.contains("fixed") &&
+      !matrixs[position + 11].classList.contains("fixed")
+    ) {
+      clearT();
+      spinT = 0;
+      drawT();
+    }
+  }
+}
 // hàm để restart game duyệt qua các matrix và loại bỏ các class
 function restart() {
   for (let matrix of matrixs) {
