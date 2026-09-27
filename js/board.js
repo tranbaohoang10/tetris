@@ -88,7 +88,7 @@ function clearI() {
   }
 }
 // Hàm này để xử lý khi nhấn nút xoay hình chữ I, nếu hình đang nằm ngang thì xoay sang dọc và ngược lại. Khi xoay cần kiểm tra các ô xung quanh có vật cản hay không nếu có thì ko cho xoay.
-function spinI() {
+function rotateI() {
   // từ ngang sang dọc
   if (spinI === 0) {
     if (
@@ -204,12 +204,30 @@ function moveRightSquare() {
 }
 // Phương thức này để để kiểm tra xem hình I nó có thể đi xuống ko nếu có thì làm bình thường còn nếu ko có thì gọi phương thức lockI() để khóa các ô I hiện tại lại và tạo một hình I mới ở vị trí ban đầu.
 function moveDownI() {
-  if (position + 13 < row * col) {
+  // I nằm ngang
+  if (spinI === 0) {
+    if (position + 13 < row * col) {
+      if (
+        !matrixs[position + 10].classList.contains("fixed") &&
+        !matrixs[position + 11].classList.contains("fixed") &&
+        !matrixs[position + 12].classList.contains("fixed") &&
+        !matrixs[position + 13].classList.contains("fixed")
+      ) {
+        clearI();
+        position += 10;
+        drawI();
+      } else {
+        lockI();
+      }
+    } else {
+      lockI();
+    }
+  }
+  // I nằm dọc, xét + 40 vì I nếu nằm đầu tiên thì nó sẽ là vị trí +10,+20,+30 rồi và +40 là vị trí tiếp theo nếu +40 mà có vật cản thì ko cho di chuyển xuống nữa
+  else {
     if (
-      !matrixs[position + 10].classList.contains("fixed") &&
-      !matrixs[position + 11].classList.contains("fixed") &&
-      !matrixs[position + 12].classList.contains("fixed") &&
-      !matrixs[position + 13].classList.contains("fixed")
+      position + 40 < row * col &&
+      !matrixs[position + 40].classList.contains("fixed")
     ) {
       clearI();
       position += 10;
@@ -217,30 +235,62 @@ function moveDownI() {
     } else {
       lockI();
     }
-  } else {
-    lockI();
   }
 }
 // phương thức moveLeftI() để kiểm tra có thể sang trái không nếu có thì làm bình thường còn ko thì tiếp tục khối
 function moveLeftI() {
-  if (
-    position % col !== 0 &&
-    !matrixs[position - 1].classList.contains("fixed")
-  ) {
-    clearI();
-    position -= 1;
-    drawI();
+  // I nằm ngang
+  if (spinI === 0) {
+    if (
+      position % col !== 0 &&
+      !matrixs[position - 1].classList.contains("fixed")
+    ) {
+      clearI();
+      position -= 1;
+      drawI();
+    }
+  }
+  // I nằm dọc xét 4 vị trí dọc bên trái nếu có vật cản thì ko cho di chuyển sang trái nữa, còn I nằm ngang thì chỉ cần xét 1 vị trí bên trái tại vì I nằm ngang nó đã chứa 3 ô bên phải rồi nên chỉ cần xét 1 ô bên trái là đủ
+  else {
+    if (
+      position % col !== 0 &&
+      !matrixs[position - 1].classList.contains("fixed") &&
+      !matrixs[position + 9].classList.contains("fixed") &&
+      !matrixs[position + 19].classList.contains("fixed") &&
+      !matrixs[position + 29].classList.contains("fixed")
+    ) {
+      clearI();
+      position -= 1;
+      drawI();
+    }
   }
 }
 // phương thức moveRightI() để kiểm tra có thể sang phải không nếu có thì làm bình thường còn ko thì tiếp tục khối. Col -4 ở đây nghĩa là nếu muốn ô I nằm full ngang thì position nó đang = 6(6,7,8,9 cùng 1 hàng và có 10 cột từ 0->9) nếu position = 7 thì ô I sẽ vượt ra ngoài khung nên cần xử lý điều kiện này.
 function moveRightI() {
-  if (
-    position % col < col - 4 &&
-    !matrixs[position + 4].classList.contains("fixed")
-  ) {
-    clearI();
-    position += 1;
-    drawI();
+  // I nằm ngang
+  if (spinI === 0) {
+    if (
+      position % col < col - 4 &&
+      !matrixs[position + 4].classList.contains("fixed")
+    ) {
+      clearI();
+      position += 1;
+      drawI();
+    }
+  }
+  // I nằm dọc xét 4 vị trí dọc bên phải nếu có vật cản thì ko cho di chuyển sang phải nữa, còn I nằm ngang thì chỉ cần xét 1 vị trí bên phải(-4 là do nếu position đang = 6 thì nó sẽ chiếm 6,7,8,9)
+  else {
+    if (
+      position % col < col - 1 &&
+      !matrixs[position + 1].classList.contains("fixed") &&
+      !matrixs[position + 11].classList.contains("fixed") &&
+      !matrixs[position + 21].classList.contains("fixed") &&
+      !matrixs[position + 31].classList.contains("fixed")
+    ) {
+      clearI();
+      position += 1;
+      drawI();
+    }
   }
 }
 document.addEventListener("keydown", function (event) {
