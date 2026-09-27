@@ -87,6 +87,35 @@ function clearI() {
     matrixs[position + 30].classList.remove("block", "block-i");
   }
 }
+// Hàm này để xử lý khi nhấn nút xoay hình chữ I, nếu hình đang nằm ngang thì xoay sang dọc và ngược lại. Khi xoay cần kiểm tra các ô xung quanh có vật cản hay không nếu có thì ko cho xoay.
+function spinI() {
+  // từ ngang sang dọc
+  if (spinI === 0) {
+    if (
+      position + 30 < row * col &&
+      !matrixs[position + 10].classList.contains("fixed") &&
+      !matrixs[position + 20].classList.contains("fixed") &&
+      !matrixs[position + 30].classList.contains("fixed")
+    ) {
+      clearI();
+      spinI = 1;
+      drawI();
+    }
+  }
+  // từ dọc sang ngang
+  else {
+    if (
+      position % col <= col - 4 &&
+      !matrixs[position + 1].classList.contains("fixed") &&
+      !matrixs[position + 2].classList.contains("fixed") &&
+      !matrixs[position + 3].classList.contains("fixed")
+    ) {
+      clearI();
+      spinI = 0;
+      drawI();
+    }
+  }
+}
 // sau khi hình I chạm đáy hoặc chạm vào các ô đã có vật cản khác thì cần khóa các ô hiện tại lại và tạo một hình I mới ở vị trí ban đầu.
 function lockI() {
   if (spinI === 0) {
