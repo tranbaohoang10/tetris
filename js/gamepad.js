@@ -288,88 +288,6 @@ function lockT() {
   checkRow();
   newShape();
 }
-// phương thức moveDownT() để kiểm tra hình T có thể đi xuống không
-function moveDownT() {
-  // T =0 túc là đang
-  // xxx(4,5,6)
-  // oxo(15),(14,16) là các ô xung quanh
-  //  o(25)
-  // để mà xuống được thì các ô 14,16,25 phải trống nên là xét điều kiện(ở đây position đang = 4) thì các ô trống phải là +10=14,+12=16 và +21=25 đồng thời xét thêm điều kiện nó vẫn nằm trong grid nếu chạm đáy(lấy vị trí cao nhất là 21)
-  if (spinT === 0) {
-    if (
-      position + 21 < row * col &&
-      !matrixs[position + 10].classList.contains("fixed") &&
-      !matrixs[position + 12].classList.contains("fixed") &&
-      !matrixs[position + 21].classList.contains("fixed")
-    ) {
-      clearT();
-      position += 10;
-      drawT();
-    } else {
-      lockT();
-    }
-  }
-  // T xoay 90 độ
-  // T =1 túc là đang
-  //  x(5) với position = 4
-  // xx(14,15)
-  // ox(24,25)
-  //  o(35)
-  // để mà xuống được thì các ô 24,35 phải trống nên là xét điều kiện(ở đây position đang = 4) thì các ô trống phải là +20=24,+31=35 đồng thời xét thêm điều kiện nó vẫn nằm trong grid nếu chạm đáy(lấy vị trí cao nhất là 35)
-  else if (spinT === 1) {
-    if (
-      position + 31 < row * col &&
-      !matrixs[position + 20].classList.contains("fixed") &&
-      !matrixs[position + 31].classList.contains("fixed")
-    ) {
-      clearT();
-      position += 10;
-      drawT();
-    } else {
-      lockT();
-    }
-  }
-  // T xoay 180 độ
-  // T =2 túc là đang
-  //  x(5) với position = 4
-  // xxx(14,15,16)
-  // ooo(24,25,26)
-  // để mà xuống được thì các ô 24,25,26 phải trống nên là xét điều kiện(ở đây position đang = 4) thì các ô trống phải là +20=24,+21=25,+22=26 đồng thời xét thêm điều kiện nó vẫn nằm trong grid nếu chạm đáy(lấy vị trí cao nhất là 22)
-  else if (spinT === 2) {
-    if (
-      position + 22 < row * col &&
-      !matrixs[position + 20].classList.contains("fixed") &&
-      !matrixs[position + 21].classList.contains("fixed") &&
-      !matrixs[position + 22].classList.contains("fixed")
-    ) {
-      clearT();
-      position += 10;
-      drawT();
-    } else {
-      lockT();
-    }
-  }
-  // T xoay 270 độ
-  // T =3 túc là đang
-  //  x(4) với position = 4
-  //  xx(14,15)
-  //  xo(24,25)
-  //  o(34)
-  // để mà xuống được thì các ô 25,34 phải trống nên là xét điều kiện(ở đây position đang = 4) thì các ô trống phải là +21=25,+30=34,đồng thời xét thêm điều kiện nó vẫn nằm trong grid nếu chạm đáy(lấy vị trí cao nhất là 30)
-  else {
-    if (
-      position + 30 < row * col &&
-      !matrixs[position + 21].classList.contains("fixed") &&
-      !matrixs[position + 30].classList.contains("fixed")
-    ) {
-      clearT();
-      position += 10;
-      drawT();
-    } else {
-      lockT();
-    }
-  }
-}
 // hàm để restart game duyệt qua các matrix và loại bỏ các class
 function restart() {
   for (let matrix of matrixs) {
@@ -512,6 +430,162 @@ function moveRightI() {
       clearI();
       position += 1;
       drawI();
+    }
+  }
+}
+// phương thức moveDownT() để kiểm tra hình T có thể đi xuống không
+function moveDownT() {
+  // T =0 túc là đang
+  // xxx(4,5,6)
+  // oxo(15),(14,16) là các ô xung quanh
+  //  o(25)
+  // để mà xuống được thì các ô 14,16,25 phải trống nên là xét điều kiện(ở đây position đang = 4) thì các ô trống phải là +10=14,+12=16 và +21=25 đồng thời xét thêm điều kiện nó vẫn nằm trong grid nếu chạm đáy(lấy vị trí cao nhất là 21)
+  if (spinT === 0) {
+    if (
+      position + 21 < row * col &&
+      !matrixs[position + 10].classList.contains("fixed") &&
+      !matrixs[position + 12].classList.contains("fixed") &&
+      !matrixs[position + 21].classList.contains("fixed")
+    ) {
+      clearT();
+      position += 10;
+      drawT();
+    } else {
+      lockT();
+    }
+  }
+  // T xoay 90 độ
+  // T =1 túc là đang
+  //  x(5) với position = 4
+  // xx(14,15)
+  // ox(24,25)
+  //  o(35)
+  // để mà xuống được thì các ô 24,35 phải trống nên là xét điều kiện(ở đây position đang = 4) thì các ô trống phải là +20=24,+31=35 đồng thời xét thêm điều kiện nó vẫn nằm trong grid nếu chạm đáy(lấy vị trí cao nhất là 35)
+  else if (spinT === 1) {
+    if (
+      position + 31 < row * col &&
+      !matrixs[position + 20].classList.contains("fixed") &&
+      !matrixs[position + 31].classList.contains("fixed")
+    ) {
+      clearT();
+      position += 10;
+      drawT();
+    } else {
+      lockT();
+    }
+  }
+  // T xoay 180 độ
+  // T =2 túc là đang
+  //  x(5) với position = 4
+  // xxx(14,15,16)
+  // ooo(24,25,26)
+  // để mà xuống được thì các ô 24,25,26 phải trống nên là xét điều kiện(ở đây position đang = 4) thì các ô trống phải là +20=24,+21=25,+22=26 đồng thời xét thêm điều kiện nó vẫn nằm trong grid nếu chạm đáy(lấy vị trí cao nhất là 22)
+  else if (spinT === 2) {
+    if (
+      position + 22 < row * col &&
+      !matrixs[position + 20].classList.contains("fixed") &&
+      !matrixs[position + 21].classList.contains("fixed") &&
+      !matrixs[position + 22].classList.contains("fixed")
+    ) {
+      clearT();
+      position += 10;
+      drawT();
+    } else {
+      lockT();
+    }
+  }
+  // T xoay 270 độ
+  // T =3 túc là đang
+  //  x(4) với position = 4
+  //  xx(14,15)
+  //  xo(24,25)
+  //  o(34)
+  // để mà xuống được thì các ô 25,34 phải trống nên là xét điều kiện(ở đây position đang = 4) thì các ô trống phải là +21=25,+30=34,đồng thời xét thêm điều kiện nó vẫn nằm trong grid nếu chạm đáy(lấy vị trí cao nhất là 30)
+  else {
+    if (
+      position + 30 < row * col &&
+      !matrixs[position + 21].classList.contains("fixed") &&
+      !matrixs[position + 30].classList.contains("fixed")
+    ) {
+      clearT();
+      position += 10;
+      drawT();
+    } else {
+      lockT();
+    }
+  }
+}
+// phương thức moveLeftT() để kiểm tra hình T có thể di chuyển sang trái không
+function moveLeftT() {
+  // T hướng ban đầu
+  // lấy position = 4
+  // oxxx(4,5,6) là x,(3) là ô
+  //  ox(15 là x),(14) là các ô xung quanh
+  // để mà qua trái được thì các ô 3,14 phải trống nên là xét điều kiện(ở đây position đang = 4) thì các ô trống phải là -1=3,+10=14,đồng thời xét thêm điều kiện nó vẫn nằm trong grid nếu chạm trái
+  if (spinT === 0) {
+    if (
+      position % col !== 0 &&
+      !matrixs[position - 1].classList.contains("fixed") &&
+      !matrixs[position + 10].classList.contains("fixed")
+    ) {
+      clearT();
+      position -= 1;
+      drawT();
+    }
+  }
+  // T xoay 90 độ
+  // T =1 túc là đang
+  // ox(5) với position = 4
+  //oxx(13,14,15)
+  // ox(24,25)
+  // với 5,14,15,25 là các ô x và 4,13,24 là các ô xung quanh
+  // để mà qua trái được thì các ô 4,13,24 phải trống nên là xét điều kiện(ở đây position đang = 4) thì các ô trống phải là 0=4,+9=13,+20=24,đồng thời xét thêm điều kiện nó vẫn nằm trong grid nếu chạm trái
+  else if (spinT === 1) {
+    if (
+      position % col !== 0 &&
+      !matrixs[position].classList.contains("fixed") &&
+      !matrixs[position + 9].classList.contains("fixed") &&
+      !matrixs[position + 20].classList.contains("fixed")
+    ) {
+      clearT();
+      position -= 1;
+      drawT();
+    }
+  }
+  // T xoay 180 độ
+  // T =2 túc là đang
+  // ox(4,5) với position = 4
+  //oxxx(13,14,15,16)
+  // với 5,14,15,16 là các ô x và 4,13 là các ô xung quanh
+  // để mà qua trái được thì các ô 4,13 phải trống nên là xét điều kiện(ở đây position đang = 4) thì các ô trống phải là 0=4,+9=13 đồng thời xét thêm điều kiện nó vẫn nằm trong grid nếu chạm trái
+  else if (spinT === 2) {
+    if (
+      position % col !== 0 &&
+      !matrixs[position].classList.contains("fixed") &&
+      !matrixs[position + 9].classList.contains("fixed")
+    ) {
+      clearT();
+      position -= 1;
+      drawT();
+    }
+  }
+  // T xoay 270 độ
+  // T =3 túc là đang
+  // ox(3,4) với position = 4
+  // oxx(13,14,15)
+  // ox(23,24)
+  // với 4,14,15,24 là các ô x và 3,13,23 là các ô xung quanh
+  // để mà qua trái được thì các ô 3,13,23 phải trống nên là xét điều kiện(ở đây position đang = 4) thì các ô trống phải là -1=3,+9=13,+19=23 đồng thời xét thêm điều kiện nó vẫn nằm trong grid nếu chạm trái
+  else {
+    if (
+      position % col !== 0 &&
+      !matrixs[position - 1].classList.contains("fixed") &&
+      !matrixs[position + 9].classList.contains("fixed") &&
+      !matrixs[position + 19].classList.contains("fixed")
+    ) {
+      clearT();
+      position -= 1;
+      drawT();
     }
   }
 }
