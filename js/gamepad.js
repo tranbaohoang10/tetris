@@ -589,6 +589,85 @@ function moveLeftT() {
     }
   }
 }
+// phương thức moveRightT() để kiểm tra hình T có thể di chuyển sang phải không
+function moveRightT() {
+  // T hướng ban đầu
+  // lấy position = 4
+  // xxxo(4,5,6,7) là x,(7) là o
+  //  xo(15 là x),(16) là các ô xung quanh
+  // để mà qua phải được thì các ô 7,16 phải trống nên là xét điều kiện(ở đây position đang = 4) thì các ô trống phải là +3=7,+12=16,đồng thời xét thêm điều kiện nó vẫn nằm trong grid nếu chạm phải(ở đây col-3 vì khi position = 6 nó sẽ vô if và đúng điều kiện thì +1 tức position =7 và nó sẽ chiếm 7,8,9 -> dừng)
+  // 4 sẽ là 7,5 sẽ là 8,6 sẽ là 9(này là đang tính nó đã vào vòng if và position+1 nên nó bị đẩy qua 1 ô sang phải)
+  if (spinT === 0) {
+    if (
+      position % col < col - 3 &&
+      !matrixs[position + 3].classList.contains("fixed") &&
+      !matrixs[position + 12].classList.contains("fixed")
+    ) {
+      clearT();
+      position += 1;
+      drawT();
+    }
+  }
+  // T xoay 90 độ
+  // T =1 túc là đang
+  // xo(5,6) với position = 4
+  //xxo(14,15,16)
+  // xo(25,26)
+  // với 5,14,15,25 là các ô x và 6,16,26 là các ô xung quanh
+  // để mà qua phải được thì các ô 6,16,26 phải trống nên là xét điều kiện(ở đây position đang = 4) thì các ô trống phải là +2=6,+12=16,+22=26,đồng thời xét thêm điều kiện nó vẫn nằm trong grid nếu chạm phải(ở đây col-2(8) vì khi position = 4 thì x đang ở vị trí 5 và đến khi position = 7 thì x đang ở vị trí 8 và sẽ vô vòng if -> position +1 = 8 lúc này x nó sẽ chiêm 9 -> dừng)
+  // 4 sẽ là 6,5 sẽ là 7,6 sẽ là 8,7 sẽ là 9(này là đang tính nó đã vào vòng if và position+1 nên nó bị đẩy qua 1 ô sang phải)
+  else if (spinT === 1) {
+    if (
+      position % col < col - 2 &&
+      !matrixs[position + 2].classList.contains("fixed") &&
+      !matrixs[position + 12].classList.contains("fixed") &&
+      !matrixs[position + 22].classList.contains("fixed")
+    ) {
+      clearT();
+      position += 1;
+      drawT();
+    }
+  }
+  // T xoay 180 độ
+  // T =2 túc là đang
+  // xo(5,6) với position = 4
+  //xxxo(14,15,16,17)
+  // với 5,14,15,16 là các ô x và 6,17 là các ô xung quanh
+  // để mà qua phải được thì các ô 6,17 phải trống nên là xét điều kiện(ở đây position đang = 4) thì các ô trống phải là +2=6,+13=17,đồng thời xét thêm điều kiện nó vẫn nằm trong grid nếu chạm phải(ở đây col-3(7) vì khi position = 4 thì x đang ở vị trí 5 và đến khi position = 6 thì x đang ở vị trí 7 và sẽ chạy vào vòng if và position +1 tức position = 7 ,x=8 và nó sẽ chiếm 7,8,9 -> dừng)
+  // 4 sẽ là 7,5 sẽ là 8,6 sẽ là 9(này là đang tính nó đã vào vòng if và position+1 nên nó bị đẩy qua 1 ô sang phải)
+  else if (spinT === 2) {
+    if (
+      position % col < col - 3 &&
+      !matrixs[position + 2].classList.contains("fixed") &&
+      !matrixs[position + 13].classList.contains("fixed")
+    ) {
+      clearT();
+      position += 1;
+      drawT();
+    }
+  }
+
+  // T xoay 270 độ
+  // T =3 túc là đang
+  // xo(4,5) với position = 4
+  // xxo(14,15,16)
+  // xo(24,25)
+  // với 4,14,15,24 là các ô x và 5,16,25 là các ô xung quanh
+  // để mà qua trái được thì các ô 5,16,25 phải trống nên là xét điều kiện(ở đây position đang = 4) thì các ô trống phải là +1=5,+12=16,+21=25 đồng thời xét thêm điều kiện nó vẫn nằm trong grid nếu chạm phải(ở đây col-2(8) vì khi position = 4 thì x đang ở vị trí 4 và đến khi position = 7 thì x đang ở vị trí 7(x xa nhất tức đang là vị trí thứ 8) và sẽ chạy vào vòng if và position +1 tức position = 8 ,x=8(x xa nhất đang vị trí thứ 9) và nó sẽ chiếm 8,9 -> dừng)
+  // 4 sẽ là 6,5 sẽ là 7,6 sẽ là 8,7 sẽ là 9(này là đang tính nó đã vào vòng if và position+1 nên nó bị đẩy qua 1 ô sang phải)
+  else {
+    if (
+      position % col < col - 2 &&
+      !matrixs[position + 1].classList.contains("fixed") &&
+      !matrixs[position + 12].classList.contains("fixed") &&
+      !matrixs[position + 21].classList.contains("fixed")
+    ) {
+      clearT();
+      position += 1;
+      drawT();
+    }
+  }
+}
 document.addEventListener("keydown", function (event) {
   if (gameover) {
     return;
