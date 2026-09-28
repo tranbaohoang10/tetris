@@ -291,11 +291,18 @@ function lockT() {
 // hàm để restart game duyệt qua các matrix và loại bỏ các class
 function restart() {
   for (let matrix of matrixs) {
-    matrix.classList.remove("block", "block-square", "block-i", "fixed");
+    matrix.classList.remove(
+      "block",
+      "block-square",
+      "block-i",
+      "block-t",
+      "fixed",
+    );
   }
   gameover = false;
   line = 0;
   spinI = 0;
+  spinT = 0;
   currentShape = "";
   lineElement.textContent = "Line: 0 / 10";
   newShape();
@@ -679,6 +686,9 @@ document.addEventListener("keydown", function (event) {
     if (currentShape === "I") {
       moveDownI();
     }
+    if (currentShape === "T") {
+      moveDownT();
+    }
   }
   if (event.key === "ArrowLeft") {
     if (currentShape === "O") {
@@ -686,6 +696,9 @@ document.addEventListener("keydown", function (event) {
     }
     if (currentShape === "I") {
       moveLeftI();
+    }
+    if (currentShape === "T") {
+      moveLeftT();
     }
   }
   if (event.key === "ArrowRight") {
@@ -696,11 +709,17 @@ document.addEventListener("keydown", function (event) {
     if (currentShape === "I") {
       moveRightI();
     }
+    if (currentShape === "T") {
+      moveRightT();
+    }
   }
   // xoay
   if (event.key === "ArrowUp") {
     if (currentShape === "I") {
       rotateI();
+    }
+    if (currentShape === "T") {
+      rotateT();
     }
   }
 });
@@ -712,6 +731,9 @@ setInterval(function () {
 
     if (currentShape === "I") {
       moveDownI();
+    }
+    if (currentShape === "T") {
+      moveDownT();
     }
   }
 }, 800);
@@ -749,7 +771,8 @@ function clearRow(r) {
   }
 }
 function newShape() {
-  let random = Math.floor(Math.random() * 2);
+  let random = Math.floor(Math.random() * 3);
+
   // random ra khối O
   if (random === 0) {
     currentShape = "O";
@@ -770,7 +793,7 @@ function newShape() {
     }
   }
   // random ra khối I
-  else {
+  else if (random === 1) {
     currentShape = "I";
     position = 3;
     spinI = 0;
@@ -787,6 +810,28 @@ function newShape() {
       }
     } else {
       drawI();
+    }
+  }
+  // random ra khối T
+  else {
+    currentShape = "T";
+    position = 4;
+    spinT = 0;
+
+    // kiểm tra vị trí sinh khối T có bị chiếm chưa
+    if (
+      matrixs[position].classList.contains("fixed") ||
+      matrixs[position + 1].classList.contains("fixed") ||
+      matrixs[position + 2].classList.contains("fixed") ||
+      matrixs[position + 11].classList.contains("fixed")
+    ) {
+      gameover = true;
+
+      if (confirm("Game Over")) {
+        restart();
+      }
+    } else {
+      drawT();
     }
   }
 }
