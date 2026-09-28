@@ -23,6 +23,7 @@ let gameover = false;
 let line = 0;
 let spinI = 0;
 let spinT = 0;
+let spinS = 0;
 let currentShape = "";
 function drawSquare() {
   matrixs[position].classList.add("block", "block-square");
@@ -287,6 +288,55 @@ function lockT() {
   }
   checkRow();
   newShape();
+}
+// phương thức drawS() để vẽ hình S và xoay theo từng hướng
+function drawS() {
+  // S hướng ban đầu
+  // position = 4
+  //  xx(5,6)
+  // xx(14,15)
+  if (spinS === 0) {
+    matrixs[position + 1].classList.add("block", "block-s");
+    matrixs[position + 2].classList.add("block", "block-s");
+    matrixs[position + 10].classList.add("block", "block-s");
+    matrixs[position + 11].classList.add("block", "block-s");
+  }
+  // S xoay 90 độ
+  // position = 4
+  // x(4)
+  // xx(14,15)
+  //  x(25)
+  if (spinS === 1) {
+    matrixs[position].classList.add("block", "block-s");
+    matrixs[position + 10].classList.add("block", "block-s");
+    matrixs[position + 11].classList.add("block", "block-s");
+    matrixs[position + 21].classList.add("block", "block-s");
+  }
+}
+// phương thức clearS() để xóa các ô S và điều kiện như phương thức drawS() theo từng hướng xoay
+function clearS() {
+  // S hướng ban đầu
+  // position = 4
+  //  xx(5,6)
+  // xx(14,15)
+  if (spinS === 0) {
+    matrixs[position + 1].classList.remove("block", "block-s");
+    matrixs[position + 2].classList.remove("block", "block-s");
+    matrixs[position + 10].classList.remove("block", "block-s");
+    matrixs[position + 11].classList.remove("block", "block-s");
+  }
+
+  // S xoay 90 độ
+  // position = 4
+  // x(4)
+  // xx(14,15)
+  //  x(25)
+  if (spinS === 1) {
+    matrixs[position].classList.remove("block", "block-s");
+    matrixs[position + 10].classList.remove("block", "block-s");
+    matrixs[position + 11].classList.remove("block", "block-s");
+    matrixs[position + 21].classList.remove("block", "block-s");
+  }
 }
 // hàm để restart game duyệt qua các matrix và loại bỏ các class
 function restart() {
