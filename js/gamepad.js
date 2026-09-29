@@ -377,6 +377,32 @@ function rotateS() {
     }
   }
 }
+// sau khi hình S chạm đáy hoặc chạm vật cản thì khóa khối S lại, lấy điều kiện lock như drawS
+function lockS() {
+  // S hướng ban đầu
+  //  xx
+  // xx
+  if (spinS === 0) {
+    matrixs[position + 1].classList.add("fixed");
+    matrixs[position + 2].classList.add("fixed");
+    matrixs[position + 10].classList.add("fixed");
+    matrixs[position + 11].classList.add("fixed");
+  }
+
+  // S xoay 90 độ
+  // x
+  // xx
+  //  x
+  if (spinS === 1) {
+    matrixs[position].classList.add("fixed");
+    matrixs[position + 10].classList.add("fixed");
+    matrixs[position + 11].classList.add("fixed");
+    matrixs[position + 21].classList.add("fixed");
+  }
+
+  checkRow();
+  newShape();
+}
 // hàm để restart game duyệt qua các matrix và loại bỏ các class
 function restart() {
   for (let matrix of matrixs) {
@@ -761,6 +787,52 @@ function moveRightT() {
       clearT();
       position += 1;
       drawT();
+    }
+  }
+}
+// phương thức moveDownS() để kiểm tra hình S có thể đi xuống không
+function moveDownS() {
+  // S hướng ban đầu
+  // position = 4 nên:
+  //  xx(5,6)
+  // xxo(14,15,16)
+  // oo(24,25)
+  // để hình S đi xuống được thì các ô 16,24,25 phải trống tức là position +12=16, +20=24, +21=25 đồng thời xét thêm điều kiện nó vẫn nằm trong grid nếu chạm đáy(lấy vị trí cao nhất là 25)
+  if (spinS === 0) {
+    if (
+      position + 21 < row * col &&
+      !matrixs[position + 12].classList.contains("fixed") &&
+      !matrixs[position + 20].classList.contains("fixed") &&
+      !matrixs[position + 21].classList.contains("fixed")
+    ) {
+      clearS();
+      position += 10;
+      drawS();
+    } else {
+      lockS();
+    }
+  }
+
+  // S xoay 90 độ
+  // position = 4
+  // x(4)
+  // xx(14,15)
+  // ox(24,25)
+  //  o(35)
+  // để đi xuống được thì các ô 24,35 phải trống
+  // tức là position +20, +31
+  // để hình S đi xuống được thì các ô 24,35 phải trống tức là position +20=24,+31=35 đồng thời xét thêm điều kiện nó vẫn nằm trong grid nếu chạm đáy(lấy vị trí cao nhất là 35)
+  else {
+    if (
+      position + 31 < row * col &&
+      !matrixs[position + 20].classList.contains("fixed") &&
+      !matrixs[position + 31].classList.contains("fixed")
+    ) {
+      clearS();
+      position += 10;
+      drawS();
+    } else {
+      lockS();
     }
   }
 }
