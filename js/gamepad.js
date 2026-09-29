@@ -338,6 +338,45 @@ function clearS() {
     matrixs[position + 21].classList.remove("block", "block-s");
   }
 }
+// phương thức rotateS() để xử lý xoay khối S
+function rotateS() {
+  // từ 0 -> 1
+  //  xx (5,6)   x(4)
+  // xx(14,15)=> xx(14,15)
+  //              x(25)
+  // với position = 4 để xoay được thì các ô 4,14,15,25 phải trống và ko chạm đáy(xét vị trí dài nhất là 25(dựa vào board))
+  if (spinS === 0) {
+    if (
+      position + 21 < row * col &&
+      !matrixs[position].classList.contains("fixed") &&
+      !matrixs[position + 10].classList.contains("fixed") &&
+      !matrixs[position + 11].classList.contains("fixed") &&
+      !matrixs[position + 21].classList.contains("fixed")
+    ) {
+      clearS();
+      spinS = 1;
+      drawS();
+    }
+  }
+  // từ 1 -> 0
+  // x(4)          xx(5,6)
+  // xx(14,15) => xx(14,15)
+  //  x(25)
+  // với position = 4 để xoay được thì các ô 5,6,14,15 phải trống và ko chạm đáy(xét vị trí dài nhất là 6(dựa vào mép phải của board))
+  else {
+    if (
+      position % col < col - 2 &&
+      !matrixs[position + 1].classList.contains("fixed") &&
+      !matrixs[position + 2].classList.contains("fixed") &&
+      !matrixs[position + 10].classList.contains("fixed") &&
+      !matrixs[position + 11].classList.contains("fixed")
+    ) {
+      clearS();
+      spinS = 0;
+      drawS();
+    }
+  }
+}
 // hàm để restart game duyệt qua các matrix và loại bỏ các class
 function restart() {
   for (let matrix of matrixs) {
