@@ -819,8 +819,6 @@ function moveDownS() {
   // xx(14,15)
   // ox(24,25)
   //  o(35)
-  // để đi xuống được thì các ô 24,35 phải trống
-  // tức là position +20, +31
   // để hình S đi xuống được thì các ô 24,35 phải trống tức là position +20=24,+31=35 đồng thời xét thêm điều kiện nó vẫn nằm trong grid nếu chạm đáy(lấy vị trí cao nhất là 35)
   else {
     if (
@@ -833,6 +831,44 @@ function moveDownS() {
       drawS();
     } else {
       lockS();
+    }
+  }
+}
+// phương thức moveLeftS() để kiểm tra hình S có thể di chuyển sang trái không
+function moveLeftS() {
+  // S hướng ban đầu
+  // position = 4 nên:
+  //  oxx(4,5,6)
+  // oxx(13,14,15)
+  //
+  // để hình S đi đi sang trái được được thì các ô 4,13 phải trống tức là position +0=4, +9=13, đồng thời xét thêm điều kiện nó chưa chạm bên trái board(nếu position % col = 0 thì hình S đang sát mép trái -> dừng)
+  if (spinS === 0) {
+    if (
+      position % col !== 0 &&
+      !matrixs[position].classList.contains("fixed") &&
+      !matrixs[position + 9].classList.contains("fixed")
+    ) {
+      clearS();
+      position -= 1;
+      drawS();
+    }
+  }
+  // S xoay 90 độ
+  // position = 4
+  // ox(3,4)
+  // oxx(13,14,15)
+  //  ox(24,25)
+  // để hình S đi sang trái được thì các ô 3,13,24 phải trống tức là position -1=3,+9=13,+20=24 đồng thời xét thêm điều kiện nó vẫn chưa chạm bên trái board(nếu position % col = 0 thì hình S đang sát mép trái -> dừng)
+  else {
+    if (
+      position % col !== 0 &&
+      !matrixs[position - 1].classList.contains("fixed") &&
+      !matrixs[position + 9].classList.contains("fixed") &&
+      !matrixs[position + 20].classList.contains("fixed")
+    ) {
+      clearS();
+      position -= 1;
+      drawS();
     }
   }
 }
