@@ -872,6 +872,43 @@ function moveLeftS() {
     }
   }
 }
+// phương thức moveRightS() để kiểm tra hình S có thể di chuyển sang phải không
+function moveRightS() {
+  // S hướng ban đầu
+  // position = 4 nên:
+  //  xxo(5,6,7)
+  // xxo(14,15,16)
+  // để hình S đi sang phải được thì các ô 7,16 phải trống tức là position +3=7,+12=16 đồng thời xét thêm điều kiện nó vẫn chưa chạm bên phải board(nếu position =4->ô xa nhất = 7(vì nó chạy vào if và thực hiện),position=5->8,position=6->9 tức position%col < col-3 -> dừng)
+  if (spinS === 0) {
+    if (
+      position % col < col - 3 &&
+      !matrixs[position + 3].classList.contains("fixed") &&
+      !matrixs[position + 12].classList.contains("fixed")
+    ) {
+      clearS();
+      position += 1;
+      drawS();
+    }
+  }
+  // S xoay 90 độ
+  // position = 4
+  // xo(4,5)
+  // xxo(14,15,16)
+  //  xo(25,26)
+  // để hình S đi sang phải được thì các ô 5,16,26 phải trống tức là position +1=5,+12=16,+22=26 đồng thời xét thêm điều kiện nó vẫn chưa chạm bên phải board(nếu position =4->ô xa nhất = 6(vì nó chạy vào if và thực hiện),position=5->7,position=6->8,position=7->9 tức position%col < col-2 -> dừng)
+  else {
+    if (
+      position % col < col - 2 &&
+      !matrixs[position + 1].classList.contains("fixed") &&
+      !matrixs[position + 12].classList.contains("fixed") &&
+      !matrixs[position + 22].classList.contains("fixed")
+    ) {
+      clearS();
+      position += 1;
+      drawS();
+    }
+  }
+}
 document.addEventListener("keydown", function (event) {
   if (gameover) {
     return;
