@@ -411,6 +411,7 @@ function restart() {
       "block-square",
       "block-i",
       "block-t",
+      "block-s",
       "fixed",
     );
   }
@@ -418,6 +419,7 @@ function restart() {
   line = 0;
   spinI = 0;
   spinT = 0;
+  spinS = 0;
   currentShape = "";
   lineElement.textContent = "Line: 0 / 10";
   newShape();
@@ -923,6 +925,9 @@ document.addEventListener("keydown", function (event) {
     if (currentShape === "T") {
       moveDownT();
     }
+    if (currentShape === "S") {
+      moveDownS();
+    }
   }
   if (event.key === "ArrowLeft") {
     if (currentShape === "O") {
@@ -934,17 +939,22 @@ document.addEventListener("keydown", function (event) {
     if (currentShape === "T") {
       moveLeftT();
     }
+    if (currentShape === "S") {
+      moveLeftS();
+    }
   }
   if (event.key === "ArrowRight") {
     if (currentShape === "O") {
       moveRightSquare();
     }
-
     if (currentShape === "I") {
       moveRightI();
     }
     if (currentShape === "T") {
       moveRightT();
+    }
+    if (currentShape === "S") {
+      moveRightS();
     }
   }
   // xoay
@@ -954,6 +964,9 @@ document.addEventListener("keydown", function (event) {
     }
     if (currentShape === "T") {
       rotateT();
+    }
+    if (currentShape === "S") {
+      rotateS();
     }
   }
 });
@@ -968,6 +981,9 @@ setInterval(function () {
     }
     if (currentShape === "T") {
       moveDownT();
+    }
+    if (currentShape === "S") {
+      moveDownS();
     }
   }
 }, 800);
@@ -1005,7 +1021,7 @@ function clearRow(r) {
   }
 }
 function newShape() {
-  let random = Math.floor(Math.random() * 3);
+  let random = Math.floor(Math.random() * 4);
 
   // random ra khối O
   if (random === 0) {
@@ -1047,7 +1063,7 @@ function newShape() {
     }
   }
   // random ra khối T
-  else {
+  else if (random === 2) {
     currentShape = "T";
     position = 4;
     spinT = 0;
@@ -1066,6 +1082,26 @@ function newShape() {
       }
     } else {
       drawT();
+    }
+  }
+  // random ra khối S
+  else {
+    currentShape = "S";
+    position = 4;
+    spinS = 0;
+    // kiểm tra vị trí sinh khối S có bị chiếm chưa
+    if (
+      matrixs[position + 1].classList.contains("fixed") ||
+      matrixs[position + 2].classList.contains("fixed") ||
+      matrixs[position + 10].classList.contains("fixed") ||
+      matrixs[position + 11].classList.contains("fixed")
+    ) {
+      gameover = true;
+      if (confirm("Game Over")) {
+        restart();
+      }
+    } else {
+      drawS();
     }
   }
 }
