@@ -24,6 +24,7 @@ let line = 0;
 let spinI = 0;
 let spinT = 0;
 let spinS = 0;
+let spinZ = 0;
 let currentShape = "";
 function drawSquare() {
   matrixs[position].classList.add("block", "block-square");
@@ -402,6 +403,56 @@ function lockS() {
 
   checkRow();
   newShape();
+}
+// phương thức drawZ() để vẽ hình Z và xoay theo từng hướng
+function drawZ() {
+  // Z hướng ban đầu
+  // position = 4
+  // xx(4,5)
+  //  xx(15,16)
+  if (spinZ === 0) {
+    matrixs[position].classList.add("block", "block-z");
+    matrixs[position + 1].classList.add("block", "block-z");
+    matrixs[position + 11].classList.add("block", "block-z");
+    matrixs[position + 12].classList.add("block", "block-z");
+  }
+
+  // Z xoay 90 độ
+  // position = 4
+  //  x(5)
+  // xx(14,15)
+  // x(24)
+  if (spinZ === 1) {
+    matrixs[position + 1].classList.add("block", "block-z");
+    matrixs[position + 10].classList.add("block", "block-z");
+    matrixs[position + 11].classList.add("block", "block-z");
+    matrixs[position + 20].classList.add("block", "block-z");
+  }
+}
+// phương thức clearZ() để xóa các ô Z và điều kiện như phương thức drawZ() theo từng hướng xoay
+function clearZ() {
+  // Z hướng ban đầu
+  // position = 4
+  // xx(4,5)
+  //  xx(15,16)
+  if (spinZ === 0) {
+    matrixs[position].classList.remove("block", "block-z");
+    matrixs[position + 1].classList.remove("block", "block-z");
+    matrixs[position + 11].classList.remove("block", "block-z");
+    matrixs[position + 12].classList.remove("block", "block-z");
+  }
+
+  // Z xoay 90 độ
+  // position = 4
+  //  x(5)
+  // xx(14,15)
+  // x(24)
+  if (spinZ === 1) {
+    matrixs[position + 1].classList.remove("block", "block-z");
+    matrixs[position + 10].classList.remove("block", "block-z");
+    matrixs[position + 11].classList.remove("block", "block-z");
+    matrixs[position + 20].classList.remove("block", "block-z");
+  }
 }
 // hàm để restart game duyệt qua các matrix và loại bỏ các class
 function restart() {
