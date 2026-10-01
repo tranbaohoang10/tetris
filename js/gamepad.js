@@ -528,6 +528,7 @@ function restart() {
       "block-i",
       "block-t",
       "block-s",
+      "block-z",
       "fixed",
     );
   }
@@ -1109,6 +1110,43 @@ function moveLeftZ() {
     }
   }
 }
+// phương thức moveRightZ() để kiểm tra hình Z có thể di chuyển sang phải không
+function moveRightZ() {
+  // Z hướng ban đầu
+  // position = 4
+  // xxo(4,5,6)
+  //  xxo(15,16,17)
+  // để hình Z đi sang phải được thì các ô 6,17 phải trống tức là +2=6,+13=17 đồng thời xét mép phải coi thử có sang phải được không(position = 4 thì chạy vào if và thực hiện position+1 và vị trí xa nhất lúc này là 17(tức là ô 7),5 thì là 8,6 thì là 9 -> dừng nên xét điều kiện col-3)
+  if (spinZ === 0) {
+    if (
+      position % col < col - 3 &&
+      !matrixs[position + 2].classList.contains("fixed") &&
+      !matrixs[position + 13].classList.contains("fixed")
+    ) {
+      clearZ();
+      position += 1;
+      drawZ();
+    }
+  }
+  // Z xoay 90 độ
+  // position = 4
+  //  xo(5,6)
+  // xxo(14,15,16)
+  // xo(24,25)
+  // để hình Z đi sang phải được thì các ô 6,16,25 phải trống tức là position +2=6,+12=16,+21=25 đồng thời xét mép phải coi thử có sang phải được không(position = 4 thì chạy vào if và thực hiện position+1 và vị trí xa nhất lúc này là 16(tức là ô 6),5 thì là 7,6 thì là 8,7 thì là 9 -> dừng nên xét điều kiện col-2)
+  else {
+    if (
+      position % col < col - 2 &&
+      !matrixs[position + 2].classList.contains("fixed") &&
+      !matrixs[position + 12].classList.contains("fixed") &&
+      !matrixs[position + 21].classList.contains("fixed")
+    ) {
+      clearZ();
+      position += 1;
+      drawZ();
+    }
+  }
+}
 document.addEventListener("keydown", function (event) {
   if (gameover) {
     return;
@@ -1126,7 +1164,12 @@ document.addEventListener("keydown", function (event) {
     if (currentShape === "S") {
       moveDownS();
     }
+
+    if (currentShape === "Z") {
+      moveDownZ();
+    }
   }
+
   if (event.key === "ArrowLeft") {
     if (currentShape === "O") {
       moveLeftSquare();
@@ -1140,7 +1183,12 @@ document.addEventListener("keydown", function (event) {
     if (currentShape === "S") {
       moveLeftS();
     }
+
+    if (currentShape === "Z") {
+      moveLeftZ();
+    }
   }
+
   if (event.key === "ArrowRight") {
     if (currentShape === "O") {
       moveRightSquare();
@@ -1154,7 +1202,12 @@ document.addEventListener("keydown", function (event) {
     if (currentShape === "S") {
       moveRightS();
     }
+
+    if (currentShape === "Z") {
+      moveRightZ();
+    }
   }
+
   // xoay
   if (event.key === "ArrowUp") {
     if (currentShape === "I") {
@@ -1165,6 +1218,9 @@ document.addEventListener("keydown", function (event) {
     }
     if (currentShape === "S") {
       rotateS();
+    }
+    if (currentShape === "Z") {
+      rotateZ();
     }
   }
 });
@@ -1182,6 +1238,9 @@ setInterval(function () {
     }
     if (currentShape === "S") {
       moveDownS();
+    }
+    if (currentShape === "Z") {
+      moveDownZ();
     }
   }
 }, 800);
@@ -1219,7 +1278,7 @@ function clearRow(r) {
   }
 }
 function newShape() {
-  let random = Math.floor(Math.random() * 4);
+  let random = Math.floor(Math.random() * 5);
 
   // random ra khối O
   if (random === 0) {
@@ -1283,7 +1342,7 @@ function newShape() {
     }
   }
   // random ra khối S
-  else {
+  else if (random === 3) {
     currentShape = "S";
     position = 4;
     spinS = 0;
@@ -1300,6 +1359,28 @@ function newShape() {
       }
     } else {
       drawS();
+    }
+  }
+  // random ra khối Z
+  else {
+    currentShape = "Z";
+    position = 4;
+    spinZ = 0;
+
+    // kiểm tra vị trí sinh khối Z có bị chiếm chưa
+    if (
+      matrixs[position].classList.contains("fixed") ||
+      matrixs[position + 1].classList.contains("fixed") ||
+      matrixs[position + 11].classList.contains("fixed") ||
+      matrixs[position + 12].classList.contains("fixed")
+    ) {
+      gameover = true;
+
+      if (confirm("Game Over")) {
+        restart();
+      }
+    } else {
+      drawZ();
     }
   }
 }
