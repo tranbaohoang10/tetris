@@ -610,6 +610,81 @@ function clearJ() {
     matrixs[position + 21].classList.remove("block", "block-j");
   }
 }
+// phương thức rotateJ() để xử lý xoay khối J
+function rotateJ() {
+  // từ 0 -> 1
+  // xo(4,5)         xx(4,5)
+  // xxx(14,15,16) =>x(14)
+  // o(24)           x(24)
+  // với position = 4 để xoay được thì các ô 5,24 phải trống và đồng thời kiểm tra chạm đáy, lấy vị trí xa nhất là 24 tức position +20
+  if (spinJ === 0) {
+    if (
+      position + 20 < row * col &&
+      !matrixs[position].classList.contains("fixed") &&
+      !matrixs[position + 1].classList.contains("fixed") &&
+      !matrixs[position + 10].classList.contains("fixed") &&
+      !matrixs[position + 20].classList.contains("fixed")
+    ) {
+      clearJ();
+      spinJ = 1;
+      drawJ();
+    }
+  }
+  // từ 1 -> 2
+  // xxo(4,5,6)  xxx(4,5,6)
+  // x o(14,16) => x(16)
+  // x(24)
+  // với position = 4 để xoay được thì các ô 6,16 phải trống đồng thời kiểm tra chạm mép phải, ô xa nhất bên phải là 6 tức position +2,5->7,6->8,7->9 nên xét position % col < col - 2
+  else if (spinJ === 1) {
+    if (
+      position % col < col - 2 &&
+      !matrixs[position].classList.contains("fixed") &&
+      !matrixs[position + 1].classList.contains("fixed") &&
+      !matrixs[position + 2].classList.contains("fixed") &&
+      !matrixs[position + 12].classList.contains("fixed")
+    ) {
+      clearJ();
+      spinJ = 2;
+      drawJ();
+    }
+  }
+  // từ 2 -> 3
+  // xxx(4,5,6)   x(5)
+  //  ox(15,16)=> x(15)
+  // oo(24,25)   xx(24,25)
+  // với position = 4 để xoay được thì các ô 15,24,25 phải trống đồng thời kiểm tra chạm đáy, lấy vị trí xa nhất là 25 tức position +21
+  else if (spinJ === 2) {
+    if (
+      position + 21 < row * col &&
+      !matrixs[position + 1].classList.contains("fixed") &&
+      !matrixs[position + 11].classList.contains("fixed") &&
+      !matrixs[position + 20].classList.contains("fixed") &&
+      !matrixs[position + 21].classList.contains("fixed")
+    ) {
+      clearJ();
+      spinJ = 3;
+      drawJ();
+    }
+  }
+  // từ 3 -> 0
+  // ox(4,5)           x(4)
+  // oxo(14,15,16)  => xxx(14,15,16)
+  // xx(24,25)
+  // với position = 4 để xoay được thì các ô 4,14,16 phải trống đồng thời kiểm tra chạm mép phải, ô xa nhất bên phải là 16 tức position +12(lấy vị trí đang 6),5->7,6->8,7->9 nên xét position % col < col - 2
+  else {
+    if (
+      position % col < col - 2 &&
+      !matrixs[position].classList.contains("fixed") &&
+      !matrixs[position + 10].classList.contains("fixed") &&
+      !matrixs[position + 11].classList.contains("fixed") &&
+      !matrixs[position + 12].classList.contains("fixed")
+    ) {
+      clearJ();
+      spinJ = 0;
+      drawJ();
+    }
+  }
+}
 // hàm để restart game duyệt qua các matrix và loại bỏ các class
 function restart() {
   for (let matrix of matrixs) {
