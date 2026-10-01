@@ -454,6 +454,71 @@ function clearZ() {
     matrixs[position + 20].classList.remove("block", "block-z");
   }
 }
+// phương thức rotateZ() để xử lý xoay khối Z
+function rotateZ() {
+  // từ 0 -> 1
+  // xx(4,5)          x(5)
+  // oxx(14,15,16) =>xx(14,15)
+  // o(24)           x(24)
+  // với position = 4 để xoay được thì các ô 14,24 phải trống và đồng thời kiểm tra chạm đáy, lấy vị trí xa nhất là 24 tức position +20
+  if (spinZ === 0) {
+    if (
+      position + 20 < row * col &&
+      !matrixs[position + 1].classList.contains("fixed") &&
+      !matrixs[position + 10].classList.contains("fixed") &&
+      !matrixs[position + 11].classList.contains("fixed") &&
+      !matrixs[position + 20].classList.contains("fixed")
+    ) {
+      clearZ();
+      spinZ = 1;
+      drawZ();
+    }
+  }
+
+  // từ 1 -> 0
+  // ox(5)       xx(4,5)
+  // xxo(14,15,16) => xx(15,16)
+  // x(24)
+  // với position = 4 để xoay được thì các ô 5,16 phải trống và ô xa nhất bên phải là position +12 nên xét position % col < col - 2
+  else {
+    if (
+      position % col < col - 2 &&
+      !matrixs[position].classList.contains("fixed") &&
+      !matrixs[position + 1].classList.contains("fixed") &&
+      !matrixs[position + 11].classList.contains("fixed") &&
+      !matrixs[position + 12].classList.contains("fixed")
+    ) {
+      clearZ();
+      spinZ = 0;
+      drawZ();
+    }
+  }
+}
+// sau khi hình Z chạm đáy hoặc chạm vật cản thì khóa khối Z lại, lấy điều kiện lock như drawZ
+function lockZ() {
+  // Z hướng ban đầu
+  // xx(4,5)
+  //  xx(15,16)
+  if (spinZ === 0) {
+    matrixs[position].classList.add("fixed");
+    matrixs[position + 1].classList.add("fixed");
+    matrixs[position + 11].classList.add("fixed");
+    matrixs[position + 12].classList.add("fixed");
+  }
+
+  // Z xoay 90 độ
+  //  x(5)
+  // xx(14,15)
+  // x(24)
+  if (spinZ === 1) {
+    matrixs[position + 1].classList.add("fixed");
+    matrixs[position + 10].classList.add("fixed");
+    matrixs[position + 11].classList.add("fixed");
+    matrixs[position + 20].classList.add("fixed");
+  }
+  checkRow();
+  newShape();
+}
 // hàm để restart game duyệt qua các matrix và loại bỏ các class
 function restart() {
   for (let matrix of matrixs) {
