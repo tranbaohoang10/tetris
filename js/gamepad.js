@@ -1027,6 +1027,88 @@ function moveRightS() {
     }
   }
 }
+// phương thức moveDownZ() để kiểm tra hình Z có thể đi xuống không
+function moveDownZ() {
+  // Z hướng ban đầu
+  // position = 4
+  // xx(4,5)
+  // oxx(14,15,16)
+  //  oo(25,26)
+  // để hình Z đi xuống được thì các ô 14,25,26 phải trống tức là position +10=14,+21=25,+22=26 đồng thời kiểm tra chạm đáy, lấy vị trí xa nhất là 26 tức position +22
+  if (spinZ === 0) {
+    if (
+      position + 22 < row * col &&
+      !matrixs[position + 10].classList.contains("fixed") &&
+      !matrixs[position + 21].classList.contains("fixed") &&
+      !matrixs[position + 22].classList.contains("fixed")
+    ) {
+      clearZ();
+      position += 10;
+      drawZ();
+    } else {
+      lockZ();
+    }
+  }
+  // Z xoay 90 độ
+  // position = 4
+  //  x(5)
+  // xx(14,15)
+  // xo(24,25)
+  // o(34)
+  // để hình Z đi xuống được thì các ô 25,34 phải trống tức là position +21=25,+30=34
+  // đồng thời kiểm tra chạm đáy, lấy vị trí xa nhất là 34 tức position +30
+  else {
+    if (
+      position + 30 < row * col &&
+      !matrixs[position + 21].classList.contains("fixed") &&
+      !matrixs[position + 30].classList.contains("fixed")
+    ) {
+      clearZ();
+      position += 10;
+      drawZ();
+    } else {
+      lockZ();
+    }
+  }
+}
+// phương thức moveLeftZ() để kiểm tra hình Z có thể di chuyển sang trái không
+function moveLeftZ() {
+  // Z hướng ban đầu
+  // position = 4
+  // oxx(3,4,5)
+  //  oxx(14,15,16)
+  // để hình Z đi sang trái được thì các ô 3,14 phải trống tức là position -1=3,+10=14 đồng thời kiểm tra hình Z chưa chạm mép trái(tức position % col phải !=0)
+  if (spinZ === 0) {
+    if (
+      position % col !== 0 &&
+      !matrixs[position - 1].classList.contains("fixed") &&
+      !matrixs[position + 10].classList.contains("fixed")
+    ) {
+      clearZ();
+      position -= 1;
+      drawZ();
+    }
+  }
+
+  // Z xoay 90 độ
+  // position = 4
+  //  ox(4,5)
+  // oxx(13,14,15)
+  // ox(23,24)
+  // để hình Z đi sang trái được thì các ô 4,13,23 phải trống tức là +0=4,+9=13,+19=23 đồng thời kiểm tra hình Z chưa chạm mép trái(tức position % col phải !=0)
+  else {
+    if (
+      position % col !== 0 &&
+      !matrixs[position].classList.contains("fixed") &&
+      !matrixs[position + 9].classList.contains("fixed") &&
+      !matrixs[position + 19].classList.contains("fixed")
+    ) {
+      clearZ();
+      position -= 1;
+      drawZ();
+    }
+  }
+}
 document.addEventListener("keydown", function (event) {
   if (gameover) {
     return;
