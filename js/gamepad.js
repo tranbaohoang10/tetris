@@ -824,6 +824,82 @@ function clearL() {
     matrixs[position + 21].classList.remove("block", "block-l");
   }
 }
+// phương thức rotateL() để xử lý xoay khối L cho 4 TH
+function rotateL() {
+  // từ 0 -> 1
+  // position = 4
+  // o x(6)          x(4)
+  // xxx(14,15,16)=> x(14)
+  // oo(24,25)       xx(24,25)
+  // với position = 4 để xoay được thì các ô 4,24,25 phải trống đồng thời kiểm tra chạm đáy chưa và lấy vị trí xa nhất là 25 tức position +21
+  if (spinL === 0) {
+    if (
+      position + 21 < row * col &&
+      !matrixs[position].classList.contains("fixed") &&
+      !matrixs[position + 20].classList.contains("fixed") &&
+      !matrixs[position + 21].classList.contains("fixed")
+    ) {
+      clearL();
+      spinL = 1;
+      drawL();
+    }
+  }
+  // 90 độ
+  // từ 1 -> 2
+  // position = 4
+  // xoo(4,5,6) xxx(4,5,6)
+  // x(14)   => x(14)
+  // xx(24,25)
+  // với position = 4 để xoay được thì các ô 5,6 phải trống đồng thời kiểm tra chạm mép phải hay chưa và lấy vị trí xa nhất bên phải là 6 tức position +2,5->7,6->8,7->9 nên xét position % col < col -2
+  else if (spinL === 1) {
+    if (
+      position % col < col - 2 &&
+      !matrixs[position + 1].classList.contains("fixed") &&
+      !matrixs[position + 2].classList.contains("fixed")
+    ) {
+      clearL();
+      spinL = 2;
+      drawL();
+    }
+  }
+  // 180 độ
+  // từ 2 -> 3
+  // position = 4
+  // xxx(4,5,6)   xx(4,5)
+  // xo(14,15) =>  x(15)
+  //  o(25)        x(25)
+  // với position = 4 để xoay được thì các ô 15,25 phải trống đồng thời kiểm tra chạm đáy hay chưa và lấy vị trí xa nhất là 25 tức position +21
+  else if (spinL === 2) {
+    if (
+      position + 21 < row * col &&
+      !matrixs[position + 11].classList.contains("fixed") &&
+      !matrixs[position + 21].classList.contains("fixed")
+    ) {
+      clearL();
+      spinL = 3;
+      drawL();
+    }
+  }
+  // 270 độ
+  // từ 3 -> 0
+  // position = 4
+  // xxo(4,5,6)         x(6)
+  // oxo(14,15,16) => xxx(14,15,16)
+  //  x(25)
+  // với position = 4 để xoay được thì các ô 6,14,16 phải trống đồng thời kiểm tra chạm mép phải và lấy vị trí xa nhất bên phải là 16 tức đang là ô 6, 5->7,6->8,7->9 -> dừng nên xét position % col < col -2
+  else {
+    if (
+      position % col < col - 2 &&
+      !matrixs[position + 2].classList.contains("fixed") &&
+      !matrixs[position + 10].classList.contains("fixed") &&
+      !matrixs[position + 12].classList.contains("fixed")
+    ) {
+      clearL();
+      spinL = 0;
+      drawL();
+    }
+  }
+}
 // hàm để restart game duyệt qua các matrix và loại bỏ các class
 function restart() {
   for (let matrix of matrixs) {
