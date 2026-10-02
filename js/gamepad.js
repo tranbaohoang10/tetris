@@ -26,6 +26,7 @@ let spinT = 0;
 let spinS = 0;
 let spinZ = 0;
 let spinJ = 0;
+let spinL = 0;
 let currentShape = "";
 function drawSquare() {
   matrixs[position].classList.add("block", "block-square");
@@ -731,6 +732,97 @@ function lockJ() {
 
   checkRow();
   newShape();
+}
+// phương thức drawL() để vẽ hình L và xoay theo từng hướng
+function drawL() {
+  // L hướng ban đầu
+  // position = 4
+  //   x(6)
+  // xxx(14,15,16)
+  if (spinL === 0) {
+    matrixs[position + 2].classList.add("block", "block-l");
+    matrixs[position + 10].classList.add("block", "block-l");
+    matrixs[position + 11].classList.add("block", "block-l");
+    matrixs[position + 12].classList.add("block", "block-l");
+  }
+  // L xoay 90 độ 0->1
+  // position = 4
+  // x(4)
+  // x(14)
+  // xx(24,25)
+  if (spinL === 1) {
+    matrixs[position].classList.add("block", "block-l");
+    matrixs[position + 10].classList.add("block", "block-l");
+    matrixs[position + 20].classList.add("block", "block-l");
+    matrixs[position + 21].classList.add("block", "block-l");
+  }
+  // L xoay 180 độ 1->2
+  // position = 4
+  // xxx(4,5,6)
+  // x(14)
+  if (spinL === 2) {
+    matrixs[position].classList.add("block", "block-l");
+    matrixs[position + 1].classList.add("block", "block-l");
+    matrixs[position + 2].classList.add("block", "block-l");
+    matrixs[position + 10].classList.add("block", "block-l");
+  }
+  // L xoay 270 độ 2->3
+  // position = 4
+  // xx(4,5)
+  //  x(15)
+  //  x(25)
+  if (spinL === 3) {
+    matrixs[position].classList.add("block", "block-l");
+    matrixs[position + 1].classList.add("block", "block-l");
+    matrixs[position + 11].classList.add("block", "block-l");
+    matrixs[position + 21].classList.add("block", "block-l");
+  }
+}
+
+// phương thức clearL() để xóa các ô L và điều kiện giống drawL() theo từng hướng xoay
+function clearL() {
+  // L hướng ban đầu
+  // position = 4
+  //   x(6)
+  // xxx(14,15,16)
+  if (spinL === 0) {
+    matrixs[position + 2].classList.remove("block", "block-l");
+    matrixs[position + 10].classList.remove("block", "block-l");
+    matrixs[position + 11].classList.remove("block", "block-l");
+    matrixs[position + 12].classList.remove("block", "block-l");
+  }
+  // L xoay 90 độ từ trái sang phải 0->1
+  // position = 4
+  // x(4)
+  // x(14)
+  // xx(24,25)
+  if (spinL === 1) {
+    matrixs[position].classList.remove("block", "block-l");
+    matrixs[position + 10].classList.remove("block", "block-l");
+    matrixs[position + 20].classList.remove("block", "block-l");
+    matrixs[position + 21].classList.remove("block", "block-l");
+  }
+  // L xoay 180 độ 1->2
+  // position = 4
+  // xxx(4,5,6)
+  // x(14)
+  if (spinL === 2) {
+    matrixs[position].classList.remove("block", "block-l");
+    matrixs[position + 1].classList.remove("block", "block-l");
+    matrixs[position + 2].classList.remove("block", "block-l");
+    matrixs[position + 10].classList.remove("block", "block-l");
+  }
+  // L xoay 270 độ 2->3
+  // position = 4
+  // xx(4,5)
+  //  x(15)
+  //  x(25)
+  if (spinL === 3) {
+    matrixs[position].classList.remove("block", "block-l");
+    matrixs[position + 1].classList.remove("block", "block-l");
+    matrixs[position + 11].classList.remove("block", "block-l");
+    matrixs[position + 21].classList.remove("block", "block-l");
+  }
 }
 // hàm để restart game duyệt qua các matrix và loại bỏ các class
 function restart() {
