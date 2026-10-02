@@ -1360,6 +1360,88 @@ function moveRightZ() {
     }
   }
 }
+function moveDownJ() {
+  // J hướng ban đầu
+  // position = 4
+  // x(4)
+  // xxx(14,15,16)
+  // ooo(24,25,26)
+  // để hình Z đi xuống được thì các ô 24,25,26 phải trống tức là position +20=24,+21=25,+22=26 đồng thời kiểm tra chạm đáyvà lấy vị trí xa nhất là 26 tức position lấy +22
+  if (spinJ === 0) {
+    if (
+      position + 22 < row * col &&
+      !matrixs[position + 20].classList.contains("fixed") &&
+      !matrixs[position + 21].classList.contains("fixed") &&
+      !matrixs[position + 22].classList.contains("fixed")
+    ) {
+      clearJ();
+      position += 10;
+      drawJ();
+    } else {
+      lockJ();
+    }
+  }
+  // J xoay 90 độ 0 ->1
+  // position = 4
+  // xx(4,5)
+  // xo(14,15)
+  // x(24)
+  // o(34)
+  // để hình Z đi xuống được thì các ô 15,34 phải trống tức là position +11=15,+30=25 đồng thời kiểm tra chạm đáy và lấy vị trí xa nhất là 34 tức position là +30
+  else if (spinJ === 1) {
+    if (
+      position + 30 < row * col &&
+      !matrixs[position + 11].classList.contains("fixed") &&
+      !matrixs[position + 30].classList.contains("fixed")
+    ) {
+      clearJ();
+      position += 10;
+      drawJ();
+    } else {
+      lockJ();
+    }
+  }
+  // J xoay 180 độ 1 ->2
+  // position = 4
+  // xxx(4,5,6)
+  // oox(14,15,16)
+  //   o(26)
+  // để hình Z đi xuống được thì các ô 14,15,26 phải trống tức là position +10=14,+11=15,+22=26 đồng thời kiểm tra chạm đáy và lấy vị trí xa nhất là 26 tức position là +22
+  else if (spinJ === 2) {
+    if (
+      position + 22 < row * col &&
+      !matrixs[position + 10].classList.contains("fixed") &&
+      !matrixs[position + 11].classList.contains("fixed") &&
+      !matrixs[position + 22].classList.contains("fixed")
+    ) {
+      clearJ();
+      position += 10;
+      drawJ();
+    } else {
+      lockJ();
+    }
+  }
+  // J xoay 270 độ 2 ->3
+  // position = 4
+  //  x(5)
+  //  x(15)
+  // xx(24,25)
+  // oo(34,35)
+  // để hình Z đi xuống được thì các ô 34,35 phải trống tức là position +30=34,+31=35 đồng thời kiểm tra chạm đáy và lấy vị trí xa nhất là 35 tức position là +31
+  else {
+    if (
+      position + 31 < row * col &&
+      !matrixs[position + 30].classList.contains("fixed") &&
+      !matrixs[position + 31].classList.contains("fixed")
+    ) {
+      clearJ();
+      position += 10;
+      drawJ();
+    } else {
+      lockJ();
+    }
+  }
+}
 document.addEventListener("keydown", function (event) {
   if (gameover) {
     return;
