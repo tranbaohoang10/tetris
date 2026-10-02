@@ -1442,6 +1442,77 @@ function moveDownJ() {
     }
   }
 }
+// phương thức moveLeftJ() để kiểm tra hình J có thể di chuyển sang trái không
+function moveLeftJ() {
+  // J hướng ban đầu
+  // position = 4
+  // ox(3,4)
+  // oxxx(13,14,15,16)
+  // với 4,14,15,16 là các ô x và 3,13 là các ô xung quanh và để hình J đi sang trái được thì các ô 3,13 phải trống tức là position -1=3,+9=13 đồng thời xét mép trái coi thử có sang trái được không tức là position % col phải !=0
+  if (spinJ === 0) {
+    if (
+      position % col !== 0 &&
+      !matrixs[position - 1].classList.contains("fixed") &&
+      !matrixs[position + 9].classList.contains("fixed")
+    ) {
+      clearJ();
+      position -= 1;
+      drawJ();
+    }
+  }
+  // J xoay 90 độ 0->1
+  // position = 4
+  // oxx(3,4,5)
+  // ox(13,14)
+  // ox(23,24)
+  // với 4,5,14,24 là các ô x và 3,13,23 là các ô xung quanh và để hình J đi sang trái được thì các ô 3,13,23 phải trống tức là position -1=3,+9=13,+19=23 đồng thời xét mép trái được không tức là position % col phải !=0
+  else if (spinJ === 1) {
+    if (
+      position % col !== 0 &&
+      !matrixs[position - 1].classList.contains("fixed") &&
+      !matrixs[position + 9].classList.contains("fixed") &&
+      !matrixs[position + 19].classList.contains("fixed")
+    ) {
+      clearJ();
+      position -= 1;
+      drawJ();
+    }
+  }
+  // J xoay 180 độ 1->2
+  // position = 4
+  // oxxx(3,4,5,6)
+  //   ox(15,16)
+  // với 4,5,6,16 là các ô x và 3,15 là các ô xung quanh và để hình J đi sang trái được thì các ô 3,15 phải trống tức là position -1=3,+11=15 đồng thời xét mép trái được không tức là position % col phải !=0
+  else if (spinJ === 2) {
+    if (
+      position % col !== 0 &&
+      !matrixs[position - 1].classList.contains("fixed") &&
+      !matrixs[position + 11].classList.contains("fixed")
+    ) {
+      clearJ();
+      position -= 1;
+      drawJ();
+    }
+  }
+  // J xoay 270 độ 2->3
+  // position = 4
+  // ox(4,5)
+  // ox(14,15)
+  //oxx(23,24,25)
+  // với 5,15,24,25 là các ô x và 4,14,23 là các ô xung quan và để hình J đi sang trái được thì các ô 4,14,23 phải trống tức là position =4,+10=14,+19=23 đồng thời xét mép trái được không tức là position % col phải !=0
+  else {
+    if (
+      position % col !== 0 &&
+      !matrixs[position].classList.contains("fixed") &&
+      !matrixs[position + 10].classList.contains("fixed") &&
+      !matrixs[position + 19].classList.contains("fixed")
+    ) {
+      clearJ();
+      position -= 1;
+      drawJ();
+    }
+  }
+}
 document.addEventListener("keydown", function (event) {
   if (gameover) {
     return;
