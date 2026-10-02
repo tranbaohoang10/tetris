@@ -685,6 +685,53 @@ function rotateJ() {
     }
   }
 }
+// phương thức lock J là sau khi hình J chạm đáy hoặc chạm vật cản thì khóa khối J lại, lấy điều kiện lock giống drawJ
+function lockJ() {
+  // J hướng ban đầu
+  // x(4)
+  // xxx(14,15,16)
+  if (spinJ === 0) {
+    matrixs[position].classList.add("fixed");
+    matrixs[position + 10].classList.add("fixed");
+    matrixs[position + 11].classList.add("fixed");
+    matrixs[position + 12].classList.add("fixed");
+  }
+
+  // J xoay 90 độ
+  // xx(4,5)
+  // x(14)
+  // x(24)
+  if (spinJ === 1) {
+    matrixs[position].classList.add("fixed");
+    matrixs[position + 1].classList.add("fixed");
+    matrixs[position + 10].classList.add("fixed");
+    matrixs[position + 20].classList.add("fixed");
+  }
+
+  // J xoay 180 độ
+  // xxx(4,5,6)
+  //   x(16)
+  if (spinJ === 2) {
+    matrixs[position].classList.add("fixed");
+    matrixs[position + 1].classList.add("fixed");
+    matrixs[position + 2].classList.add("fixed");
+    matrixs[position + 12].classList.add("fixed");
+  }
+
+  // J xoay 270 độ
+  //  x(5)
+  //  x(15)
+  // xx(24,25)
+  if (spinJ === 3) {
+    matrixs[position + 1].classList.add("fixed");
+    matrixs[position + 11].classList.add("fixed");
+    matrixs[position + 20].classList.add("fixed");
+    matrixs[position + 21].classList.add("fixed");
+  }
+
+  checkRow();
+  newShape();
+}
 // hàm để restart game duyệt qua các matrix và loại bỏ các class
 function restart() {
   for (let matrix of matrixs) {
