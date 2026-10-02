@@ -742,6 +742,7 @@ function restart() {
       "block-t",
       "block-s",
       "block-z",
+      "block-j",
       "fixed",
     );
   }
@@ -1387,7 +1388,7 @@ function moveDownJ() {
   // xo(14,15)
   // x(24)
   // o(34)
-  // để hình Z đi xuống được thì các ô 15,34 phải trống tức là position +11=15,+30=25 đồng thời kiểm tra chạm đáy và lấy vị trí xa nhất là 34 tức position là +30
+  // để hình Z đi xuống được thì các ô 15,34 phải trống tức là position +11=15,+30=34 đồng thời kiểm tra chạm đáy và lấy vị trí xa nhất là 34 tức position là +30
   else if (spinJ === 1) {
     if (
       position + 30 < row * col &&
@@ -1513,10 +1514,82 @@ function moveLeftJ() {
     }
   }
 }
+// phương thức moveRightJ() để kiểm tra hình J có thể di chuyển sang phải không
+function moveRightJ() {
+  // J hướng ban đầu
+  // position = 4
+  // xo(4,5)
+  // xxxo(14,15,16,17)
+  // với 4,14,15,16 là các ô x và 5,17 là các ô xung quanh và để hình J đi sang phải được thì các ô 5,17 phải trống tức là position +1=5,+13=17 và đồng thời xét mép phải và vì hình J sau khi chạy vào if và thực hiện position +1 thì vị trí xa nhất là 17 tức là ô 7,5 thì là 8,6 thì là 9 -> dừng nên xét điều kiện col-3
+  if (spinJ === 0) {
+    if (
+      position % col < col - 3 &&
+      !matrixs[position + 1].classList.contains("fixed") &&
+      !matrixs[position + 13].classList.contains("fixed")
+    ) {
+      clearJ();
+      position += 1;
+      drawJ();
+    }
+  }
+  // J xoay 90 độ 0->1
+  // position = 4
+  // xxo(4,5,6)
+  // xo(14,15)
+  // xo(24,25)
+  // với 4,5,14,24 là các ô x và 6,15,25 là các ô xung quanh và để hình J đi sang phải được thì các ô 6,15,25 phải trống tức là position +2=6,+11=15,+21=25 và đồng thời xét mép phải và vì hình J sau khi chạy vào if và thực hiện position +1 thì vị trí xa nhất là 6 tức là ô 6,5 thì là 7,6 thì là 8,7 thì là 9 -> dừng nên xét điều kiện col-2
+  else if (spinJ === 1) {
+    if (
+      position % col < col - 2 &&
+      !matrixs[position + 2].classList.contains("fixed") &&
+      !matrixs[position + 11].classList.contains("fixed") &&
+      !matrixs[position + 21].classList.contains("fixed")
+    ) {
+      clearJ();
+      position += 1;
+      drawJ();
+    }
+  }
+  // J xoay 180 độ 1->2
+  // position = 4
+  // xxxo(4,5,6,7)
+  //   xo(16,17)
+  // với 4,5,6,16 là các ô x và 7,17 là các ô xung quanh và để hình J đi sang phải được thì các ô 7,17 phải trống tức là position +3=7,+13=17 và đồng thời xét mép phải và vì hình J sau khi chạy vào if và thực hiện position +1 thì vị trí xa nhất là 7 tức là ô 7,5 thì là 8,6 thì là 9 -> dừng nên xét điều kiện col-3
+  else if (spinJ === 2) {
+    if (
+      position % col < col - 3 &&
+      !matrixs[position + 3].classList.contains("fixed") &&
+      !matrixs[position + 13].classList.contains("fixed")
+    ) {
+      clearJ();
+      position += 1;
+      drawJ();
+    }
+  }
+  // J xoay 270 độ 2->3
+  // position = 4
+  //  xo(5,6)
+  //  xo(15,16)
+  // xxo(24,25,26)
+  // với 5,15,24,25 là các ô x và 6,16,26 là các ô xung quanh và để hình J đi sang phải được thì các ô 6,16,26 phải trống tức là position +2=6,+12=16,+22=26 và đồng thời xét mép phải và vì hình J sau khi chạy vào if và thực hiện position +1 thì vị trí xa nhất là 6 tức là ô 6,5 thì là 7,6 thì là 8,7 thì là 9 -> dừng nên xét điều kiện col-2
+  else {
+    if (
+      position % col < col - 2 &&
+      !matrixs[position + 2].classList.contains("fixed") &&
+      !matrixs[position + 12].classList.contains("fixed") &&
+      !matrixs[position + 22].classList.contains("fixed")
+    ) {
+      clearJ();
+      position += 1;
+      drawJ();
+    }
+  }
+}
 document.addEventListener("keydown", function (event) {
   if (gameover) {
     return;
   }
+  // đi xuống
   if (event.key === "ArrowDown") {
     if (currentShape === "O") {
       moveDownSquare();
@@ -1530,12 +1603,15 @@ document.addEventListener("keydown", function (event) {
     if (currentShape === "S") {
       moveDownS();
     }
-
     if (currentShape === "Z") {
       moveDownZ();
     }
+    if (currentShape === "J") {
+      moveDownJ();
+    }
   }
 
+  // đi sang trái
   if (event.key === "ArrowLeft") {
     if (currentShape === "O") {
       moveLeftSquare();
@@ -1549,12 +1625,15 @@ document.addEventListener("keydown", function (event) {
     if (currentShape === "S") {
       moveLeftS();
     }
-
     if (currentShape === "Z") {
       moveLeftZ();
     }
+    if (currentShape === "J") {
+      moveLeftJ();
+    }
   }
 
+  // đi sang phải
   if (event.key === "ArrowRight") {
     if (currentShape === "O") {
       moveRightSquare();
@@ -1568,9 +1647,11 @@ document.addEventListener("keydown", function (event) {
     if (currentShape === "S") {
       moveRightS();
     }
-
     if (currentShape === "Z") {
       moveRightZ();
+    }
+    if (currentShape === "J") {
+      moveRightJ();
     }
   }
 
@@ -1587,6 +1668,9 @@ document.addEventListener("keydown", function (event) {
     }
     if (currentShape === "Z") {
       rotateZ();
+    }
+    if (currentShape === "J") {
+      rotateJ();
     }
   }
 });
@@ -1607,6 +1691,9 @@ setInterval(function () {
     }
     if (currentShape === "Z") {
       moveDownZ();
+    }
+    if (currentShape === "J") {
+      moveDownJ();
     }
   }
 }, 800);
@@ -1644,7 +1731,7 @@ function clearRow(r) {
   }
 }
 function newShape() {
-  let random = Math.floor(Math.random() * 5);
+  let random = Math.floor(Math.random() * 6);
 
   // random ra khối O
   if (random === 0) {
@@ -1728,7 +1815,8 @@ function newShape() {
     }
   }
   // random ra khối Z
-  else {
+  // random ra khối Z
+  else if (random === 4) {
     currentShape = "Z";
     position = 4;
     spinZ = 0;
@@ -1747,6 +1835,29 @@ function newShape() {
       }
     } else {
       drawZ();
+    }
+  }
+  // random ra khối J
+  else {
+    currentShape = "J";
+    position = 4;
+    spinJ = 0;
+    // kiểm tra vị trí sinh khối J có bị chiếm chưa
+    // position = 4
+    // x(4)
+    // xxx(14,15,16)
+    if (
+      matrixs[position].classList.contains("fixed") ||
+      matrixs[position + 10].classList.contains("fixed") ||
+      matrixs[position + 11].classList.contains("fixed") ||
+      matrixs[position + 12].classList.contains("fixed")
+    ) {
+      gameover = true;
+      if (confirm("Game Over")) {
+        restart();
+      }
+    } else {
+      drawJ();
     }
   }
 }
