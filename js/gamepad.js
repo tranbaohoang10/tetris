@@ -900,6 +900,53 @@ function rotateL() {
     }
   }
 }
+// phương thức lockL() là sau khi hình L chạm đáy hoặc chạm vật cản thì khóa khối L lại và lấy điều kiện lock giống drawL()
+function lockL() {
+  // L hướng ban đầu
+  // position = 4
+  //   x(6)
+  // xxx(14,15,16)
+  if (spinL === 0) {
+    matrixs[position + 2].classList.add("fixed");
+    matrixs[position + 10].classList.add("fixed");
+    matrixs[position + 11].classList.add("fixed");
+    matrixs[position + 12].classList.add("fixed");
+  }
+  // L xoay 90 độ 0->1
+  // position = 4
+  // x(4)
+  // x(14)
+  // xx(24,25)
+  if (spinL === 1) {
+    matrixs[position].classList.add("fixed");
+    matrixs[position + 10].classList.add("fixed");
+    matrixs[position + 20].classList.add("fixed");
+    matrixs[position + 21].classList.add("fixed");
+  }
+  // L xoay 180 độ 1->2
+  // position = 4
+  // xxx(4,5,6)
+  // x(14)
+  if (spinL === 2) {
+    matrixs[position].classList.add("fixed");
+    matrixs[position + 1].classList.add("fixed");
+    matrixs[position + 2].classList.add("fixed");
+    matrixs[position + 10].classList.add("fixed");
+  }
+  // L xoay 270 độ 2->3
+  // position = 4
+  // xx(4,5)
+  //  x(15)
+  //  x(25)
+  if (spinL === 3) {
+    matrixs[position].classList.add("fixed");
+    matrixs[position + 1].classList.add("fixed");
+    matrixs[position + 11].classList.add("fixed");
+    matrixs[position + 21].classList.add("fixed");
+  }
+  checkRow();
+  newShape();
+}
 // hàm để restart game duyệt qua các matrix và loại bỏ các class
 function restart() {
   for (let matrix of matrixs) {
