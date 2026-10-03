@@ -1800,6 +1800,90 @@ function moveRightJ() {
     }
   }
 }
+// phương thức moveDownL() để kiểm tra hình L có thể đi xuống không
+function moveDownL() {
+  // L hướng ban đầu
+  // position = 4
+  //   x(6)
+  // xxx(14,15,16)
+  // ooo(24,25,26)
+  // để hình L đi xuống được thì các ô 24,25,26 phải trống tức là position +20=24,+21=25,+22=26 và đồng thời kiểm tra chạm đáy và lấy vị trí xa nhất là 26 tức position +22
+  if (spinL === 0) {
+    if (
+      position + 22 < row * col &&
+      !matrixs[position + 20].classList.contains("fixed") &&
+      !matrixs[position + 21].classList.contains("fixed") &&
+      !matrixs[position + 22].classList.contains("fixed")
+    ) {
+      clearL();
+      position += 10;
+      drawL();
+    } else {
+      lockL();
+    }
+  }
+  // L xoay 90 độ 0->1
+  // position = 4
+  // x(4)
+  // x(14)
+  // xx(24,25)
+  // oo(34,35)
+  // để hình L đi xuống được thì các ô 34,35 phải trống tức là position +30=34,+31=35 và đồng thời kiểm tra chạm đáy và lấy vị trí xa nhất là 35 tức position +31
+  else if (spinL === 1) {
+    if (
+      position + 31 < row * col &&
+      !matrixs[position + 30].classList.contains("fixed") &&
+      !matrixs[position + 31].classList.contains("fixed")
+    ) {
+      clearL();
+      position += 10;
+      drawL();
+    } else {
+      lockL();
+    }
+  }
+  // L xoay 180 độ 1->2
+  // position = 4
+  // xxx(4,5,6)
+  // xoo(14,15,16)
+  // o(24)
+  // để hình L đi xuống được thì các ô 15,16,24 phải trống tức là position +11=15,+12=16,+20=24 và đồng thời kiểm tra chạm đáy và lấy vị trí xa nhất là 24 tức position +20
+  else if (spinL === 2) {
+    if (
+      position + 20 < row * col &&
+      !matrixs[position + 11].classList.contains("fixed") &&
+      !matrixs[position + 12].classList.contains("fixed") &&
+      !matrixs[position + 20].classList.contains("fixed")
+    ) {
+      clearL();
+      position += 10;
+      drawL();
+    } else {
+      lockL();
+    }
+  }
+  // L xoay 270 độ 2->3
+  // position = 4
+  // xx(4,5)
+  // ox(14,15)
+  //  x(25)
+  //  o(35)
+  // để hình L đi xuống được thì các ô 14,35 phải trống tức là position +10=14,+31=35
+  // đồng thời kiểm tra chạm đáy và lấy vị trí xa nhất là 35 tức position +31
+  else {
+    if (
+      position + 31 < row * col &&
+      !matrixs[position + 10].classList.contains("fixed") &&
+      !matrixs[position + 31].classList.contains("fixed")
+    ) {
+      clearL();
+      position += 10;
+      drawL();
+    } else {
+      lockL();
+    }
+  }
+}
 document.addEventListener("keydown", function (event) {
   if (gameover) {
     return;
