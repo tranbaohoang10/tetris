@@ -8,6 +8,11 @@ for (let i = 0; i < row * col; i++) {
 }
 // đếm dòng
 const lineElement = document.querySelector(".line");
+// hiển thị level hiện tại
+const levelElement = document.querySelector(".level");
+// nút back và next để chuyển level
+const backButton = document.querySelector(".back");
+const nextButton = document.querySelector(".next");
 // xu ly mau hinh vuong(test hình trước)
 const matrixs = document.querySelectorAll(".matrix");
 // matrixs[4].classList.add("block", "block-square");
@@ -21,6 +26,8 @@ let position = 4;
 let gameover = false;
 // đồ án sử dụng line ko sử dụng score, line = 10 thì qua level khác
 let line = 0;
+// level
+let level = 0;
 let spinI = 0;
 let spinT = 0;
 let spinS = 0;
@@ -974,6 +981,26 @@ function restart() {
   lineElement.textContent = "Line: 0 / 10";
   newShape();
 }
+// xử lý nút next để qua level tiếp theo
+nextButton.addEventListener("click", function () {
+  // level cuối là level 7 nên nếu đang nhỏ hơn 7 thì mới cho qua tiếp
+  if (level < 7) {
+    level++;
+    levelElement.textContent = "Level " + level;
+    // qua level mới thì chơi lại board từ đầu
+    restart();
+  }
+});
+// xử lý nút back để trở về level trước
+backButton.addEventListener("click", function () {
+  // level đầu tiên là level 0 nên nếu đang lớn hơn 0 thì mới cho quay lại
+  if (level > 0) {
+    level--;
+    levelElement.textContent = "Level " + level;
+    // trở về level trước thì chơi lại board từ đầu
+    restart();
+  }
+});
 newShape();
 // Phương thức này để để kiểm tra xem hình vuông nó có thể đi xuống ko nếu có thì làm bình thường còn nếu ko có thì gọi phương thức lockSquare() để khóa các ô vuông hiện tại lại và tạo một hình vuông mới ở vị trí ban đầu.
 function moveDownSquare() {
