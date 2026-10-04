@@ -1884,6 +1884,152 @@ function moveDownL() {
     }
   }
 }
+// phương thức moveLeftL() để kiểm tra hình L có thể di chuyển sang trái không
+function moveLeftL() {
+  // L hướng ban đầu
+  // position = 4
+  //   ox(5,6)
+  // oxxx(13,14,15,16)
+  // với 6,14,15,16 là các ô x và 5,13 là các ô xung quanh bên trái và để hình L đi sang trái được thì các ô 5,13 phải trống tức là position +1=5,+9=13 và đồng thời xét mép trái coi thử có sang trái được không tức là position % col phải !=0
+  if (spinL === 0) {
+    if (
+      position % col !== 0 &&
+      !matrixs[position + 1].classList.contains("fixed") &&
+      !matrixs[position + 9].classList.contains("fixed")
+    ) {
+      clearL();
+      position -= 1;
+      drawL();
+    }
+  }
+  // L xoay 90 độ 0->1
+  // position = 4
+  // ox(3,4)
+  // ox(13,14)
+  // oxx(23,24,25)
+  // với 4,14,24,25 là các ô x và 3,13,23 là các ô xung quanh và để hình L đi sang trái được thì các ô 3,13,23 phải trống tức là position -1=3,+9=13,+19=23 và đồng thời xét mép trái coi thử có sang trái được không tức là position % col phải !=0
+  else if (spinL === 1) {
+    if (
+      position % col !== 0 &&
+      !matrixs[position - 1].classList.contains("fixed") &&
+      !matrixs[position + 9].classList.contains("fixed") &&
+      !matrixs[position + 19].classList.contains("fixed")
+    ) {
+      clearL();
+      position -= 1;
+      drawL();
+    }
+  }
+  // L xoay 180 độ 1->2
+  // position = 4
+  // oxxx(3,4,5,6)
+  // ox(13,14)
+  // với 4,5,6,14 là các ô x và 3,13 là các ô xung quanh và để hình L đi sang trái được thì các ô 3,13 phải trống tức là position -1=3,+9=13 và đồng thời xét mép trái coi thử có sang trái được không tức là position % col phải !=0
+  else if (spinL === 2) {
+    if (
+      position % col !== 0 &&
+      !matrixs[position - 1].classList.contains("fixed") &&
+      !matrixs[position + 9].classList.contains("fixed")
+    ) {
+      clearL();
+      position -= 1;
+      drawL();
+    }
+  }
+  // L xoay 270 độ 2->3
+  // position = 4
+  // oxx(3,4,5)
+  //  ox(14,15)
+  //  ox(24,25)
+  // với 4,5,15,25 là các ô x và 3,14,24 là các ô xung quanh và để hình L đi sang trái được thì các ô 3,14,24 phải trống tức là position -1=3,+10=14,+20=24 và đồng thời xét mép trái coi thử có sang trái được không tức là position % col phải !=0
+  else {
+    if (
+      position % col !== 0 &&
+      !matrixs[position - 1].classList.contains("fixed") &&
+      !matrixs[position + 10].classList.contains("fixed") &&
+      !matrixs[position + 20].classList.contains("fixed")
+    ) {
+      clearL();
+      position -= 1;
+      drawL();
+    }
+  }
+}
+
+// phương thức moveRightL() để kiểm tra hình L có thể di chuyển sang phải không
+function moveRightL() {
+  // L hướng ban đầu
+  // position = 4
+  //   xo(6,7)
+  // xxxo(14,15,16,17)
+  // với 6,14,15,16 là các ô x và 7,17 là các ô xung quanh và để hình L đi sang phải được thì các ô 7,17 phải trống tức là position +3=7,+13=17 và đồng thời xét mép phải và vì sau khi vào if sẽ position +1 thì ô xa nhất là 7,5 thì là 8,6 thì là 9 -> dừng nên xét col-3(7)
+  if (spinL === 0) {
+    if (
+      position % col < col - 3 &&
+      !matrixs[position + 3].classList.contains("fixed") &&
+      !matrixs[position + 13].classList.contains("fixed")
+    ) {
+      clearL();
+      position += 1;
+      drawL();
+    }
+  }
+
+  // L xoay 90 độ 0->1
+  // position = 4
+  // xo(4,5)
+  // xo(14,15)
+  // xxo(24,25,26)
+  // với 4,14,24,25 là các ô x và 5,15,26 là các ô xung quanh và để hình L đi sang phải được thì các ô 5,15,26 phải trống tức là position +1=5,+11=15,+22=26 và đồng thời xét mép phải, vì position = 4 -> ô xa nhất là 26 tức là ô 6(khi chạy vào if và thực hiện position +1), 5 thì là 7,6 thì là 8,7 thì là 9 -> dừng nên xét col-2(8)
+  else if (spinL === 1) {
+    if (
+      position % col < col - 2 &&
+      !matrixs[position + 1].classList.contains("fixed") &&
+      !matrixs[position + 11].classList.contains("fixed") &&
+      !matrixs[position + 22].classList.contains("fixed")
+    ) {
+      clearL();
+      position += 1;
+      drawL();
+    }
+  }
+
+  // L xoay 180 độ 1->2
+  // position = 4
+  // xxxo(4,5,6,7)
+  // xo(14,15)
+  // với 4,5,6,14 là các ô x và 7,15 là các ô xung quanh và để hình L đi sang phải được thì các ô 7,15 phải trống tức là position +3=7,+11=15 và đồng thời xét mép phải vì position = 4 -> ô xa nhất là 7 tức là ô 7(khi chạy vào if và thực hiện position +1), 5 thì là 8,6 thì là 9 -> dừng nên xét col-3(7)
+  else if (spinL === 2) {
+    if (
+      position % col < col - 3 &&
+      !matrixs[position + 3].classList.contains("fixed") &&
+      !matrixs[position + 11].classList.contains("fixed")
+    ) {
+      clearL();
+      position += 1;
+      drawL();
+    }
+  }
+
+  // L xoay 270 độ 2->3
+  // position = 4
+  // xxo(4,5,6)
+  //  xo(15,16)
+  //  xo(25,26)
+  // với 4,5,15,25 là các ô x và 6,16,26 là các ô xung quanh và để hình L đi sang phải được thì các ô 6,16,26 phải trống tức là position +2=6,+12=16,+22=26 và đồng thời xét mép phải vì position = 4 -> ô xa nhất là 6 tức là ô 6(khi chạy vào if và thực hiện position +1), 5 thì là 7,6 thì là 8,7 thì là 9 -> dừng nên xét col-2(8)
+  else {
+    if (
+      position % col < col - 2 &&
+      !matrixs[position + 2].classList.contains("fixed") &&
+      !matrixs[position + 12].classList.contains("fixed") &&
+      !matrixs[position + 22].classList.contains("fixed")
+    ) {
+      clearL();
+      position += 1;
+      drawL();
+    }
+  }
+}
 document.addEventListener("keydown", function (event) {
   if (gameover) {
     return;
