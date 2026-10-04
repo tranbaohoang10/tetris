@@ -958,6 +958,7 @@ function restart() {
       "block-s",
       "block-z",
       "block-j",
+      "block-l",
       "fixed",
     );
   }
@@ -966,6 +967,9 @@ function restart() {
   spinI = 0;
   spinT = 0;
   spinS = 0;
+  spinZ = 0;
+  spinJ = 0;
+  spinL = 0;
   currentShape = "";
   lineElement.textContent = "Line: 0 / 10";
   newShape();
@@ -2054,6 +2058,9 @@ document.addEventListener("keydown", function (event) {
     if (currentShape === "J") {
       moveDownJ();
     }
+    if (currentShape === "L") {
+      moveDownL();
+    }
   }
 
   // đi sang trái
@@ -2075,6 +2082,9 @@ document.addEventListener("keydown", function (event) {
     }
     if (currentShape === "J") {
       moveLeftJ();
+    }
+    if (currentShape === "L") {
+      moveLeftL();
     }
   }
 
@@ -2098,6 +2108,9 @@ document.addEventListener("keydown", function (event) {
     if (currentShape === "J") {
       moveRightJ();
     }
+    if (currentShape === "L") {
+      moveRightL();
+    }
   }
 
   // xoay
@@ -2116,6 +2129,9 @@ document.addEventListener("keydown", function (event) {
     }
     if (currentShape === "J") {
       rotateJ();
+    }
+    if (currentShape === "L") {
+      rotateL();
     }
   }
 });
@@ -2139,6 +2155,9 @@ setInterval(function () {
     }
     if (currentShape === "J") {
       moveDownJ();
+    }
+    if (currentShape === "L") {
+      moveDownL();
     }
   }
 }, 800);
@@ -2176,7 +2195,7 @@ function clearRow(r) {
   }
 }
 function newShape() {
-  let random = Math.floor(Math.random() * 6);
+  let random = Math.floor(Math.random() * 7);
 
   // random ra khối O
   if (random === 0) {
@@ -2260,7 +2279,6 @@ function newShape() {
     }
   }
   // random ra khối Z
-  // random ra khối Z
   else if (random === 4) {
     currentShape = "Z";
     position = 4;
@@ -2283,7 +2301,7 @@ function newShape() {
     }
   }
   // random ra khối J
-  else {
+  else if (random === 5) {
     currentShape = "J";
     position = 4;
     spinJ = 0;
@@ -2303,6 +2321,27 @@ function newShape() {
       }
     } else {
       drawJ();
+    }
+  } else {
+    currentShape = "L";
+    position = 4;
+    spinL = 0;
+    // kiểm tra vị trí sinh khối L có bị chiếm chưa
+    // position = 4
+    //   x(6)
+    // xxx(14,15,16)
+    if (
+      matrixs[position + 2].classList.contains("fixed") ||
+      matrixs[position + 10].classList.contains("fixed") ||
+      matrixs[position + 11].classList.contains("fixed") ||
+      matrixs[position + 12].classList.contains("fixed")
+    ) {
+      gameover = true;
+      if (confirm("Game Over")) {
+        restart();
+      }
+    } else {
+      drawL();
     }
   }
 }
