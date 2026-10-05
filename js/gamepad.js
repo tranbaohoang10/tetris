@@ -966,6 +966,7 @@ function restart() {
       "block-z",
       "block-j",
       "block-l",
+      "block-garbage",
       "fixed",
     );
   }
@@ -979,6 +980,9 @@ function restart() {
   spinL = 0;
   currentShape = "";
   lineElement.textContent = "Line: 0 / 10";
+  if (level === 1) {
+    createTrash();
+  }
   newShape();
 }
 // xử lý nút next để qua level tiếp theo
@@ -2369,6 +2373,29 @@ function newShape() {
       }
     } else {
       drawL();
+    }
+  }
+}
+// phương thức tạo rác cho level 1(ở đây chỉ tạo 5 dòng cuối là rác)
+function createTrash() {
+  let empty1 = 0;
+  let empty2 = 0;
+  let index = 0;
+  // chạy vào vòng lặp 5 dòng cuối(15->19) để random ra 2 ô trống trong 1 dòng rác và các ô còn lại sẽ là rác
+  for (let r = 15; r < row; r++) {
+    // 2 cái này random để xuất hiện 2 ô trống trong 1 dòng rác(từ 0->9)
+    empty1 = Math.floor(Math.random() * 10);
+    empty2 = Math.floor(Math.random() * 10);
+    // while để xử lý trường hợp 2 ô trống random ra cùng nhau(ở đây có thể random ra giống nhiều lần nên dùng while để random lại)
+    while (empty1 === empty2) {
+      empty2 = Math.floor(Math.random() * 10);
+    }
+    // phần này là duyệt các cột của hàng 17->19 và vào vòng if để kiểm tra nếu cột đó không phải là 2 ô trống thì sẽ thêm class block, block-garbage, fixed vào các ô đó
+    for (let c = 0; c < col; c++) {
+      index = r * col + c;
+      if (c !== empty1 && c !== empty2) {
+        matrixs[index].classList.add("block", "block-garbage", "fixed");
+      }
     }
   }
 }
