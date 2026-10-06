@@ -13,6 +13,8 @@ const levelElement = document.querySelector(".level");
 // nút back và next để chuyển level
 const backButton = document.querySelector(".back");
 const nextButton = document.querySelector(".next");
+// ngoi sao hi vong
+const hopeStarButton = document.querySelector(".hope-star");
 // xu ly mau hinh vuong(test hình trước)
 const matrixs = document.querySelectorAll(".matrix");
 // matrixs[4].classList.add("block", "block-square");
@@ -28,6 +30,8 @@ let gameover = false;
 let line = 0;
 // level
 let level = 0;
+// ngoi sao hi vong
+let hopeStar = false;
 let spinI = 0;
 let spinT = 0;
 let spinS = 0;
@@ -1004,6 +1008,11 @@ backButton.addEventListener("click", function () {
     // trở về level trước thì chơi lại board từ đầu
     restart();
   }
+});
+// dùng ngôi sao hi vọng
+hopeStarButton.addEventListener("click", function () {
+  hopeStar = true;
+  hopeStarButton.textContent = "⭐ Đã sử dụng";
 });
 newShape();
 // Phương thức này để để kiểm tra xem hình vuông nó có thể đi xuống ko nếu có thì làm bình thường còn nếu ko có thì gọi phương thức lockSquare() để khóa các ô vuông hiện tại lại và tạo một hình vuông mới ở vị trí ban đầu.
@@ -2205,7 +2214,14 @@ function checkRow() {
     }
     if (countrow === col) {
       clearRow(r);
-      line++;
+
+      // nếu đã sử dụng ngôi sao hi vọng thì 1 hàng được tính 2 line
+      if (hopeStar === true) {
+        line += 2;
+      } else {
+        line++;
+      }
+
       lineElement.textContent = "Line: " + line + " / 10";
     }
   }
@@ -2390,7 +2406,7 @@ function createTrash() {
     while (empty1 === empty2) {
       empty2 = Math.floor(Math.random() * 10);
     }
-    // phần này là duyệt các cột của hàng 17->19 và vào vòng if để kiểm tra nếu cột đó không phải là 2 ô trống thì sẽ thêm class block, block-garbage, fixed vào các ô đó
+    // phần này là duyệt các cột của hàng 15->19 và vào vòng if để kiểm tra nếu cột đó không phải là 2 ô trống thì sẽ thêm class block, block-garbage, fixed vào các ô đó
     for (let c = 0; c < col; c++) {
       index = r * col + c;
       if (c !== empty1 && c !== empty2) {
