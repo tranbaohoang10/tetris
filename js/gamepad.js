@@ -1036,7 +1036,7 @@ backButton.addEventListener("click", function () {
 // dùng ngôi sao hi vọng
 hopeStarButton.addEventListener("click", function () {
   hopeStar = true;
-  hopeStarButton.textContent = "⭐ Đã sử dụng";
+  hopeStarButton.textContent = "Đã sử dụng";
 });
 newShape();
 // Phương thức này để để kiểm tra xem hình vuông nó có thể đi xuống ko nếu có thì làm bình thường còn nếu ko có thì gọi phương thức lockSquare() để khóa các ô vuông hiện tại lại và tạo một hình vuông mới ở vị trí ban đầu.

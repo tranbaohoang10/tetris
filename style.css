@@ -68,3 +68,28 @@ body {
 .block-l {
   background-color: orange;
 }
+.hope-star {
+  background: none;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.hope-star i {
+  font-size: 22px;
+}
+
+/* hover thì ngôi sao chuyển sang màu vàng và được tô đầy */
+.hope-star:hover i {
+  color: #ffc107;
+  font-weight: 900;
+}
+.math-question {
+  display: none;
+  margin-bottom: 15px;
+}
+
+.math-answer {
+  width: 100px;
+}
