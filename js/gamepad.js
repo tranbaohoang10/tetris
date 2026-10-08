@@ -58,7 +58,10 @@ function lockSquare() {
   matrixs[position + 1].classList.add("fixed");
   matrixs[position + 10].classList.add("fixed");
   matrixs[position + 11].classList.add("fixed");
-  checkRow();
+  // nếu đủ 10 line và đã qua level thì dừng hàm tại đây
+  if (checkRow() === true) {
+    return;
+  }
   // random
   newShape();
 }
@@ -134,7 +137,10 @@ function lockI() {
     matrixs[position + 20].classList.add("fixed");
     matrixs[position + 30].classList.add("fixed");
   }
-  checkRow();
+  // nếu đủ 10 line và đã qua level thì dừng hàm tại đây
+  if (checkRow() === true) {
+    return;
+  }
   // random
   newShape();
 }
@@ -300,7 +306,10 @@ function lockT() {
     matrixs[position + 11].classList.add("fixed");
     matrixs[position + 20].classList.add("fixed");
   }
-  checkRow();
+  // nếu đủ 10 line và đã qua level thì dừng hàm tại đây
+  if (checkRow() === true) {
+    return;
+  }
   newShape();
 }
 // phương thức drawS() để vẽ hình S và xoay theo từng hướng
@@ -414,7 +423,10 @@ function lockS() {
     matrixs[position + 21].classList.add("fixed");
   }
 
-  checkRow();
+  // nếu đủ 10 line và đã qua level thì dừng hàm tại đây
+  if (checkRow() === true) {
+    return;
+  }
   newShape();
 }
 // phương thức drawZ() để vẽ hình Z và xoay theo từng hướng
@@ -529,7 +541,10 @@ function lockZ() {
     matrixs[position + 11].classList.add("fixed");
     matrixs[position + 20].classList.add("fixed");
   }
-  checkRow();
+  // nếu đủ 10 line và đã qua level thì dừng hàm tại đây
+  if (checkRow() === true) {
+    return;
+  }
   newShape();
 }
 // phương thức drawJ() để vẽ hình J và xoay theo từng hướng
@@ -741,7 +756,10 @@ function lockJ() {
     matrixs[position + 21].classList.add("fixed");
   }
 
-  checkRow();
+  // nếu đủ 10 line và đã qua level thì dừng hàm tại đây
+  if (checkRow() === true) {
+    return;
+  }
   newShape();
 }
 // phương thức drawL() để vẽ hình L và xoay theo từng hướng
@@ -955,7 +973,10 @@ function lockL() {
     matrixs[position + 11].classList.add("fixed");
     matrixs[position + 21].classList.add("fixed");
   }
-  checkRow();
+  // nếu đủ 10 line và đã qua level thì dừng hàm tại đây
+  if (checkRow() === true) {
+    return;
+  }
   newShape();
 }
 // hàm để restart game duyệt qua các matrix và loại bỏ các class
@@ -976,6 +997,9 @@ function restart() {
   }
   gameover = false;
   line = 0;
+  // restart hoặc đổi level thì sẽ đặt lại ngôi sao hi vọng
+  hopeStar = false;
+  hopeStarButton.textContent = "⭐ Ngôi sao hy vọng";
   spinI = 0;
   spinT = 0;
   spinS = 0;
@@ -2215,7 +2239,7 @@ function checkRow() {
     if (countrow === col) {
       clearRow(r);
 
-      // nếu đã sử dụng ngôi sao hi vọng thì 1 hàng được tính 2 line
+      // nếu sử dụng ngôi sao hi vọng thì 1 hàng được tính 2 line
       if (hopeStar === true) {
         line += 2;
       } else {
@@ -2223,8 +2247,18 @@ function checkRow() {
       }
 
       lineElement.textContent = "Line: " + line + " / 10";
+      //nếu đủ 10 line thì qua level tiếp theo và level em chỉ làm 8 lv nên sẽ dừng ở level 7(0-7)
+      if (line >= 10 && level < 7) {
+        level++;
+        levelElement.textContent = "Level " + level;
+        restart();
+        // true nghĩa là vừa chuyển level
+        return true;
+      }
     }
   }
+  // false nghĩa là vẫn đang chơi level hiện tại
+  return false;
 }
 // hàm này là để xoá row đầy và kéo các tất cả row phía trên xuống 1 hàng và row đầu tiên(1) sẽ là row trống
 function clearRow(r) {
