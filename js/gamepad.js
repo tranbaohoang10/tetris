@@ -2121,6 +2121,19 @@ document.addEventListener("keydown", function (event) {
   if (gameover) {
     return;
   }
+  // nếu đang có câu hỏi toán thì ko cho sử dụng 4 phím mũi tên vì lúc này người chơi phải nhập đáp án trong 5s chứ ko được di chuyển khối
+  if (mathShowing === true) {
+    // chặn cả 4 phím để khi đang nhập số thì phím lên/xuống ko làm thay đổi giá trị input
+    if (
+      event.key === "ArrowDown" ||
+      event.key === "ArrowLeft" ||
+      event.key === "ArrowRight" ||
+      event.key === "ArrowUp"
+    ) {
+      event.preventDefault();
+    }
+    return;
+  }
   // đi xuống
   if (event.key === "ArrowDown") {
     if (currentShape === "O") {
@@ -2219,7 +2232,8 @@ document.addEventListener("keydown", function (event) {
   }
 });
 setInterval(function () {
-  if (!gameover) {
+  // viết lại phần điều kiện này cho level 2. Nếu mathShowing = true thì khối sẽ đứng yên để người chơi giải toán
+  if (!gameover && mathShowing === false) {
     if (currentShape === "O") {
       moveDownSquare();
     }
