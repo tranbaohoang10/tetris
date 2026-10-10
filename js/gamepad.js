@@ -2244,6 +2244,33 @@ setInterval(function () {
     }
   }
 }, 800);
+// setInterval này là chạy mỗi 1s để kiểm tra thời gian ở level 2 cứ đủ 15s thì tạo câu hỏi toán và khi câu hỏi xuất hiện thì đếm ngược 5s
+setInterval(function () {
+  // chỉ thực hiện khi đang ở level 2 và game chưa kết thúc còn ở các level khác sẽ ko xuất hiện câu hỏi toán
+  if (level === 2 && !gameover) {
+    // TH đang có câu hỏi toán thì ko tăng mathSeconds nữa mà chuyển sang đếm ngược 5s
+    if (mathShowing === true) {
+      answerSeconds--;
+      // cập nhật số giây còn lại lên màn hình
+      mathTime.textContent = "Còn " + answerSeconds + " giây";
+      // nếu answerSeconds <= 0 tức là đã hết 5s trả lời
+      if (answerSeconds <= 0) {
+        mathShowing = false;
+        mathQuestion.style.display = "none";
+        mathSeconds = 0;
+      }
+    }
+    // TH chưa có câu hỏi thì cứ mỗi 1s sẽ tăng mathSeconds lên 1
+    else {
+      mathSeconds++;
+      // nếu mathSeconds >=15 tức đã đủ 15s thì cho xuất hiện câu hỏi và câu hỏi khi xuất hiện rồi thì sẽ đặt lại thời gian chờ về 0
+      if (mathSeconds >= 15) {
+        mathSeconds = 0;
+        createMath();
+      }
+    }
+  }
+}, 1000);
 // Kiểm tra row đầy chưa ví dụ:
 // r= 19 nghĩa là đang(190,191,192,193,194,195,196,197,198,199), nếu các ô này có class fixed nghĩa là row này đầy thì từng ô tăng tương ứng với countrow và nếu countrow = col thì xoá row đó và tăng line lên 1(đọc dòng 20), các row khác tương tự
 function checkRow() {
