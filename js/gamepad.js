@@ -42,8 +42,8 @@ let trashLine = 0;
 let hopeStar = false;
 // thời gian chờ xuất hiện câu hỏi
 let mathSeconds = 0;
-// thời gian trả lời câu hỏi
-let answerSeconds = 7;
+// thời gian trả lời câu hỏi là 5s, nếu hết 5s mà chưa trả lời thì câu hỏi sẽ kết thúc
+let answerSeconds = 5;
 // kiểm tra câu hỏi có đang xuất hiện không
 let mathShowing = false;
 // kết quả đúng của câu hỏi
@@ -2497,4 +2497,55 @@ function createTrash() {
       }
     }
   }
+}
+// phương thức tạo câu hỏi toán ngẫu nhiên cho level 2, gồm 4 phép tính +,-,*,/
+// ở đây random 2 số a,b từ 1->10 và random thêm 1 số từ 0->3 để chọn phép tính
+function createMath() {
+  let a = Math.floor(Math.random() * 10) + 1;
+  let b = Math.floor(Math.random() * 10) + 1;
+  // random từ 0->3 tức là có 4 TH để tạo phép tính
+  // 0 là cộng, 1 là trừ, 2 là nhân, 3 là chia
+  let random = Math.floor(Math.random() * 4);
+  // TH random = 0 thì tạo phép cộng
+  if (random === 0) {
+    mathResult = a + b;
+    mathText.textContent = a + " + " + b + " = ?";
+  }
+  // TH random = 1 thì tạo phép trừ
+  else if (random === 1) {
+    // nếu a nhỏ hơn b thì đổi vị trí a,b để kết quả ko bị âm
+    // ví dụ a=3,b=8 thì đổi lại a=8,b=3 để phép tính là 8-3 chứ ko phải 3-8
+    if (a < b) {
+      let temp = a;
+      a = b;
+      b = temp;
+    }
+    mathResult = a - b;
+    mathText.textContent = a + " - " + b + " = ?";
+  }
+  // TH random = 2 thì tạo phép nhân
+  else if (random === 2) {
+    mathResult = a * b;
+    mathText.textContent = a + " * " + b + " = ?";
+  }
+  // TH còn lại tức random = 3 thì tạo phép chia
+  else {
+    // ở đây phải xử lý riêng phép chia vì nếu random a,b bình thường thì kết quả có thể là số thập phân
+    // nên random kết quả trước từ 1->10 rồi lấy b nhân ngược lại với kết quả đó để tạo a
+    // ví dụ b=3,mathResult=4 thì a=3*4=12 nên câu hỏi sẽ là 12/3=?
+    mathResult = Math.floor(Math.random() * 10) + 1;
+    a = b * mathResult;
+    mathText.textContent = a + " / " + b + " = ?";
+  }
+  // khi câu hỏi được tạo thì đổi mathShowing thành true để biết đang giải toán
+  // đồng thời đặt thời gian trả lời lại là 5s cho mỗi câu hỏi mới
+  mathShowing = true;
+  answerSeconds = 5;
+  // xóa đáp án của câu trước vì nếu ko xóa thì input vẫn còn số người chơi đã nhập
+  mathAnswer.value = "";
+  // hiển thị thời gian ban đầu và cho câu hỏi xuất hiện bên trong board
+  mathTime.textContent = "Còn 5 giây";
+  mathQuestion.style.display = "block";
+  // khi câu hỏi xuất hiện thì tự đưa con trỏ vào input để người chơi nhập đáp án
+  mathAnswer.focus();
 }
