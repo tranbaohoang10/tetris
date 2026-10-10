@@ -68,6 +68,9 @@ body {
 .block-l {
   background-color: orange;
 }
+.block-garbage {
+  background-color: gray;
+}
 .hope-star {
   background: none;
   border: 1px solid #333;

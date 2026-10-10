@@ -15,6 +15,12 @@ const backButton = document.querySelector(".back");
 const nextButton = document.querySelector(".next");
 // ngoi sao hi vong
 const hopeStarButton = document.querySelector(".hope-star");
+// các thành phần câu hỏi toán trong level 2
+const mathQuestion = document.querySelector(".math-question");
+const mathText = document.querySelector(".math-text");
+const mathTime = document.querySelector(".math-time");
+const mathAnswer = document.querySelector(".math-answer");
+const mathSubmit = document.querySelector(".math-submit");
 // xu ly mau hinh vuong(test hình trước)
 const matrixs = document.querySelectorAll(".matrix");
 // matrixs[4].classList.add("block", "block-square");
@@ -30,8 +36,18 @@ let gameover = false;
 let line = 0;
 // level
 let level = 0;
+// đếm số hàng rác đã xóa trong level 1
+let trashLine = 0;
 // ngoi sao hi vong
 let hopeStar = false;
+// thời gian chờ xuất hiện câu hỏi
+let mathSeconds = 0;
+// thời gian trả lời câu hỏi
+let answerSeconds = 7;
+// kiểm tra câu hỏi có đang xuất hiện không
+let mathShowing = false;
+// kết quả đúng của câu hỏi
+let mathResult = 0;
 let spinI = 0;
 let spinT = 0;
 let spinS = 0;
@@ -997,9 +1013,11 @@ function restart() {
   }
   gameover = false;
   line = 0;
+  trashLine = 0;
   // restart hoặc đổi level thì sẽ đặt lại ngôi sao hi vọng
   hopeStar = false;
-  hopeStarButton.textContent = "⭐ Ngôi sao hy vọng";
+  hopeStarButton.querySelector("span").textContent = "Ngôi sao hy vọng";
+  hopeStarButton.querySelector("i").className = "fa-regular fa-star";
   spinI = 0;
   spinT = 0;
   spinS = 0;
@@ -1036,7 +1054,8 @@ backButton.addEventListener("click", function () {
 // dùng ngôi sao hi vọng
 hopeStarButton.addEventListener("click", function () {
   hopeStar = true;
-  hopeStarButton.textContent = "Đã sử dụng";
+  hopeStarButton.querySelector("span").textContent = "Đã sử dụng";
+  hopeStarButton.querySelector("i").className = "fa-solid fa-star";
 });
 newShape();
 // Phương thức này để để kiểm tra xem hình vuông nó có thể đi xuống ko nếu có thì làm bình thường còn nếu ko có thì gọi phương thức lockSquare() để khóa các ô vuông hiện tại lại và tạo một hình vuông mới ở vị trí ban đầu.
@@ -2231,33 +2250,59 @@ function checkRow() {
   for (let r = 0; r < row; r++) {
     let start = r * col;
     let countrow = 0;
+    let isTrash = false;
+
+    // kiểm tra hàng hiện tại có đầy 10 ô không
+    // đồng thời kiểm tra hàng đó có chứa rác không
     for (let i = start; i < start + col; i++) {
       if (matrixs[i].classList.contains("fixed")) {
         countrow++;
       }
+
+      if (matrixs[i].classList.contains("block-garbage")) {
+        isTrash = true;
+      }
     }
+
+    // nếu hàng đầy thì xóa hàng đó
     if (countrow === col) {
       clearRow(r);
 
-      // nếu sử dụng ngôi sao hi vọng thì 1 hàng được tính 2 line
-      if (hopeStar === true) {
-        line += 2;
+      // xử lý riêng level 1
+      if (level === 1) {
+        // nếu hàng vừa xóa có rác thì tăng số hàng rác đã dọn
+        if (isTrash === true) {
+          trashLine++;
+          line++;
+        }
+
+        // chỉ tính các hàng thường sau khi đã dọn đủ 3 hàng rác(tại vì level 1 chỉ có 3 hàng rác nên khi dọn đủ 3 hàng rác thì các hàng tiếp theo sẽ tính line như bình thường chứ ko được tính line rác x2)
+        else if (trashLine >= 3) {
+          if (hopeStar === true) {
+            line += 2;
+          } else {
+            line++;
+          }
+        }
       } else {
-        line++;
+        // các level khác vẫn cộng line như bình thường
+        if (hopeStar === true) {
+          line += 2;
+        } else {
+          line++;
+        }
       }
 
       lineElement.textContent = "Line: " + line + " / 10";
-      //nếu đủ 10 line thì qua level tiếp theo và level em chỉ làm 8 lv nên sẽ dừng ở level 7(0-7)
+      // đủ 10 line thì chuyển sang level tiếp theo
       if (line >= 10 && level < 7) {
         level++;
         levelElement.textContent = "Level " + level;
         restart();
-        // true nghĩa là vừa chuyển level
         return true;
       }
     }
   }
-  // false nghĩa là vẫn đang chơi level hiện tại
   return false;
 }
 // hàm này là để xoá row đầy và kéo các tất cả row phía trên xuống 1 hàng và row đầu tiên(1) sẽ là row trống
@@ -2277,6 +2322,10 @@ function clearRow(r) {
 }
 function newShape() {
   let random = Math.floor(Math.random() * 7);
+  // level 1 nếu vẫn còn rác thì chỉ random khối O và I(:(()
+  if (level === 1 && document.querySelector(".block-garbage") !== null) {
+    random = Math.floor(Math.random() * 2);
+  }
 
   // random ra khối O
   if (random === 0) {
@@ -2426,13 +2475,13 @@ function newShape() {
     }
   }
 }
-// phương thức tạo rác cho level 1(ở đây chỉ tạo 5 dòng cuối là rác)
+// phương thức tạo rác cho level 1(ở đây chỉ tạo 3 dòng cuối là rác)
 function createTrash() {
   let empty1 = 0;
   let empty2 = 0;
   let index = 0;
-  // chạy vào vòng lặp 5 dòng cuối(15->19) để random ra 2 ô trống trong 1 dòng rác và các ô còn lại sẽ là rác
-  for (let r = 15; r < row; r++) {
+  // chạy vào vòng lặp 3 dòng cuối(17->19) để random ra 2 ô trống trong 1 dòng rác và các ô còn lại sẽ là rác
+  for (let r = 17; r < row; r++) {
     // 2 cái này random để xuất hiện 2 ô trống trong 1 dòng rác(từ 0->9)
     empty1 = Math.floor(Math.random() * 10);
     empty2 = Math.floor(Math.random() * 10);
@@ -2440,7 +2489,7 @@ function createTrash() {
     while (empty1 === empty2) {
       empty2 = Math.floor(Math.random() * 10);
     }
-    // phần này là duyệt các cột của hàng 15->19 và vào vòng if để kiểm tra nếu cột đó không phải là 2 ô trống thì sẽ thêm class block, block-garbage, fixed vào các ô đó
+    // phần này là duyệt các cột của hàng 17->19 và vào vòng if để kiểm tra nếu cột đó không phải là 2 ô trống thì sẽ thêm class block, block-garbage, fixed vào các ô đó
     for (let c = 0; c < col; c++) {
       index = r * col + c;
       if (c !== empty1 && c !== empty2) {
