@@ -2590,3 +2590,28 @@ function createMath() {
   // khi câu hỏi xuất hiện thì tự đưa con trỏ vào input để người chơi nhập đáp án
   mathAnswer.focus();
 }
+// phương thức kiểm tra đáp án khi người chơi bấm nút trả lời trong level 2 thì ở đây sẽ lấy số người chơi nhập vào input rồi so sánh với mathResult đã được tính trong createMath(),ví dụ câu hỏi là 8+5=? thì mathResult=13, nếu người chơi nhập 13 thì đúng còn nhập số khác thì sai
+function checkMathAnswer() {
+  // nếu mathShowing = false tức là hiện tại ko có câu hỏi toán nên ko cần kiểm tra đáp án vì có thể câu hỏi đã hết 5s hoặc người chơi đã trả lời trước đó rồi
+  if (mathShowing === false) {
+    return;
+  }
+  // ép kiểu từ string -> number để so sánh vì mathResult là number còn mathAnswer.value là string nên phải ép kiểu để so sánh
+  let answer = Number(mathAnswer.value);
+  // TH người chơi trả lời đúng
+  if (answer === mathResult) {
+    // ẩn câu hỏi và cho game tiếp tục chạy
+    mathShowing = false;
+    mathQuestion.style.display = "none";
+    // đặt lại thời gian chờ câu hỏi tiếp theo là 0 để đếm lại 15s
+    mathSeconds = 0;
+  }
+  // TH người chơi trả lời sai
+  else {
+    // ẩn câu hỏi và cho game tiếp tục chạy
+    mathShowing = false;
+    mathQuestion.style.display = "none";
+    // đặt lại thời gian chờ câu hỏi tiếp theo
+    mathSeconds = 0;
+  }
+}
