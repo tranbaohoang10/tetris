@@ -1014,6 +1014,12 @@ function restart() {
   gameover = false;
   line = 0;
   trashLine = 0;
+  mathSeconds = 0;
+  answerSeconds = 5;
+  mathShowing = false;
+  mathResult = 0;
+  mathAnswer.value = "";
+  mathQuestion.style.display = "none";
   // restart hoặc đổi level thì sẽ đặt lại ngôi sao hi vọng
   hopeStar = false;
   hopeStarButton.querySelector("span").textContent = "Ngôi sao hy vọng";
@@ -2615,3 +2621,13 @@ function checkMathAnswer() {
     mathSeconds = 0;
   }
 }
+// xử lý khi người chơi bấm nút Trả lời
+mathSubmit.addEventListener("click", function () {
+  checkMathAnswer();
+});
+// Này là xử lý thêm nút enter có thể nhấn Enter để trả lời nhanh
+mathAnswer.addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    checkMathAnswer();
+  }
+});
