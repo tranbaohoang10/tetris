@@ -115,21 +115,27 @@ body {
   display: block;
   margin-bottom: 15px;
 }
-.level2-notice {
+.level2 {
   max-width: 450px;
   padding: 25px;
   border: 2px solid #333;
   border-radius: 10px;
   text-align: center;
 }
-.level2-notice h2 {
+.level2 h2 {
   color: red;
 }
-.level2-notice p {
+.level2 p {
   line-height: 1.5;
 }
 
-.level2-notice button {
+.level2 button {
   padding: 10px 25px;
+  cursor: pointer;
+}
+.use-bomb {
+  display: block;
+  margin-bottom: 15px;
+  padding: 8px 15px;
   cursor: pointer;
 }

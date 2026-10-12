@@ -23,7 +23,9 @@ const mathAnswer = document.querySelector(".math-answer");
 const mathSubmit = document.querySelector(".math-submit");
 // phần hiển thị số Bom hiện tại
 const bombElement = document.querySelector(".bomb-count");
-const level2Notice = document.querySelector(".level2-notice");
+const level2Notice = document.querySelector(".level2");
+// nút sử dụng Bom
+const useBombButton = document.querySelector(".use-bomb");
 // xu ly mau hinh vuong(test hình trước)
 const matrixs = document.querySelectorAll(".matrix");
 // matrixs[4].classList.add("block", "block-square");
@@ -55,6 +57,8 @@ let mathResult = 0;
 let bomb = 0;
 // lưu số Bom khi bắt đầu chơi một màn để nếu Game Over thì khôi phục lại
 let startBomb = 0;
+// lấy bom
+let selectBom = false;
 let spinI = 0;
 let spinT = 0;
 let spinS = 0;
@@ -2705,5 +2709,34 @@ function raiseFloor() {
     if (matrixs[i].classList.contains("fixed")) {
       matrixs[i].className = "matrix";
     }
+  }
+}
+// phương thức pump() để xử lý phá các khối fixed trong phạm vi 3x3 khi người chơi chọn 1 ô bất kỳ trên board. Ví dụ người chơi chọn ô 184 thì hàng của nó là Math.floor(184/10)=18 và cột là 184%10=4, lúc này vùng phá sẽ gồm 3 hàng 17,18,19 và 3 cột 3,4,5 tương ứng với các ô 173,174,175,183,184,185,193,194,195. Chỉ phá những ô có class fixed còn khối đang rơi thì giữ nguyên. Nếu phá được ít nhất 1 ô fixed thì trừ 1 Bom và cho game tiếp tục chạy
+function pump(centerIndex) {
+  // vd 184 -> hàng 18, cột 4
+  let centerRow = Math.floor(centerIndex / col);
+  let centerCol = centerIndex % col;
+  let removed = 0;
+  // duyệt các hàng và cột xung quanh ô được chọn từ -1 đến +1 để tạo vùng 3x3, đồng thời kiểm tra các vị trí ko được vượt khỏi board vì nếu chọn ô ở mép thì có thể bị âm hoặc vượt quá 19 hàng và 9 cột
+  for (let r = centerRow - 1; r <= centerRow + 1; r++) {
+    // vd 17,18,19
+    for (let c = centerCol - 1; c <= centerCol + 1; c++) {
+      //vd 3,4,5
+      if (r >= 0 && r < row && c >= 0 && c < col) {
+        let index = r * col + c; // vd 173,174,175,183,184,185,193,194,195
+        if (matrixs[index].classList.contains("fixed")) {
+          matrixs[index].className = "matrix";
+          removed++;
+        }
+      }
+    }
+  }
+  // nếu removed > 0 tức là đã phá được ít nhất 1 ô fixed thì mới trừ bom còn nếu vùng được chọn ko có fixed thì ko trừ Bom và tiếp tục cho người chơi chọn lại
+  if (removed > 0) {
+    bomb--;
+    bombElement.textContent = "Bom: " + bomb;
+    bombSelecting = false;
+    useBombButton.textContent = "Dùng Bom";
+    board.classList.remove("bomb-selecting");
   }
 }
