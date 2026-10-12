@@ -2631,3 +2631,47 @@ mathAnswer.addEventListener("keydown", function (event) {
     checkMathAnswer();
   }
 });
+// phương thức này để nâng các khối đã nằm lên 1 hàng khi trả lời sai hoặc hết 5s ở level 2 chỉ nâng các ô có class fixed nếu chưa có fixed thì ko có khối nào được nâng
+function raiseFloor() {
+  // kiểm tra hàng đầu tiên từ 0->9 xem có khối fixed nào chưa vì nếu có thì khi nâng lên sẽ vượt khỏi board ví dụ ô 4 đã fixed thì khi nâng lên sẽ thành 4-10=-6 nên xử lý gameover
+  for (let i = 0; i < col; i++) {
+    if (matrixs[i].classList.contains("fixed")) {
+      gameover = true;
+      if (confirm("Game Over")) {
+        restart();
+      }
+      return;
+    }
+  }
+  // kiểm tra các khối fixed khi nâng lên có đụng khối đang rơi hay ko vì chỉ nâng khối đã nằm còn khối đang rơi thì giữ nguyên ví dụ ô 174 đang có khối rơi còn ô 184 đã fixed, khi nâng thì ô 184 sẽ lên ô 174 nên 2 khối bị trùng vị trí -> gameover
+  for (let i = 0; i < (row - 1) * col; i++) {
+    if (
+      matrixs[i + col].classList.contains("fixed") &&
+      matrixs[i].classList.contains("block") &&
+      !matrixs[i].classList.contains("fixed")
+    ) {
+      gameover = true;
+      if (confirm("Game Over")) {
+        restart();
+      }
+      return;
+    }
+  }
+  // bắt đầu nâng các khối fixed lên 1 hàng, vì board có 10 cột nên lấy class của ô bên dưới i+10 đưa lên ô hiện tại i ví dụ ô 190 sẽ lên ô 180, ô 180 sẽ lên ô 170, tương tự các ô khác duyệt từ 0->189 vì hàng cuối 190->199 sẽ xử lý riêng
+  for (let i = 0; i < (row - 1) * col; i++) {
+    // nếu ô bên dưới có fixed thì đưa khối đó lên ô hiện tại ví dụ i=180 thì i+col=190 nên lấy class của ô 190 gán cho ô 180
+    if (matrixs[i + col].classList.contains("fixed")) {
+      matrixs[i].className = matrixs[i + col].className;
+    }
+    // nếu ô hiện tại có fixed nhưng ô bên dưới trống thì phải xóa khối cũ vì nó đã được đẩy lên hàng trên ví dụ ô 180 đã được đẩy lên 170 nhưng ô 190 trống thì ô 180 cũng phải trống
+    else if (matrixs[i].classList.contains("fixed")) {
+      matrixs[i].className = "matrix";
+    }
+  }
+  // cuối cùng xóa các khối fixed ở hàng cuối từ 190->199 vì chúng đã được đẩy lên hàng 18 nếu ô ở hàng cuối là khối đang rơi thì ko xóa vì nó chưa có class fixed
+  for (let i = (row - 1) * col; i < row * col; i++) {
+    if (matrixs[i].classList.contains("fixed")) {
+      matrixs[i].className = "matrix";
+    }
+  }
+}
