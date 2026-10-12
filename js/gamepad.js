@@ -21,6 +21,9 @@ const mathText = document.querySelector(".math-text");
 const mathTime = document.querySelector(".math-time");
 const mathAnswer = document.querySelector(".math-answer");
 const mathSubmit = document.querySelector(".math-submit");
+// phần hiển thị số Bom hiện tại
+const bombElement = document.querySelector(".bomb-count");
+const level2Notice = document.querySelector(".level2-notice");
 // xu ly mau hinh vuong(test hình trước)
 const matrixs = document.querySelectorAll(".matrix");
 // matrixs[4].classList.add("block", "block-square");
@@ -48,6 +51,10 @@ let answerSeconds = 5;
 let mathShowing = false;
 // kết quả đúng của câu hỏi
 let mathResult = 0;
+// số Bom hiện tại của người chơi
+let bomb = 0;
+// lưu số Bom khi bắt đầu chơi một màn để nếu Game Over thì khôi phục lại
+let startBomb = 0;
 let spinI = 0;
 let spinT = 0;
 let spinS = 0;
@@ -996,7 +1003,22 @@ function lockL() {
   newShape();
 }
 // hàm để restart game duyệt qua các matrix và loại bỏ các class
-function restart() {
+function restart(retry) {
+  // TH chơi lại do Game Over thì khôi phục số Bom lúc bắt đầu màn ví dụ bắt đầu Lv4 có 7 Bom, dùng còn 4 Bom rồi Game Over thì khi chơi lại Lv4 sẽ có 7 Bom
+  if (retry === true) {
+    bomb = startBomb;
+  }
+  // TH chuyển màn bình thường bằng Back, Next hoặc đủ 10 Line
+  else {
+    // nếu chuyển vào Lv2 thì đặt lại Bom về 0 để farm lại từ đầu
+    if (level === 2) {
+      bomb = 0;
+    }
+    // lưu số Bom hiện tại khi bắt đầu màn mới ví dụ đang có 7 Bom ở Lv4 rồi Back về Lv3 thì vẫn lưu 7 Bom
+    startBomb = bomb;
+  }
+  // cập nhật số Bom lên giao diện
+  bombElement.textContent = "Bom: " + bomb;
   for (let matrix of matrixs) {
     matrix.classList.remove(
       "block",
@@ -1036,6 +1058,9 @@ function restart() {
     createTrash();
   }
   newShape();
+  if (level === 2 && retry !== true) {
+    level2Notice.showModal();
+  }
 }
 // xử lý nút next để qua level tiếp theo
 nextButton.addEventListener("click", function () {
@@ -2124,7 +2149,7 @@ function moveRightL() {
   }
 }
 document.addEventListener("keydown", function (event) {
-  if (gameover) {
+  if (gameover || level2Notice.open) {
     return;
   }
   // nếu đang có câu hỏi toán thì ko cho sử dụng 4 phím mũi tên vì lúc này người chơi phải nhập đáp án trong 5s chứ ko được di chuyển khối
@@ -2239,7 +2264,7 @@ document.addEventListener("keydown", function (event) {
 });
 setInterval(function () {
   // viết lại phần điều kiện này cho level 2. Nếu mathShowing = true thì khối sẽ đứng yên để người chơi giải toán
-  if (!gameover && mathShowing === false) {
+  if (!gameover && mathShowing === false && !level2Notice.open) {
     if (currentShape === "O") {
       moveDownSquare();
     }
@@ -2267,7 +2292,7 @@ setInterval(function () {
 // setInterval này là chạy mỗi 1s để kiểm tra thời gian ở level 2 cứ đủ 15s thì tạo câu hỏi toán và khi câu hỏi xuất hiện thì đếm ngược 5s
 setInterval(function () {
   // chỉ thực hiện khi đang ở level 2 và game chưa kết thúc còn ở các level khác sẽ ko xuất hiện câu hỏi toán
-  if (level === 2 && !gameover) {
+  if (level === 2 && !gameover && !level2Notice.open) {
     // TH đang có câu hỏi toán thì ko tăng mathSeconds nữa mà chuyển sang đếm ngược 5s
     if (mathShowing === true) {
       answerSeconds--;
@@ -2278,6 +2303,8 @@ setInterval(function () {
         mathShowing = false;
         mathQuestion.style.display = "none";
         mathSeconds = 0;
+        // gọi hàm raiseFloor() để nâng các khối đã nằm lên 1 hàng
+        raiseFloor();
       }
     }
     // TH chưa có câu hỏi thì cứ mỗi 1s sẽ tăng mathSeconds lên 1
@@ -2387,7 +2414,7 @@ function newShape() {
     ) {
       gameover = true;
       if (confirm("Game Over")) {
-        restart();
+        restart(true);
       }
     } else {
       drawSquare();
@@ -2407,7 +2434,7 @@ function newShape() {
     ) {
       gameover = true;
       if (confirm("Game Over")) {
-        restart();
+        restart(true);
       }
     } else {
       drawI();
@@ -2429,7 +2456,7 @@ function newShape() {
       gameover = true;
 
       if (confirm("Game Over")) {
-        restart();
+        restart(true);
       }
     } else {
       drawT();
@@ -2449,7 +2476,7 @@ function newShape() {
     ) {
       gameover = true;
       if (confirm("Game Over")) {
-        restart();
+        restart(true);
       }
     } else {
       drawS();
@@ -2471,7 +2498,7 @@ function newShape() {
       gameover = true;
 
       if (confirm("Game Over")) {
-        restart();
+        restart(true);
       }
     } else {
       drawZ();
@@ -2494,7 +2521,7 @@ function newShape() {
     ) {
       gameover = true;
       if (confirm("Game Over")) {
-        restart();
+        restart(true);
       }
     } else {
       drawJ();
@@ -2515,7 +2542,7 @@ function newShape() {
     ) {
       gameover = true;
       if (confirm("Game Over")) {
-        restart();
+        restart(true);
       }
     } else {
       drawL();
@@ -2609,8 +2636,11 @@ function checkMathAnswer() {
     // ẩn câu hỏi và cho game tiếp tục chạy
     mathShowing = false;
     mathQuestion.style.display = "none";
-    // đặt lại thời gian chờ câu hỏi tiếp theo là 0 để đếm lại 15s
     mathSeconds = 0;
+    // mỗi lần trả lời đúng thì nhận 1 Bom
+    bomb++;
+    // cập nhật số Bom lên giao diện
+    bombElement.textContent = "Bom: " + bomb;
   }
   // TH người chơi trả lời sai
   else {
@@ -2619,6 +2649,8 @@ function checkMathAnswer() {
     mathQuestion.style.display = "none";
     // đặt lại thời gian chờ câu hỏi tiếp theo
     mathSeconds = 0;
+    // nếu người chơi trả lời sai thì gọi hàm raiseFloor() để nâng các khối đã nằm lên 1 hàng, nếu chưa có khối fixed thì ko nâng
+    raiseFloor();
   }
 }
 // xử lý khi người chơi bấm nút Trả lời
@@ -2638,7 +2670,7 @@ function raiseFloor() {
     if (matrixs[i].classList.contains("fixed")) {
       gameover = true;
       if (confirm("Game Over")) {
-        restart();
+        restart(true);
       }
       return;
     }
@@ -2652,7 +2684,7 @@ function raiseFloor() {
     ) {
       gameover = true;
       if (confirm("Game Over")) {
-        restart();
+        restart(true);
       }
       return;
     }
