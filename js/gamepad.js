@@ -2735,8 +2735,31 @@ function pump(centerIndex) {
   if (removed > 0) {
     bomb--;
     bombElement.textContent = "Bom: " + bomb;
-    bombSelecting = false;
+    selectBom = false;
     useBombButton.textContent = "Dùng Bom";
-    board.classList.remove("bomb-selecting");
   }
 }
+// xử lý nút sử dụng Bom, nếu chưa chọn thì cho người chơi chọn vị trí phá còn nếu đang chọn thì bấm lần nữa để hủy Bom và chỉ được sử dụng khi còn Bom và chỉ được sử dụng nếu từ level 2 trở lên
+useBombButton.addEventListener("click", function () {
+  if (selectBom === true) {
+    selectBom = false;
+    useBombButton.textContent = "Dùng Bom";
+    return;
+  }
+  if (level < 2 || bomb <= 0 || gameover || mathShowing || level2Notice.open) {
+    return;
+  }
+  selectBom = true;
+  useBombButton.textContent = "Hủy Bom";
+});
+// xử lý khi người chơi click vào board để chọn vị trí phá Bom ở đây sẽ duyệt qua 200 ô matrix để xác định người chơi chọn ô nào. Ví dụ người chơi click vào ô 184 thì i=184 và matrixs[184] sẽ bằng event.target, lúc này gọi pump(184) để phá vùng 3x3 xung quanh ô đó. Chỉ xử lý khi selectBom = true, còn nếu chưa chọn Bom thì click vào board sẽ ko có tác dụng
+board.addEventListener("click", function (event) {
+  if (selectBom === true) {
+    for (let i = 0; i < matrixs.length; i++) {
+      if (matrixs[i] === event.target) {
+        pump(i);
+        break;
+      }
+    }
+  }
+});

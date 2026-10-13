@@ -83,8 +83,6 @@ body {
 .hope-star i {
   font-size: 22px;
 }
-
-/* hover thì ngôi sao chuyển sang màu vàng và được tô đầy */
 .hope-star:hover i {
   color: #ffc107;
   font-weight: 900;
@@ -94,7 +92,7 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); /*cho nằm giữa */
   z-index: 10;
   width: 230px;
   box-sizing: border-box;
