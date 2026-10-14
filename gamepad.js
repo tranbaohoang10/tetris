@@ -2815,24 +2815,24 @@ function moveWorm() {
     let wormCol = worm.position % col;
     // lưu những hướng mà con sâu có thể di chuyển để không đi xuyên qua mép board
     let paths = [];
-    // nếu sâu chưa ở hàng đầu tiên(0) thì cho phép đi lên vd vị trí 184 -> 174, còn đang ở hàng 0 thì ko cho đi lên
+    // nếu sâu chưa ở hàng đầu tiên(0) thì cho phép đi lên vd vị trí 184 -> 174 còn đang ở hàng 0 thì ko cho đi lên
     if (wormRow > 0) {
-      directions.push("up");
+      paths.push("up");
     }
-    // nếu sâu chưa ở hàng cuối cùng(19) thì cho phép đi xuống vd vị trí 184 -> 194 nghĩa là di chuyển xuống 1 hàng
+    // nếu sâu chưa ở hàng cuối cùng(19) thì cho phép đi xuống vd vị trí 184 -> 194 còn đang ở hàng 19 thì ko cho đi xuống
     if (wormRow < row - 1) {
-      directions.push("down");
+      paths.push("down");
     }
-    // nếu sâu chưa ở cột đầu tiên(0) thì cho phép đi sang trái vd vị trí 184 -> 183 nghĩa là di chuyển sang trái 1 ô
+    // nếu sâu chưa ở cột đầu tiên(0) thì cho phép đi sang trái vd vị trí 184 -> 183 còn ở cột 0 rồi thì ko cho đi sang trái
     if (wormCol > 0) {
-      directions.push("left");
+      paths.push("left");
     }
-    // nếu sâu chưa ở cột cuối cùng(9) thì cho phép đi sang phải vd vị trí 184 -> 185 nghĩa là di chuyển sang phải 1 ô
+    // nếu sâu chưa ở cột cuối cùng(9) thì cho phép đi sang phải vd vị trí 184 -> 185 còn ở cột 9 rồi thì ko cho đi sang phải
     if (wormCol < col - 1) {
-      directions.push("right");
+      paths.push("right");
     }
     // random 1 hướng trong 4 hướng
-    let random = Math.floor(Math.random() * 4);
+    let random = Math.floor(Math.random() * paths.length);
     let path = paths[random];
     // TH đi lên -> - 10
     if (path === "up") {
@@ -2850,8 +2850,22 @@ function moveWorm() {
     else if (path === "right") {
       worm.position += 1;
     }
-    // sau khi thay đổi vị trí trong mảng thì phải cập nhật lại tọa độ ảnh để con sâu thực sự di chuyển trên board
+    // sau khi thay đổi vị trí trong mảng thì phải cập nhật lại tọa độ ảnh
     worm.image.style.left = (worm.position % col) * 30 + "px";
     worm.image.style.top = Math.floor(worm.position / col) * 30 + "px";
   }
 }
+// phương thức setInterval này chạy mỗi 3 giây để kiểm tra có cho con sâu di chuyển hay ko
+setInterval(function () {
+  // chỉ cho sâu di chuyển ở lv3 hoặc lv4, gameover = false tức game vẫn đang chạy , selectBom = false tức người chơi ko đang chọn ô để phá Bom,level2Notice.open = false tức hộp thoại ko xuất hiện và worms.length > 0 tức trên board đang có ít nhất 1 con sâu
+  if (
+    (level === 3 || level === 4) &&
+    gameover === false &&
+    selectBom === false &&
+    !level2Notice.open &&
+    worms.length > 0
+  ) {
+    // gọi phương thức cho từng con sâu di chuyển ngẫu nhiên 1 ô
+    moveWorm();
+  }
+}, 3000);
