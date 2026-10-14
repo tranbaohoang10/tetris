@@ -1066,6 +1066,7 @@ function restart(retry) {
   for (let worm of worms) {
     worm.image.remove();
   }
+  worms = [];
   if (level === 1) {
     createTrash();
   }
@@ -2783,7 +2784,15 @@ board.addEventListener("click", function (event) {
 function createWorm() {
   // tạo ảnh con sâu
   let wormImage = document.createElement("img");
-  wormImage.src = "./images/worm.png";
+  // mảng 3 con sâu(đỏ,vàng,hồng)
+  let wormImages = [
+    "./images/worm-red.png",
+    "./images/worm-yellow.png",
+    "./images/worm-pink.png",
+  ];
+  // random từ 0->2, 0 là sâu đỏ, 1 là sâu vàng, 2 là sâu hồng
+  let randomWorm = Math.floor(Math.random() * 3);
+  wormImage.src = wormImages[randomWorm];
   wormImage.classList.add("worm");
   // random vị trí từ 0->199 vì board có 200 ô
   let wormPosition = Math.floor(Math.random() * row * col);
@@ -2796,4 +2805,53 @@ function createWorm() {
     image: wormImage,
     position: wormPosition,
   });
+}
+// phương thức để di chuyển các con sâu trên board, mỗi lần gọi thì mỗi con sâu sẽ đi ngẫu nhiên đúng 1 ô theo 4 hướng lên, xuống, trái, phải
+function moveWorm() {
+  // duyệt từng con sâu trong mảng worms, lv3 thì có 1 con,lv4 sẽ có nhiều con
+  for (let worm of worms) {
+    // xác định hàng và cột hiện tại của con sâu vd sâu ở vị trí 184 thì hàng = Math.floor(184/10) = 18, cột = 184%10 = 4
+    let wormRow = Math.floor(worm.position / col);
+    let wormCol = worm.position % col;
+    // lưu những hướng mà con sâu có thể di chuyển để không đi xuyên qua mép board
+    let paths = [];
+    // nếu sâu chưa ở hàng đầu tiên(0) thì cho phép đi lên vd vị trí 184 -> 174, còn đang ở hàng 0 thì ko cho đi lên
+    if (wormRow > 0) {
+      directions.push("up");
+    }
+    // nếu sâu chưa ở hàng cuối cùng(19) thì cho phép đi xuống vd vị trí 184 -> 194 nghĩa là di chuyển xuống 1 hàng
+    if (wormRow < row - 1) {
+      directions.push("down");
+    }
+    // nếu sâu chưa ở cột đầu tiên(0) thì cho phép đi sang trái vd vị trí 184 -> 183 nghĩa là di chuyển sang trái 1 ô
+    if (wormCol > 0) {
+      directions.push("left");
+    }
+    // nếu sâu chưa ở cột cuối cùng(9) thì cho phép đi sang phải vd vị trí 184 -> 185 nghĩa là di chuyển sang phải 1 ô
+    if (wormCol < col - 1) {
+      directions.push("right");
+    }
+    // random 1 hướng trong 4 hướng
+    let random = Math.floor(Math.random() * 4);
+    let path = paths[random];
+    // TH đi lên -> - 10
+    if (path === "up") {
+      worm.position -= 10;
+    }
+    // TH đi xuống -> + 10
+    else if (path === "down") {
+      worm.position += 10;
+    }
+    // TH đi sang trái -> - 1
+    else if (path === "left") {
+      worm.position -= 1;
+    }
+    // TH đi sang phải -> + 1
+    else if (path === "right") {
+      worm.position += 1;
+    }
+    // sau khi thay đổi vị trí trong mảng thì phải cập nhật lại tọa độ ảnh để con sâu thực sự di chuyển trên board
+    worm.image.style.left = (worm.position % col) * 30 + "px";
+    worm.image.style.top = Math.floor(worm.position / col) * 30 + "px";
+  }
 }
