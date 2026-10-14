@@ -137,3 +137,11 @@ body {
   padding: 8px 15px;
   cursor: pointer;
 }
+.worm {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  z-index: 2;
+  pointer-events: none;
+}

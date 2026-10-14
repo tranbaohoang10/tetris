@@ -59,6 +59,8 @@ let bomb = 0;
 let startBomb = 0;
 // lấy bom
 let selectBom = false;
+// danh sách con sâu cho lv3 và lv4
+let worms = [];
 let spinI = 0;
 let spinT = 0;
 let spinS = 0;
@@ -1023,6 +1025,9 @@ function restart(retry) {
   }
   // cập nhật số Bom lên giao diện
   bombElement.textContent = "Bom: " + bomb;
+  // khi restart hoặc chuyển level thì hủy trạng thái chọn Bom để tránh TH sang màn mới nhưng game vẫn bị đứng yên do selectBom vẫn bằng true
+  selectBom = false;
+  useBombButton.textContent = "Dùng Bom";
   for (let matrix of matrixs) {
     matrix.classList.remove(
       "block",
@@ -1058,12 +1063,18 @@ function restart(retry) {
   spinL = 0;
   currentShape = "";
   lineElement.textContent = "Line: 0 / 10";
+  for (let worm of worms) {
+    worm.image.remove();
+  }
   if (level === 1) {
     createTrash();
   }
   newShape();
   if (level === 2 && retry !== true) {
     level2Notice.showModal();
+  }
+  if (level === 3) {
+    createWorm();
   }
 }
 // xử lý nút next để qua level tiếp theo
@@ -2153,7 +2164,7 @@ function moveRightL() {
   }
 }
 document.addEventListener("keydown", function (event) {
-  if (gameover || level2Notice.open) {
+  if (gameover || level2Notice.open || selectBom === true) {
     return;
   }
   // nếu đang có câu hỏi toán thì ko cho sử dụng 4 phím mũi tên vì lúc này người chơi phải nhập đáp án trong 5s chứ ko được di chuyển khối
@@ -2268,7 +2279,12 @@ document.addEventListener("keydown", function (event) {
 });
 setInterval(function () {
   // viết lại phần điều kiện này cho level 2. Nếu mathShowing = true thì khối sẽ đứng yên để người chơi giải toán
-  if (!gameover && mathShowing === false && !level2Notice.open) {
+  if (
+    !gameover &&
+    mathShowing === false &&
+    !level2Notice.open &&
+    selectBom === false
+  ) {
     if (currentShape === "O") {
       moveDownSquare();
     }
@@ -2296,7 +2312,7 @@ setInterval(function () {
 // setInterval này là chạy mỗi 1s để kiểm tra thời gian ở level 2 cứ đủ 15s thì tạo câu hỏi toán và khi câu hỏi xuất hiện thì đếm ngược 5s
 setInterval(function () {
   // chỉ thực hiện khi đang ở level 2 và game chưa kết thúc còn ở các level khác sẽ ko xuất hiện câu hỏi toán
-  if (level === 2 && !gameover && !level2Notice.open) {
+  if (level === 2 && !gameover && !level2Notice.open && selectBom === false) {
     // TH đang có câu hỏi toán thì ko tăng mathSeconds nữa mà chuyển sang đếm ngược 5s
     if (mathShowing === true) {
       answerSeconds--;
@@ -2763,3 +2779,21 @@ board.addEventListener("click", function (event) {
     }
   }
 });
+// phương thức tạo con sâu ở 1 vị trí ngẫu nhiên trên board
+function createWorm() {
+  // tạo ảnh con sâu
+  let wormImage = document.createElement("img");
+  wormImage.src = "./images/worm.png";
+  wormImage.classList.add("worm");
+  // random vị trí từ 0->199 vì board có 200 ô
+  let wormPosition = Math.floor(Math.random() * row * col);
+  // mỗi ô có kích thước 30px vd vị trí 184 thì cột = 184%10 = 4, hàng = Math.floor(184/10) = 18 ,left = 4*30 = 120px tính từ trái sang thì kết thúc ô số 4 bắt đầu ô số 5, top = 18*30 = 540px kết thục ô số 18 bắt đầu ô số 19
+  wormImage.style.left = (wormPosition % col) * 30 + "px";
+  wormImage.style.top = Math.floor(wormPosition / col) * 30 + "px";
+  board.appendChild(wormImage);
+  // lưu lại ảnh và vị trí của con sâu(lv4 sử dụng tiếp tại vì lv4 sẽ có nhiều sâu xuất hiện chung)
+  worms.push({
+    image: wormImage,
+    position: wormPosition,
+  });
+}
