@@ -10,6 +10,8 @@ for (let i = 0; i < row * col; i++) {
 const lineElement = document.querySelector(".line");
 // hiển thị level hiện tại
 const levelElement = document.querySelector(".level");
+// lấy ptu hiển thị trạng thái đèn xanh/đèn đỏ ở lv4
+const lightElement = document.querySelector(".traffic-light");
 // nút back và next để chuyển level
 const backButton = document.querySelector(".back");
 const nextButton = document.querySelector(".next");
@@ -41,6 +43,10 @@ let gameover = false;
 let line = 0;
 // level
 let level = 0;
+//mặc định là đèn xanh
+let lightColor = "green";
+// đèn xanh 5 giây, đèn đỏ 2 giây và ban đầu là đèn xanh 5s
+let lightSeconds = 5;
 // đếm số hàng rác đã xóa trong level 1
 let trashLine = 0;
 // ngoi sao hi vong
@@ -1062,6 +1068,19 @@ function restart(retry) {
   spinJ = 0;
   spinL = 0;
   currentShape = "";
+  // khi restart hoặc chuyển level thì đặt lại đèn xanh và đặt lại 5s
+  lightColor = "green";
+  lightSeconds = 5;
+  lightElement.textContent = "Đèn xanh: 5 giây";
+  lightElement.classList.remove("red");
+  // nếu đang ở lv4 thì hiển thị đèn
+  if (level === 4) {
+    lightElement.style.display = "block";
+  }
+  // các level khác thì ẩn
+  else {
+    lightElement.style.display = "none";
+  }
   lineElement.textContent = "Line: 0 / 10";
   for (let worm of worms) {
     worm.image.remove();

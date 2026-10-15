@@ -145,3 +145,15 @@ body {
   z-index: 2;
   pointer-events: none;
 }
+.traffic-light {
+  display: none;
+  background-color: green;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
+.traffic-light.red-1 {
+  background-color: red;
+}
