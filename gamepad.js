@@ -2853,6 +2853,10 @@ function moveWorm() {
     // sau khi thay đổi vị trí trong mảng thì phải cập nhật lại tọa độ ảnh
     worm.image.style.left = (worm.position % col) * 30 + "px";
     worm.image.style.top = Math.floor(worm.position / col) * 30 + "px";
+    // kiểm tra ô mà con sâu vừa di chuyển tới có chứa khối fixed hay ko vd sâu đang ở ô 184 và random được hướng "right" thì worm.position = 185 nếu ô 185 có fixed thì con sâu sẽ ăn ô 185(chuyển thành matrix) còn nếu ô 185 đang trống hoặc chỉ có khối Tetris đang rơi thì ko xóa vì khối đang rơi chưa có class fixed
+    if (matrixs[worm.position].classList.contains("fixed")) {
+      matrixs[worm.position].className = "matrix";
+    }
   }
 }
 // phương thức setInterval này chạy mỗi 3 giây để kiểm tra có cho con sâu di chuyển hay ko
