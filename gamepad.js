@@ -67,6 +67,8 @@ let startBomb = 0;
 let selectBom = false;
 // danh sách con sâu cho lv3 và lv4
 let worms = [];
+// này kiểm tra người chơi có bấm phím khi đèn đỏ hay ko false là ko bấm, true là có bấm
+let redText = false;
 let spinI = 0;
 let spinT = 0;
 let spinS = 0;
@@ -1081,6 +1083,8 @@ function restart(retry) {
   else {
     lightElement.style.display = "none";
   }
+  // khi restart hoặc chuyển level thì đặt lại false
+  redText = false;
   lineElement.textContent = "Line: 0 / 10";
   for (let worm of worms) {
     worm.image.remove();
@@ -2200,6 +2204,25 @@ document.addEventListener("keydown", function (event) {
     }
     return;
   }
+  // kiểm tra người chơi có bấm phím khi đèn đỏ ở lv4 hay ko
+  if (level === 4 && lightColor === "red") {
+    // nếu người chơi có bấm phím(left/right/up/down arrow) thì redText = true và thông báo người chơi đã vi phạm khi đèn đỏ
+    if (
+      event.key === "ArrowDown" ||
+      event.key === "ArrowLeft" ||
+      event.key === "ArrowRight" ||
+      event.key === "ArrowUp"
+    ) {
+      if (redText === false) {
+        redText = true;
+        lightElement.textContent =
+          "Đèn đỏ: " + lightSeconds + " giây - Đã bấm sai";
+      }
+      // chặn ko cho các phím mũi tên hoạt động
+      event.preventDefault();
+      return;
+    }
+  }
   // đi xuống
   if (event.key === "ArrowDown") {
     if (currentShape === "O") {
@@ -2903,6 +2926,8 @@ setInterval(function () {
       if (lightColor === "green") {
         lightColor = "red";
         lightSeconds = 2;
+        // mỗi lần chuyển sang đỏ thì set lại redText = false
+        redText = false;
       }
       // TH đèn đỏ đã hết 2s thì chuyển lại đèn xanh đặt thời gian là 5s
       else if (lightColor === "red") {
