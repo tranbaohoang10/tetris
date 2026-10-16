@@ -2942,7 +2942,15 @@ setInterval(function () {
     }
     // TH đang là đèn đỏ thì hiển thị thời gian còn lại và thêm class red để đổi màu
     else if (lightColor === "red") {
-      lightElement.textContent = "Đèn đỏ: " + lightSeconds + " giây";
+      // nếu chưa bấm sai thì hiển thị thời gian đèn đỏ
+      if (redText === false) {
+        lightElement.textContent = "Đèn đỏ: " + lightSeconds + " giây";
+      }
+      // nếu đã bấm sai thì hiển thị + thêm thông báo
+      else {
+        lightElement.textContent =
+          "Đèn đỏ: " + lightSeconds + " giây - Đã bấm sai";
+      }
       lightElement.classList.add("red");
     }
   }
