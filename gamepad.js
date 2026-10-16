@@ -2885,10 +2885,40 @@ setInterval(function () {
     (level === 3 || level === 4) &&
     gameover === false &&
     selectBom === false &&
-    !level2Notice.open &&
     worms.length > 0
   ) {
     // gọi phương thức cho từng con sâu di chuyển ngẫu nhiên 1 ô
     moveWorm();
   }
 }, 3000);
+// phương thức setInterval này chạy mỗi 1 giây để xử lý trạng thái đèn xanh/đỏ ở lv4
+setInterval(function () {
+  // chỉ xử lý khi đang ở lv4, game chưa kết thúc và người chơi ko đang chọn ô phá Bom nếu đang chọn Bom thì tạm dừng đếm để người chơi chọn vị trí phá
+  if (level === 4 && gameover === false && selectBom === false) {
+    // sau mỗi 1 giây thì giảm thời gian còn lại của đèn đi 1 vd lightSeconds = 5 -> 4
+    lightSeconds--;
+    // hết thời gian chuyển sang đèn khác
+    if (lightSeconds <= 0) {
+      // TH đèn xanh đã hết 5s thì chuyển sang đèn đỏ và thời gian là 2s
+      if (lightColor === "green") {
+        lightColor = "red";
+        lightSeconds = 2;
+      }
+      // TH đèn đỏ đã hết 2s thì chuyển lại đèn xanh đặt thời gian là 5s
+      else if (lightColor === "red") {
+        lightColor = "green";
+        lightSeconds = 5;
+      }
+    }
+    // TH đang là đèn xanh thì hiển thị thời gian còn lại và xóa class red
+    if (lightColor === "green") {
+      lightElement.textContent = "Đèn xanh: " + lightSeconds + " giây";
+      lightElement.classList.remove("red");
+    }
+    // TH đang là đèn đỏ thì hiển thị thời gian còn lại và thêm class red để đổi màu
+    else if (lightColor === "red") {
+      lightElement.textContent = "Đèn đỏ: " + lightSeconds + " giây";
+      lightElement.classList.add("red");
+    }
+  }
+}, 1000);
