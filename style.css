@@ -135,7 +135,8 @@ body {
   padding: 10px 25px;
   cursor: pointer;
 }
-.use-bomb {
+.use-bomb,
+.use-hammer {
   display: block;
   margin-bottom: 15px;
   padding: 8px 15px;
@@ -160,4 +161,10 @@ body {
 }
 .traffic-light.red {
   background-color: red;
+}
+.bomb-count i,
+.hammer-count i,
+.use-bomb i,
+.use-hammer i {
+  margin-right: 6px;
 }

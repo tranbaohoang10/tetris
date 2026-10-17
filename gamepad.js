@@ -24,12 +24,14 @@ const mathTime = document.querySelector(".math-time");
 const mathAnswer = document.querySelector(".math-answer");
 const mathSubmit = document.querySelector(".math-submit");
 // hiển thị bom hiện tại
-const bombElement = document.querySelector(".bomb-count");
+const bombElement = document.querySelector(".bomb-text");
 // hiển thị búa hiện tại của ng chơi
-const hammerElement = document.querySelector(".hammer-count");
+const hammerElement = document.querySelector(".hammer-text");
 const level2Notice = document.querySelector(".level2");
 // nút sử dụng Bom
 const useBombButton = document.querySelector(".use-bomb");
+// nút sử dụng búa
+const useHammerButton = document.querySelector(".use-hammer");
 // xu ly mau hinh vuong(test hình trước)
 const matrixs = document.querySelectorAll(".matrix");
 // matrixs[4].classList.add("block", "block-square");
@@ -69,6 +71,8 @@ let startBomb = 0;
 let hammer = 0;
 // lấy bom
 let selectBom = false;
+// chọn búa
+let selectHammer = false;
 // danh sách con sâu cho lv3 và lv4
 let worms = [];
 // này kiểm tra người chơi có bấm phím khi đèn đỏ hay ko false là ko bấm, true là có bấm
@@ -1041,7 +1045,7 @@ function restart(retry) {
   hammerElement.textContent = "Búa: " + hammer;
   // khi restart hoặc chuyển level thì hủy trạng thái chọn Bom để tránh TH sang màn mới nhưng game vẫn bị đứng yên do selectBom vẫn bằng true
   selectBom = false;
-  useBombButton.textContent = "Dùng Bom";
+  useBombButton.querySelector("span").textContent = "Dùng Bom";
   for (let matrix of matrixs) {
     matrix.classList.remove(
       "block",
@@ -2817,7 +2821,7 @@ useBombButton.addEventListener("click", function () {
     return;
   }
   selectBom = true;
-  useBombButton.textContent = "Hủy Bom";
+  useBombButton.querySelector("span").textContent = "Hủy Bom";
 });
 // xử lý khi người chơi click vào board để chọn vị trí phá Bom ở đây sẽ duyệt qua 200 ô matrix để xác định người chơi chọn ô nào. Ví dụ người chơi click vào ô 184 thì i=184 và matrixs[184] sẽ bằng event.target, lúc này gọi pump(184) để phá vùng 3x3 xung quanh ô đó. Chỉ xử lý khi selectBom = true, còn nếu chưa chọn Bom thì click vào board sẽ ko có tác dụng
 board.addEventListener("click", function (event) {
