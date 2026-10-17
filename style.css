@@ -113,6 +113,10 @@ body {
   display: block;
   margin-bottom: 15px;
 }
+.hammer-count {
+  display: block;
+  margin-bottom: 15px;
+}
 .level2 {
   max-width: 450px;
   padding: 25px;

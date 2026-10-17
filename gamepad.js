@@ -23,8 +23,10 @@ const mathText = document.querySelector(".math-text");
 const mathTime = document.querySelector(".math-time");
 const mathAnswer = document.querySelector(".math-answer");
 const mathSubmit = document.querySelector(".math-submit");
-// phần hiển thị số Bom hiện tại
+// hiển thị bom hiện tại
 const bombElement = document.querySelector(".bomb-count");
+// hiển thị búa hiện tại của ng chơi
+const hammerElement = document.querySelector(".hammer-count");
 const level2Notice = document.querySelector(".level2");
 // nút sử dụng Bom
 const useBombButton = document.querySelector(".use-bomb");
@@ -1033,8 +1035,10 @@ function restart(retry) {
     // lưu số Bom hiện tại khi bắt đầu màn mới ví dụ đang có 7 Bom ở Lv4 rồi Back về Lv3 thì vẫn lưu 7 Bom
     startBomb = bomb;
   }
-  // cập nhật số Bom lên giao diện
+  // cập nhật số bom lên giao diện
   bombElement.textContent = "Bom: " + bomb;
+  // cập nhật số búa lên giao diện
+  hammerElement.textContent = "Búa: " + hammer;
   // khi restart hoặc chuyển level thì hủy trạng thái chọn Bom để tránh TH sang màn mới nhưng game vẫn bị đứng yên do selectBom vẫn bằng true
   selectBom = false;
   useBombButton.textContent = "Dùng Bom";
@@ -2909,6 +2913,8 @@ function moveWorm() {
         // nếu random = 0 thì +1 búa
         if (randomHammer === 0) {
           hammer++;
+          // hiển thị số bứa lên giao diện
+          hammerElement.textContent = "Búa: " + hammer;
         }
       }
     }
