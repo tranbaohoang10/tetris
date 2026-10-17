@@ -1072,7 +1072,14 @@ function restart(retry) {
   currentShape = "";
   // khi restart hoặc chuyển level thì đặt lại đèn xanh và đặt lại 5s
   lightColor = "green";
-  lightSeconds = 5;
+  // TH đang ở lv4 thì random thời gian đèn xanh từ 3->7 giây
+  if (level === 4) {
+    lightSeconds = Math.floor(Math.random() * 5) + 3;
+  }
+  // các level khác thì giữ giá trị ban đầu là 5 giây
+  else {
+    lightSeconds = 5;
+  }
   lightElement.textContent = "Đèn xanh: 5 giây";
   lightElement.classList.remove("red");
   // nếu đang ở lv4 thì hiển thị đèn
@@ -2459,11 +2466,6 @@ function clearRow(r) {
 }
 function newShape() {
   let random = Math.floor(Math.random() * 7);
-  // level 1 nếu vẫn còn rác thì chỉ random khối O và I(:(()
-  if (level === 1 && document.querySelector(".block-garbage") !== null) {
-    random = Math.floor(Math.random() * 2);
-  }
-
   // random ra khối O
   if (random === 0) {
     currentShape = "O";
