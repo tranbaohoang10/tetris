@@ -63,6 +63,8 @@ let mathResult = 0;
 let bomb = 0;
 // lưu số Bom khi bắt đầu chơi một màn để nếu Game Over thì khôi phục lại
 let startBomb = 0;
+// lưu số búa
+let hammer = 0;
 // lấy bom
 let selectBom = false;
 // danh sách con sâu cho lv3 và lv4
@@ -1080,7 +1082,7 @@ function restart(retry) {
   else {
     lightSeconds = 5;
   }
-  lightElement.textContent = "Đèn xanh: 5 giây";
+  lightElement.textContent = "Đèn xanh: " + lightSeconds + " giây";
   lightElement.classList.remove("red");
   // nếu đang ở lv4 thì hiển thị đèn
   if (level === 4) {
@@ -2900,6 +2902,15 @@ function moveWorm() {
     // kiểm tra ô mà con sâu vừa di chuyển tới có chứa khối fixed hay ko vd sâu đang ở ô 184 và random được hướng "right" thì worm.position = 185 nếu ô 185 có fixed thì con sâu sẽ ăn ô 185(chuyển thành matrix) còn nếu ô 185 đang trống hoặc chỉ có khối Tetris đang rơi thì ko xóa vì khối đang rơi chưa có class fixed
     if (matrixs[worm.position].classList.contains("fixed")) {
       matrixs[worm.position].className = "matrix";
+      // chỉ lv3 mới được nhận búa khi sâu ăn khối fixed
+      if (level === 3) {
+        // random = 0 là nhận búa,1 là ko nhận(tỉ lệ 50/50)
+        let randomHammer = Math.floor(Math.random() * 2);
+        // nếu random = 0 thì +1 búa
+        if (randomHammer === 0) {
+          hammer++;
+        }
+      }
     }
   }
 }
@@ -2924,17 +2935,18 @@ setInterval(function () {
     lightSeconds--;
     // hết thời gian chuyển sang đèn khác
     if (lightSeconds <= 0) {
-      // TH đèn xanh đã hết 5s thì chuyển sang đèn đỏ và thời gian là 2s
+      // TH đèn xanh đã hết thời gian thì chuyển sang đèn đỏ(random)
       if (lightColor === "green") {
         lightColor = "red";
-        lightSeconds = 2;
+        // random thời gian đèn đỏ từ 2->4 giây
+        lightSeconds = Math.floor(Math.random() * 3) + 2;
         // mỗi lần chuyển sang đỏ thì set lại redText = false
         redText = false;
       }
-      // TH đèn đỏ đã hết 2s thì chuyển lại đèn xanh đặt thời gian là 5s
+      // TH đèn đỏ đã hết thời gian thì chuyển lại đèn xanh(random)
       else if (lightColor === "red") {
         lightColor = "green";
-        lightSeconds = 5;
+        lightSeconds = Math.floor(Math.random() * 5) + 3;
       }
     }
     // TH đang là đèn xanh thì hiển thị thời gian còn lại và xóa class red
