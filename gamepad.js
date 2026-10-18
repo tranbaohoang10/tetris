@@ -69,6 +69,7 @@ let bomb = 0;
 let startBomb = 0;
 // lưu số búa
 let hammer = 0;
+let startHammer = 0;
 // lấy bom
 let selectBom = false;
 // chọn búa
@@ -1029,6 +1030,7 @@ function restart(retry) {
   // TH chơi lại do Game Over thì khôi phục số Bom lúc bắt đầu màn ví dụ bắt đầu Lv4 có 7 Bom, dùng còn 4 Bom rồi Game Over thì khi chơi lại Lv4 sẽ có 7 Bom
   if (retry === true) {
     bomb = startBomb;
+    hammer = startHammer;
   }
   // TH chuyển màn bình thường bằng Back, Next hoặc đủ 10 Line
   else {
@@ -1038,6 +1040,7 @@ function restart(retry) {
     }
     // lưu số Bom hiện tại khi bắt đầu màn mới ví dụ đang có 7 Bom ở Lv4 rồi Back về Lv3 thì vẫn lưu 7 Bom
     startBomb = bomb;
+    startHammer = hammer;
   }
   // cập nhật số bom lên giao diện
   bombElement.textContent = "Bom: " + bomb;
@@ -2812,6 +2815,19 @@ function pump(centerIndex) {
     useBombButton.querySelector("span").textContent = "Dùng Bom";
   }
 }
+// phương thức để phá 1 ô fixed mà người chơi chọn vd người chơi chọn ô 184 thì chỉ phá ô 184
+function bang(index) {
+  // chỉ phá khi ô được chọn đã có class fixed nếu chọn ô trống hoặc khối đang rơi thì ko phá và ko trừ Búa sau đó xoá khối fixed ở chỗ được chọn
+  if (matrixs[index].classList.contains("fixed")) {
+    matrixs[index].className = "matrix";
+    // phá thành công thì trừ 1 búa và cập nhật lên giao diện
+    hammer--;
+    hammerElement.textContent = "Búa: " + hammer;
+    // set lại = false
+    selectHammer = false;
+    useHammerButton.querySelector("span").textContent = "Dùng Búa";
+  }
+}
 // xử lý nút sử dụng Bom, nếu chưa chọn thì cho người chơi chọn vị trí phá còn nếu đang chọn thì bấm lần nữa để hủy Bom và chỉ được sử dụng khi còn Bom và chỉ được sử dụng nếu từ level 2 trở lên
 useBombButton.addEventListener("click", function () {
   if (selectBom === true) {
@@ -2819,18 +2835,29 @@ useBombButton.addEventListener("click", function () {
     useBombButton.querySelector("span").textContent = "Dùng Bom";
     return;
   }
-  if (level < 2 || bomb <= 0 || gameover === true || selectHammer === true) {
+  if (
+    level < 2 ||
+    bomb <= 0 ||
+    gameover === true ||
+    mathShowing === true ||
+    level2Notice.open ||
+    selectHammer === true
+  ) {
     return;
   }
   selectBom = true;
   useBombButton.querySelector("span").textContent = "Hủy Bom";
 });
-// xử lý khi người chơi click vào board để chọn vị trí phá Bom ở đây sẽ duyệt qua 200 ô matrix để xác định người chơi chọn ô nào. Ví dụ người chơi click vào ô 184 thì i=184 và matrixs[184] sẽ bằng event.target, lúc này gọi pump(184) để phá vùng 3x3 xung quanh ô đó. Chỉ xử lý khi selectBom = true, còn nếu chưa chọn Bom thì click vào board sẽ ko có tác dụng
+// xử lý khi người chơi click vào board để chọn vị trí phá Bom/sử dụng búa ở đây sẽ duyệt qua 200 ô matrix để xác định người chơi chọn ô nào. Ví dụ người chơi click vào ô 184 thì i=184 và matrixs[184] sẽ bằng event.target, lúc này gọi pump(184) để phá vùng 3x3 xung quanh ô đó/. Chỉ xử lý khi selectBom = true, còn nếu chưa chọn Bom thì click vào board sẽ ko có tác dụng
 board.addEventListener("click", function (event) {
-  if (selectBom === true) {
+  if (selectBom === true || selectHammer === true) {
     for (let i = 0; i < matrixs.length; i++) {
       if (matrixs[i] === event.target) {
-        pump(i);
+        if (selectBom === true) {
+          pump(i);
+        } else if (selectHammer === true) {
+          bang(i);
+        }
         break;
       }
     }
