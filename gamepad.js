@@ -78,6 +78,9 @@ let selectHammer = false;
 let worms = [];
 // này kiểm tra người chơi có bấm phím khi đèn đỏ hay ko false là ko bấm, true là có bấm
 let redText = false;
+// này để sd cho lv1(có sẵn 3 ô rác) và lv4(nếu random trúng thì tạo 1 ô rác)
+let rowlv1 = 3;
+let rowlv4 = 1;
 let spinI = 0;
 let spinT = 0;
 let spinS = 0;
@@ -1113,7 +1116,7 @@ function restart(retry) {
   }
   worms = [];
   if (level === 1) {
-    createTrash();
+    createTrash(rowlv1);
   }
   newShape();
   if (level === 2 && retry !== true) {
@@ -2630,12 +2633,12 @@ function newShape() {
   }
 }
 // phương thức tạo rác cho level 1(ở đây chỉ tạo 3 dòng cuối là rác)
-function createTrash() {
+function createTrash(numberRows) {
   let empty1 = 0;
   let empty2 = 0;
   let index = 0;
   // chạy vào vòng lặp 3 dòng cuối(17->19) để random ra 2 ô trống trong 1 dòng rác và các ô còn lại sẽ là rác
-  for (let r = 17; r < row; r++) {
+  for (let r = row - numberRows; r < row; r++) {
     // 2 cái này random để xuất hiện 2 ô trống trong 1 dòng rác(từ 0->9)
     empty1 = Math.floor(Math.random() * 10);
     empty2 = Math.floor(Math.random() * 10);
@@ -2743,8 +2746,8 @@ mathAnswer.addEventListener("keydown", function (event) {
     checkMathAnswer();
   }
 });
-// phương thức này để nâng các khối đã nằm lên 1 hàng khi trả lời sai hoặc hết 5s ở level 2 chỉ nâng các ô có class fixed nếu chưa có fixed thì ko có khối nào được nâng
-function raiseFloor() {
+// phương thức này để nâng các khối đã nằm lên 1 hàng khi trả lời sai hoặc hết 5s ở level 2 chỉ nâng các ô có class fixed nếu chưa có fixed thì ko có khối nào được nâng,addTrash = false là ko tạo thêm hàng rác(này sử dụng cho lv2)
+function raiseFloor(addTrash = false) {
   // kiểm tra hàng đầu tiên từ 0->9 xem có khối fixed nào chưa vì nếu có thì khi nâng lên sẽ vượt khỏi board ví dụ ô 4 đã fixed thì khi nâng lên sẽ thành 4-10=-6 nên xử lý gameover
   for (let i = 0; i < col; i++) {
     if (matrixs[i].classList.contains("fixed")) {
@@ -2785,6 +2788,18 @@ function raiseFloor() {
     if (matrixs[i].classList.contains("fixed")) {
       matrixs[i].className = "matrix";
     }
+  }
+  if (addTrash === true) {
+    // check ko tạo rác nếu hàng cuối có khối đang rơi
+    for (let i = (row - 1) * col; i < row * col; i++) {
+      if (
+        matrixs[i].classList.contains("block") &&
+        !matrixs[i].classList.contains("fixed")
+      ) {
+        return;
+      }
+    }
+    createTrash(rowlv4);
   }
 }
 // phương thức pump() để xử lý phá các khối fixed trong phạm vi 3x3 khi người chơi chọn 1 ô bất kỳ trên board. Ví dụ người chơi chọn ô 184 thì hàng của nó là Math.floor(184/10)=18 và cột là 184%10=4, lúc này vùng phá sẽ gồm 3 hàng 17,18,19 và 3 cột 3,4,5 tương ứng với các ô 173,174,175,183,184,185,193,194,195. Chỉ phá những ô có class fixed còn khối đang rơi thì giữ nguyên. Nếu phá được ít nhất 1 ô fixed thì trừ 1 Bom và cho game tiếp tục chạy
@@ -2992,6 +3007,24 @@ setInterval(function () {
       else if (lightColor === "red") {
         lightColor = "green";
         lightSeconds = Math.floor(Math.random() * 5) + 3;
+        // nếu người chơi có bấm phím khi đèn đỏ thì xử phạt
+        if (redText === true) {
+          let randomFault = Math.floor(Math.random() * 10);
+          // TH 50% nâng sàn lên 1 hàng
+          if (randomFault < 5) {
+            raiseFloor();
+          }
+          // TH 30% tạo thêm 1 hàng rác
+          else if (randomFault < 8) {
+            raiseFloor(true);
+          }
+          // TH 20% tạo thêm 1 con sâu
+          else {
+            createWorm();
+          }
+        }
+        // chuyển sang đèn xanh thì đặt lại redtext = false
+        redText = false;
       }
     }
     // TH đang là đèn xanh thì hiển thị thời gian còn lại và xóa class red
