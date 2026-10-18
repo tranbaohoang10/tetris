@@ -1043,9 +1043,11 @@ function restart(retry) {
   bombElement.textContent = "Bom: " + bomb;
   // cập nhật số búa lên giao diện
   hammerElement.textContent = "Búa: " + hammer;
-  // khi restart hoặc chuyển level thì hủy trạng thái chọn Bom để tránh TH sang màn mới nhưng game vẫn bị đứng yên do selectBom vẫn bằng true
+  // khi restart hoặc chuyển level thì hủy trạng thái chọn Bom/búa để tránh TH sang màn mới nhưng game vẫn bị đứng yên do selectBom vẫn bằng true
   selectBom = false;
   useBombButton.querySelector("span").textContent = "Dùng Bom";
+  selectHammer = false;
+  useHammerButton.querySelector("span").textContent = "Dùng Búa";
   for (let matrix of matrixs) {
     matrix.classList.remove(
       "block",
@@ -2205,7 +2207,12 @@ function moveRightL() {
   }
 }
 document.addEventListener("keydown", function (event) {
-  if (gameover || level2Notice.open || selectBom === true) {
+  if (
+    gameover ||
+    level2Notice.open ||
+    selectBom === true ||
+    selectHammer === true
+  ) {
     return;
   }
   // nếu đang có câu hỏi toán thì ko cho sử dụng 4 phím mũi tên vì lúc này người chơi phải nhập đáp án trong 5s chứ ko được di chuyển khối
@@ -2338,12 +2345,13 @@ document.addEventListener("keydown", function (event) {
   }
 });
 setInterval(function () {
-  // viết lại phần điều kiện này cho level 2. Nếu mathShowing = true thì khối sẽ đứng yên để người chơi giải toán
+  // viết phần điều kiện này cho level 2. Nếu mathShowing = true thì khối sẽ đứng yên để người chơi giải toán
   if (
     !gameover &&
     mathShowing === false &&
     !level2Notice.open &&
-    selectBom === false
+    selectBom === false &&
+    selectHammer === false
   ) {
     if (currentShape === "O") {
       moveDownSquare();
@@ -2405,23 +2413,19 @@ function checkRow() {
     let start = r * col;
     let countrow = 0;
     let isTrash = false;
-
     // kiểm tra hàng hiện tại có đầy 10 ô không
     // đồng thời kiểm tra hàng đó có chứa rác không
     for (let i = start; i < start + col; i++) {
       if (matrixs[i].classList.contains("fixed")) {
         countrow++;
       }
-
       if (matrixs[i].classList.contains("block-garbage")) {
         isTrash = true;
       }
     }
-
     // nếu hàng đầy thì xóa hàng đó
     if (countrow === col) {
       clearRow(r);
-
       // xử lý riêng level 1
       if (level === 1) {
         // nếu hàng vừa xóa có rác thì tăng số hàng rác đã dọn
@@ -2429,7 +2433,6 @@ function checkRow() {
           trashLine++;
           line++;
         }
-
         // chỉ tính các hàng thường sau khi đã dọn đủ 3 hàng rác(tại vì level 1 chỉ có 3 hàng rác nên khi dọn đủ 3 hàng rác thì các hàng tiếp theo sẽ tính line như bình thường chứ ko được tính line rác x2)
         else if (trashLine >= 3) {
           if (hopeStar === true) {
@@ -2446,7 +2449,6 @@ function checkRow() {
           line++;
         }
       }
-
       lineElement.textContent = "Line: " + line + " / 10";
       // đủ 10 line thì chuyển sang level tiếp theo
       if (line >= 10 && level < 7) {
@@ -2807,17 +2809,17 @@ function pump(centerIndex) {
     bomb--;
     bombElement.textContent = "Bom: " + bomb;
     selectBom = false;
-    useBombButton.textContent = "Dùng Bom";
+    useBombButton.querySelector("span").textContent = "Dùng Bom";
   }
 }
 // xử lý nút sử dụng Bom, nếu chưa chọn thì cho người chơi chọn vị trí phá còn nếu đang chọn thì bấm lần nữa để hủy Bom và chỉ được sử dụng khi còn Bom và chỉ được sử dụng nếu từ level 2 trở lên
 useBombButton.addEventListener("click", function () {
   if (selectBom === true) {
     selectBom = false;
-    useBombButton.textContent = "Dùng Bom";
+    useBombButton.querySelector("span").textContent = "Dùng Bom";
     return;
   }
-  if (level < 2 || bomb <= 0 || gameover || mathShowing || level2Notice.open) {
+  if (level < 2 || bomb <= 0 || gameover === true || selectHammer === true) {
     return;
   }
   selectBom = true;
@@ -2931,6 +2933,7 @@ setInterval(function () {
     (level === 3 || level === 4) &&
     gameover === false &&
     selectBom === false &&
+    selectHammer === false &&
     worms.length > 0
   ) {
     // gọi phương thức cho từng con sâu di chuyển ngẫu nhiên 1 ô
@@ -2940,7 +2943,12 @@ setInterval(function () {
 // phương thức setInterval này chạy mỗi 1 giây để xử lý trạng thái đèn xanh/đỏ ở lv4
 setInterval(function () {
   // chỉ xử lý khi đang ở lv4, game chưa kết thúc và người chơi ko đang chọn ô phá Bom nếu đang chọn Bom thì tạm dừng đếm để người chơi chọn vị trí phá
-  if (level === 4 && gameover === false && selectBom === false) {
+  if (
+    level === 4 &&
+    gameover === false &&
+    selectBom === false &&
+    selectHammer === false
+  ) {
     // sau mỗi 1 giây thì giảm thời gian còn lại của đèn đi 1 vd lightSeconds = 5 -> 4
     lightSeconds--;
     // hết thời gian chuyển sang đèn khác
@@ -2979,3 +2987,16 @@ setInterval(function () {
     }
   }
 }, 1000);
+useHammerButton.addEventListener("click", function () {
+  // TH chọn búa -> hủy búa
+  if (selectHammer === true) {
+    selectHammer = false;
+    useHammerButton.querySelector("span").textContent = "Dùng Búa";
+    return;
+  }
+  if (level < 3 || hammer <= 0 || gameover === true || selectBom === true) {
+    return;
+  }
+  selectHammer = true;
+  useHammerButton.querySelector("span").textContent = "Hủy Búa";
+});
