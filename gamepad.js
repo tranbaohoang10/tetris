@@ -15,6 +15,8 @@ const lightElement = document.querySelector(".traffic-light");
 // nút back và next để chuyển level
 const backButton = document.querySelector(".back");
 const nextButton = document.querySelector(".next");
+//pause
+const pauseButton = document.querySelector(".pause");
 // ngoi sao hi vong
 const hopeStarButton = document.querySelector(".hope-star");
 // các thành phần câu hỏi toán trong level 2
@@ -42,6 +44,7 @@ const matrixs = document.querySelectorAll(".matrix");
 
 let position = 4;
 let gameover = false;
+let isPaused = false;
 // đồ án sử dụng line ko sử dụng score, line = 10 thì qua level khác
 let line = 0;
 // level
@@ -1071,9 +1074,13 @@ function restart(retry) {
       "block-l",
       "block-garbage",
       "fixed",
+      "hidden-block",
     );
   }
   gameover = false;
+  isPaused = false;
+  pauseButton.querySelector("span").textContent = "Tạm dừng";
+  pauseButton.querySelector("i").className = "fa-solid fa-pause";
   line = 0;
   trashLine = 0;
   mathSeconds = 0;
@@ -1127,11 +1134,14 @@ function restart(retry) {
   if (level === 3) {
     createWorm();
   }
+  if (level === 5) {
+    updateLight();
+  }
 }
 // xử lý nút next để qua level tiếp theo
 nextButton.addEventListener("click", function () {
   // level cuối là level 7 nên nếu đang nhỏ hơn 7 thì mới cho qua tiếp
-  if (level < 7) {
+  if (level < 5) {
     level++;
     levelElement.textContent = "Level " + level;
     // qua level mới thì chơi lại board từ đầu
@@ -1148,8 +1158,29 @@ backButton.addEventListener("click", function () {
     restart();
   }
 });
+pauseButton.addEventListener("click", function () {
+  // nếu Game Over thì ko cho tạm dừng nữa
+  if (gameover === true) {
+    return;
+  }
+
+  // TH đang chơi thì chuyển sang tạm dừng
+  if (isPaused === false) {
+    isPaused = true;
+    pauseButton.querySelector("span").textContent = "Tiếp tục";
+    pauseButton.querySelector("i").className = "fa-solid fa-play";
+  } else {
+    // TH đang tạm dừng thì cho tiếp tục chơi
+    isPaused = false;
+    pauseButton.querySelector("span").textContent = "Tạm dừng";
+    pauseButton.querySelector("i").className = "fa-solid fa-pause";
+  }
+});
 // dùng ngôi sao hi vọng
 hopeStarButton.addEventListener("click", function () {
+  if (isPaused === true || gameover === true) {
+    return;
+  }
   hopeStar = true;
   hopeStarButton.querySelector("span").textContent = "Đã sử dụng";
   hopeStarButton.querySelector("i").className = "fa-solid fa-star";
@@ -2223,7 +2254,12 @@ document.addEventListener("keydown", function (event) {
   ) {
     event.preventDefault();
   }
-  if (gameover || selectBom === true || selectHammer === true) {
+  if (
+    gameover ||
+    isPaused === true ||
+    selectBom === true ||
+    selectHammer === true
+  ) {
     return;
   }
   // nếu đang có câu hỏi toán thì ko cho sử dụng 4 phím mũi tên vì lúc này người chơi phải nhập đáp án trong 5s chứ ko được di chuyển khối
@@ -2353,11 +2389,15 @@ document.addEventListener("keydown", function (event) {
       rotateL();
     }
   }
+  if (level === 5) {
+    updateLight();
+  }
 });
 setInterval(function () {
   // viết phần điều kiện này cho level 2. Nếu mathShowing = true thì khối sẽ đứng yên để người chơi giải toán
   if (
     !gameover &&
+    isPaused === false &&
     mathShowing === false &&
     selectBom === false &&
     selectHammer === false
@@ -2384,12 +2424,15 @@ setInterval(function () {
     if (currentShape === "L") {
       moveDownL();
     }
+    if (level === 5) {
+      updateLight();
+    }
   }
 }, 800);
 // setInterval này là chạy mỗi 1s để kiểm tra thời gian ở level 2 cứ đủ 15s thì tạo câu hỏi toán và khi câu hỏi xuất hiện thì đếm ngược 5s
 setInterval(function () {
   // chỉ thực hiện khi đang ở level 2 và game chưa kết thúc còn ở các level khác sẽ ko xuất hiện câu hỏi toán
-  if (level === 2 && !gameover && selectBom === false) {
+  if (level === 2 && !gameover && isPaused === false && selectBom === false) {
     // TH đang có câu hỏi toán thì ko tăng mathSeconds nữa mà chuyển sang đếm ngược 5s
     if (mathShowing === true) {
       answerSeconds--;
@@ -2460,11 +2503,17 @@ function checkRow() {
       }
       lineElement.textContent = "Line: " + line + " / 10";
       // đủ 10 line thì chuyển sang level tiếp theo
-      if (line >= 10 && level < 7) {
-        level++;
-        levelElement.textContent = "Level " + level;
-        restart();
-        return true;
+      if (line >= 10) {
+        if (level < 5) {
+          level++;
+          levelElement.textContent = "Level " + level;
+          restart();
+          return true;
+        } else if (level === 5) {
+          gameover = true;
+          alert("Chúc mừng bạn đã hoàn thành 6 Level!");
+          return true;
+        }
       }
     }
   }
@@ -2712,7 +2761,7 @@ function createMath() {
 // phương thức kiểm tra đáp án khi người chơi bấm nút trả lời trong level 2 thì ở đây sẽ lấy số người chơi nhập vào input rồi so sánh với mathResult đã được tính trong createMath(),ví dụ câu hỏi là 8+5=? thì mathResult=13, nếu người chơi nhập 13 thì đúng còn nhập số khác thì sai
 function checkMathAnswer() {
   // nếu mathShowing = false tức là hiện tại ko có câu hỏi toán nên ko cần kiểm tra đáp án vì có thể câu hỏi đã hết 5s hoặc người chơi đã trả lời trước đó rồi
-  if (mathShowing === false) {
+  if (mathShowing === false || isPaused === true) {
     return;
   }
   // ép kiểu từ string -> number để so sánh vì mathResult là number còn mathAnswer.value là string nên phải ép kiểu để so sánh
@@ -2848,6 +2897,9 @@ function bang(index) {
 }
 // xử lý nút sử dụng Bom, nếu chưa chọn thì cho người chơi chọn vị trí phá còn nếu đang chọn thì bấm lần nữa để hủy Bom và chỉ được sử dụng khi còn Bom và chỉ được sử dụng nếu từ level 2 trở lên
 useBombButton.addEventListener("click", function () {
+  if (isPaused === true) {
+    return;
+  }
   if (selectBom === true) {
     selectBom = false;
     useBombButton.querySelector("span").textContent = "Dùng Bom";
@@ -2867,6 +2919,9 @@ useBombButton.addEventListener("click", function () {
 });
 // xử lý khi người chơi click vào board để chọn vị trí phá Bom/sử dụng búa ở đây sẽ duyệt qua 200 ô matrix để xác định người chơi chọn ô nào. Ví dụ người chơi click vào ô 184 thì i=184 và matrixs[184] sẽ bằng event.target, lúc này gọi pump(184) để phá vùng 3x3 xung quanh ô đó/. Chỉ xử lý khi selectBom = true, còn nếu chưa chọn Bom thì click vào board sẽ ko có tác dụng
 board.addEventListener("click", function (event) {
+  if (isPaused === true) {
+    return;
+  }
   if (selectBom === true || selectHammer === true) {
     for (let i = 0; i < matrixs.length; i++) {
       if (matrixs[i] === event.target) {
@@ -2976,6 +3031,7 @@ setInterval(function () {
   if (
     (level === 3 || level === 4) &&
     gameover === false &&
+    isPaused === false &&
     selectBom === false &&
     selectHammer === false &&
     worms.length > 0
@@ -2990,6 +3046,7 @@ setInterval(function () {
   if (
     level === 4 &&
     gameover === false &&
+    isPaused === false &&
     selectBom === false &&
     selectHammer === false
   ) {
@@ -3050,7 +3107,9 @@ setInterval(function () {
   }
 }, 1000);
 useHammerButton.addEventListener("click", function () {
-  // TH chọn búa -> hủy búa
+  if (isPaused === true) {
+    return;
+  }
   if (selectHammer === true) {
     selectHammer = false;
     useHammerButton.querySelector("span").textContent = "Dùng Búa";
@@ -3067,6 +3126,9 @@ function updateLight() {
   if (level !== 5) {
     return;
   }
+  sumRow = 0;
+  sumCol = 0;
+  count = 0;
   // ví dụ chỗ này là hình O đang ở ô 84 nên nó là 84,85,94,95 thì sumRow lúc này nó = 8+8+9+9 =34,sumCol = 4+5+4+5=18,count=4 vì duyệt được 4 ô có block
   for (let i = 0; i < matrixs.length; i++) {
     if (

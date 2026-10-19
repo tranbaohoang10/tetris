@@ -160,3 +160,9 @@ body {
   background-color: #111;
   border: 1px solid #333;
 }
+.pause {
+  display: block;
+  padding: 8px 15px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
