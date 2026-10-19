@@ -27,7 +27,6 @@ const mathSubmit = document.querySelector(".math-submit");
 const bombElement = document.querySelector(".bomb-text");
 // hiển thị búa hiện tại của ng chơi
 const hammerElement = document.querySelector(".hammer-text");
-const level2Notice = document.querySelector(".level2");
 // nút sử dụng Bom
 const useBombButton = document.querySelector(".use-bomb");
 // nút sử dụng búa
@@ -81,6 +80,12 @@ let redText = false;
 // này để sd cho lv1(có sẵn 3 ô rác) và lv4(nếu random trúng thì tạo 1 ô rác)
 let rowlv1 = 3;
 let rowlv4 = 1;
+// các biến cho level 5
+let sumRow = 0;
+let sumCol = 0;
+let count = 0;
+let centerRow = 0;
+let centerCol = 0;
 let spinI = 0;
 let spinT = 0;
 let spinS = 0;
@@ -1119,9 +1124,6 @@ function restart(retry) {
     createTrash(rowlv1);
   }
   newShape();
-  if (level === 2 && retry !== true) {
-    level2Notice.showModal();
-  }
   if (level === 3) {
     createWorm();
   }
@@ -2214,16 +2216,18 @@ function moveRightL() {
 }
 document.addEventListener("keydown", function (event) {
   if (
-    gameover ||
-    level2Notice.open ||
-    selectBom === true ||
-    selectHammer === true
+    event.key === "ArrowDown" ||
+    event.key === "ArrowLeft" ||
+    event.key === "ArrowRight" ||
+    event.key === "ArrowUp"
   ) {
+    event.preventDefault();
+  }
+  if (gameover || selectBom === true || selectHammer === true) {
     return;
   }
   // nếu đang có câu hỏi toán thì ko cho sử dụng 4 phím mũi tên vì lúc này người chơi phải nhập đáp án trong 5s chứ ko được di chuyển khối
   if (mathShowing === true) {
-    // chặn cả 4 phím để khi đang nhập số thì phím lên/xuống ko làm thay đổi giá trị input
     if (
       event.key === "ArrowDown" ||
       event.key === "ArrowLeft" ||
@@ -2355,7 +2359,6 @@ setInterval(function () {
   if (
     !gameover &&
     mathShowing === false &&
-    !level2Notice.open &&
     selectBom === false &&
     selectHammer === false
   ) {
@@ -2386,7 +2389,7 @@ setInterval(function () {
 // setInterval này là chạy mỗi 1s để kiểm tra thời gian ở level 2 cứ đủ 15s thì tạo câu hỏi toán và khi câu hỏi xuất hiện thì đếm ngược 5s
 setInterval(function () {
   // chỉ thực hiện khi đang ở level 2 và game chưa kết thúc còn ở các level khác sẽ ko xuất hiện câu hỏi toán
-  if (level === 2 && !gameover && !level2Notice.open && selectBom === false) {
+  if (level === 2 && !gameover && selectBom === false) {
     // TH đang có câu hỏi toán thì ko tăng mathSeconds nữa mà chuyển sang đếm ngược 5s
     if (mathShowing === true) {
       answerSeconds--;
@@ -2855,7 +2858,6 @@ useBombButton.addEventListener("click", function () {
     bomb <= 0 ||
     gameover === true ||
     mathShowing === true ||
-    level2Notice.open ||
     selectHammer === true
   ) {
     return;
@@ -2970,7 +2972,7 @@ function moveWorm() {
 }
 // phương thức setInterval này chạy mỗi 3 giây để kiểm tra có cho con sâu di chuyển hay ko
 setInterval(function () {
-  // chỉ cho sâu di chuyển ở lv3 hoặc lv4, gameover = false tức game vẫn đang chạy , selectBom = false tức người chơi ko đang chọn ô để phá Bom,level2Notice.open = false tức hộp thoại ko xuất hiện và worms.length > 0 tức trên board đang có ít nhất 1 con sâu
+  // chỉ cho sâu di chuyển ở lv3 hoặc lv4, gameover = false tức game vẫn đang chạy , selectBom = false,hammer = false và số sâu phải >0
   if (
     (level === 3 || level === 4) &&
     gameover === false &&
@@ -3060,3 +3062,42 @@ useHammerButton.addEventListener("click", function () {
   selectHammer = true;
   useHammerButton.querySelector("span").textContent = "Hủy Búa";
 });
+// phương thức này để xác định vị trí trung tâm của khối đang rơi và kiểm tra các khối fixed xung quanh trong phạm vi 5x5
+function updateLight() {
+  if (level !== 5) {
+    return;
+  }
+  // ví dụ chỗ này là hình O đang ở ô 84 nên nó là 84,85,94,95 thì sumRow lúc này nó = 8+8+9+9 =34,sumCol = 4+5+4+5=18,count=4 vì duyệt được 4 ô có block
+  for (let i = 0; i < matrixs.length; i++) {
+    if (
+      matrixs[i].classList.contains("block") &&
+      !matrixs[i].classList.contains("fixed")
+    ) {
+      sumRow += Math.floor(i / col); // 34
+      sumCol += i % col; // 18
+      count++;
+    }
+  }
+  centerRow = Math.round(sumRow / count); // 34/4 = 9(lấy tròn)
+  centerCol = Math.round(sumCol / count); // 18/4 =5(lấy tròn)
+  for (let i = 0; i < matrixs.length; i++) {
+    // ví dụ ô 104 có fixed, hình O lấy 84,85,94,95 => centerRow = 9,centerCol = 5
+    if (matrixs[i].classList.contains("fixed")) {
+      let r = Math.floor(i / col); // 10
+      let c = i % col; // 4
+      if (
+        r >= centerRow - 2 &&
+        r <= centerRow + 2 &&
+        c >= centerCol - 2 &&
+        c <= centerCol + 2
+      ) {
+        matrixs[i].classList.remove("hidden-block");
+      } else {
+        matrixs[i].classList.add("hidden-block");
+      }
+    } else {
+      // ko ẩn khối đang rơi
+      matrixs[i].classList.remove("hidden-block");
+    }
+  }
+}

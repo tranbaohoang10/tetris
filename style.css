@@ -4,23 +4,19 @@ body {
   background-color: #ddd;
   font-family: Arial, Helvetica, sans-serif;
 }
-
 .game-container {
   max-width: 1000px;
   margin: 0 auto;
 }
-
 .game-container h1 {
   text-align: center;
 }
-
 .game-layout {
   display: flex;
   justify-content: center;
   align-items: flex-start;
   gap: 30px;
 }
-
 .board {
   width: 300px;
   height: 600px;
@@ -31,12 +27,10 @@ body {
   border: 2px solid #333;
   position: relative;
 }
-
 .game-info {
   width: 180px;
   font-size: 20px;
 }
-
 .level,
 .line,
 .next {
@@ -79,7 +73,6 @@ body {
   padding: 6px 10px;
   cursor: pointer;
 }
-
 .hope-star i {
   font-size: 22px;
 }
@@ -92,7 +85,7 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /*cho nằm giữa */
+  transform: translate(-50%, -50%);
   z-index: 10;
   width: 230px;
   box-sizing: border-box;
@@ -105,7 +98,6 @@ body {
 .math-time {
   margin-bottom: 10px;
 }
-
 .math-answer {
   width: 100px;
 }
@@ -116,24 +108,6 @@ body {
 .hammer-count {
   display: block;
   margin-bottom: 15px;
-}
-.level2 {
-  max-width: 450px;
-  padding: 25px;
-  border: 2px solid #333;
-  border-radius: 10px;
-  text-align: center;
-}
-.level2 h2 {
-  color: red;
-}
-.level2 p {
-  line-height: 1.5;
-}
-
-.level2 button {
-  padding: 10px 25px;
-  cursor: pointer;
 }
 .use-bomb,
 .use-hammer {
@@ -167,4 +141,22 @@ body {
 .use-bomb i,
 .use-hammer i {
   margin-right: 6px;
+}
+.game-help {
+  width: 400px;
+  padding: 15px;
+  border: 1px solid #333;
+}
+.game-help h2 {
+  text-align: center;
+}
+.game-help h4 {
+  margin-bottom: 10px;
+}
+.game-help p {
+  line-height: 1.5;
+}
+.board .matrix.hidden-block {
+  background-color: #111;
+  border: 1px solid #333;
 }

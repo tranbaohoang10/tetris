@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="./fontawesome/css/all.min.css">
-  <title>Document</title>
+  <title>Tetris</title>
 </head>
 
 <body>
@@ -42,24 +42,82 @@
           <i class="fa-solid fa-hammer"></i>
           <span>Dùng Búa</span>
         </button>
-        <button class="hope-star"><i class="fa-regular fa-star"></i><span>Ngôi sao hy vọng</span></button>
+        <button class="hope-star">
+          <i class="fa-regular fa-star"></i>
+          <span>Ngôi sao hy vọng</span>
+        </button>
         <button class="back">Back</button>
         <button class="next">Next</button>
       </div>
+
+      <div class="game-help">
+        <h2>HƯỚNG DẪN CHƠI TETRIS</h2>
+        <h3>1) Cách điều khiển</h3>
+        <p>ArrowLeft : Di chuyển khối sang trái</p>
+        <p>ArrowRight : Di chuyển khối sang phải</p>
+        <p>ArrowDown : Cho khối rơi nhanh hơn</p>
+        <p>ArrowUp : Xoay khối Tetris</p>
+        <p>Người chơi phải fill đủ 10 ô trên một hàng để xóa hàng đó</p>
+        <h3>2) Các nút chức năng</h3>
+        <p><strong>Back:</strong> Quay lại level trước và chơi lại màn đó</p>
+        <p><strong>Next:</strong> Chuyển sang level tiếp theo và chơi lại màn đó</p>
+        <p>
+          <strong>Ngôi sao hy vọng:</strong>
+          Khi sử dụng, mỗi hàng thường được xóa sẽ được tính gấp đôi(1 hàng = 2 Line) tức chỉ cần xóa 5 hàng để đạt 10
+          Line
+          riêng lv1 phải dọn xong 3 hàng rác trước khi các hàng thường được tính điểm còn hàng rác không được nhân đôi
+        </p>
+        <p>
+          <strong>Bom:</strong>
+          Nhận được khi trả lời đúng câu hỏi toán ở Lv2 mỗi lần sử dụng có thể phá các khối đã nằm trong vùng 3x3 xung
+          quanh
+          ô được chọn và chỉ trừ 1 Bom khi phá thành công ít nhất 1 ô
+        </p>
+        <p>
+          <strong>Búa:</strong>
+          Có cơ hội nhận được ở lv3 khi con sâu ăn một khối đã nằm(xác suất 50%) mỗi <strong>Búa</strong> có thể phá 1 ô
+          đã
+          nằm do người chơi chọn
+        </p>
+        <h3>3) Luật chơi từng level</h3>
+        <h4>Level 0 - Tetris cơ bản</h4>
+        <p>
+          Chơi Tetris bình thường di chuyển và xoay các khối để ghép kín từng hàng Xóa đủ 10 line thì tự động qua Lv1
+        </p>
+        <h4>Level 1 - Hàng rác</h4>
+        <p>
+          Khi bắt đầu sẽ có sẵn 3 hàng rác ở phía dưới thì mỗi hàng có 2 lỗ trống ngẫu nhiên và người chơi phải ghép
+          khối vào các lỗ để xóa hết 3 hàng rác và sau khi dọn hết rác, tiếp tục xóa các hàng thường để đạt 10 Line
+        </p>
+        <h4>Level 2 - Câu hỏi toán và Bom</h4>
+        <p>
+          Cứ sau 15 giây sẽ xuất hiện một câu hỏi toán ngẫu nhiên gồm cộng, trừ, nhân, chia và người chơi có 5 giây để
+          trả lời, nếu trả lời đúng sẽ nhận được 1 Bom còn trả lời sai hoặc hết thời gian thì các khối đã nằm sẽ bị nâng
+          lên 1 hàng và người chơi có thể sử dụng Bom để phá các khối đã nằm trong phạm vi 3x3, đạt 10 line để qua màn
+        </p>
+        <h4>Level 3 - Con sâu và Búa</h4>
+        <p>
+          Khi bắt đầu sẽ xuất hiện 1 con sâu di chuyển ngẫu nhiên mỗi 3 giây và khi con sâu di chuyển vào ô có khối đã
+          nằm thì nó sẽ ăn ô đó, mỗi lần ăn thành công sẽ có 50% cơ hội nhận được 1 Búa và người chơi có thể sử dụng Búa
+          để phá 1 ô đã nằm bất kỳ trên board ăn đủ 10 line để qua màn
+        </p>
+        <h4>Level 4 - Đèn xanh đèn đỏ</h4>
+        <p>
+          Khi bắt đầu sẽ xuất hiện đèn xanh kéo dài ngẫu nhiên từ 3 đến 7 giây và đèn đỏ từ 2 đến 4 giây, khi đèn đỏ
+          người chơi không được sử dụng các phím mũi tên và nếu vi phạm thì khi đèn chuyển sang xanh sẽ nhận ngẫu nhiên
+          1 trong 3 hình phạt gồm 50% nâng các khối đã nằm lên 1 hàng, 30% nâng các khối đã nằm lên 1 hàng và tạo thêm 1
+          hàng rác nếu hàng cuối không có khối đang rơi, 20% tạo thêm 1 con sâu và các con sâu ở level này sẽ không cho
+          Búa khi ăn khối đã nằm ăn 10 line để qua màn
+        </p>
+        <h4>Level 5 - Board bị mù</h4>
+        <p>
+          Khi bắt đầu, các khối đã nằm sẽ bị che khuất và người chơi chỉ có thể nhìn thấy
+          các khối trong phạm vi 3 ô xung quanh khối Tetris đang rơi, các khối bị ẩn vẫn
+          tồn tại và có thể cản đường di chuyển, đạt 10 Line để qua màn
+        </p>
+      </div>
     </div>
   </div>
-  <dialog class="level2">
-    <p><strong>Đây là màn chơi cực kỳ quan trọng!</strong></p>
-    <p>Hãy trả lời chính xác các câu hỏi toán học để nhận Bom.</p>
-    <p>
-      Chơi thật khéo léo, tận dụng từng giây và tích lũy càng nhiều Bom càng tốt.
-    </p>
-    <p><strong>Hãy chuẩn bị thật kỹ, vì những màn sau sẽ là ÁC MỘNG!</strong></p>
-    <p><strong>CHÚC BẠN MAY MẮN(hẹ hẹ)!</strong></p>
-    <form method="dialog">
-      <button>BẮT ĐẦU</button>
-    </form>
-  </dialog>
   <script src="gamepad.js"></script>
 </body>
 
