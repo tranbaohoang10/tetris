@@ -27,12 +27,12 @@ const mathAnswer = document.querySelector(".math-answer");
 const mathSubmit = document.querySelector(".math-submit");
 // hiển thị bom hiện tại
 const bombElement = document.querySelector(".bomb-text");
-// hiển thị búa hiện tại của ng chơi
-const hammerElement = document.querySelector(".hammer-text");
+// hiển thị số Mắt hiện tại của người chơi
+const eyeElement = document.querySelector(".eye-text");
 // nút sử dụng Bom
 const useBombButton = document.querySelector(".use-bomb");
-// nút sử dụng búa
-const useHammerButton = document.querySelector(".use-hammer");
+// nút sử dụng mắt ở lv5
+const useEyeButton = document.querySelector(".use-eye");
 // xu ly mau hinh vuong(test hình trước)
 const matrixs = document.querySelectorAll(".matrix");
 // matrixs[4].classList.add("block", "block-square");
@@ -69,13 +69,13 @@ let mathResult = 0;
 let bomb = 0;
 // lưu số Bom khi bắt đầu chơi một màn để nếu Game Over thì khôi phục lại
 let startBomb = 0;
-// lưu số búa
-let hammer = 0;
-let startHammer = 0;
+// lưu số mắt
+let eye = 0;
+let startEye = 0;
+//
+let eyeSeconds = 0;
 // lấy bom
 let selectBom = false;
-// chọn búa
-let selectHammer = false;
 // danh sách con sâu cho lv3 và lv4
 let worms = [];
 // này kiểm tra người chơi có bấm phím khi đèn đỏ hay ko false là ko bấm, true là có bấm
@@ -1041,7 +1041,7 @@ function restart(retry) {
   // TH chơi lại do Game Over thì khôi phục số Bom lúc bắt đầu màn ví dụ bắt đầu Lv4 có 7 Bom, dùng còn 4 Bom rồi Game Over thì khi chơi lại Lv4 sẽ có 7 Bom
   if (retry === true) {
     bomb = startBomb;
-    hammer = startHammer;
+    eye = startEye;
   }
   // TH chuyển màn bình thường bằng Back, Next hoặc đủ 10 Line
   else {
@@ -1049,19 +1049,19 @@ function restart(retry) {
     if (level === 2) {
       bomb = 0;
     }
-    // lưu số Bom hiện tại khi bắt đầu màn mới ví dụ đang có 7 Bom ở Lv4 rồi Back về Lv3 thì vẫn lưu 7 Bom
+    // lưu số Bom hiện tại khi bắt đầu màn mới ví dụ đang có 7 Bom ở Lv4 rồi Back về Lv3 thì vẫn lưu 7 Bom tương tự với mắt
     startBomb = bomb;
-    startHammer = hammer;
+    startEye = eye;
   }
   // cập nhật số bom lên giao diện
   bombElement.textContent = "Bom: " + bomb;
   // cập nhật số búa lên giao diện
-  hammerElement.textContent = "Búa: " + hammer;
+  eyeElement.textContent = "Mắt: " + eye;
   // khi restart hoặc chuyển level thì hủy trạng thái chọn Bom/búa để tránh TH sang màn mới nhưng game vẫn bị đứng yên do selectBom vẫn bằng true
   selectBom = false;
   useBombButton.querySelector("span").textContent = "Dùng Bom";
-  selectHammer = false;
-  useHammerButton.querySelector("span").textContent = "Dùng Búa";
+  eyeSeconds = 0;
+  useEyeButton.querySelector("span").textContent = "Dùng Mắt";
   for (let matrix of matrixs) {
     matrix.classList.remove(
       "block",
@@ -2254,12 +2254,7 @@ document.addEventListener("keydown", function (event) {
   ) {
     event.preventDefault();
   }
-  if (
-    gameover ||
-    isPaused === true ||
-    selectBom === true ||
-    selectHammer === true
-  ) {
+  if (gameover || isPaused === true || selectBom === true) {
     return;
   }
   // nếu đang có câu hỏi toán thì ko cho sử dụng 4 phím mũi tên vì lúc này người chơi phải nhập đáp án trong 5s chứ ko được di chuyển khối
@@ -2399,8 +2394,7 @@ setInterval(function () {
     !gameover &&
     isPaused === false &&
     mathShowing === false &&
-    selectBom === false &&
-    selectHammer === false
+    selectBom === false
   ) {
     if (currentShape === "O") {
       moveDownSquare();
@@ -2882,19 +2876,6 @@ function pump(centerIndex) {
     useBombButton.querySelector("span").textContent = "Dùng Bom";
   }
 }
-// phương thức để phá 1 ô fixed mà người chơi chọn vd người chơi chọn ô 184 thì chỉ phá ô 184
-function bang(index) {
-  // chỉ phá khi ô được chọn đã có class fixed nếu chọn ô trống hoặc khối đang rơi thì ko phá và ko trừ Búa sau đó xoá khối fixed ở chỗ được chọn
-  if (matrixs[index].classList.contains("fixed")) {
-    matrixs[index].className = "matrix";
-    // phá thành công thì trừ 1 búa và cập nhật lên giao diện
-    hammer--;
-    hammerElement.textContent = "Búa: " + hammer;
-    // set lại = false
-    selectHammer = false;
-    useHammerButton.querySelector("span").textContent = "Dùng Búa";
-  }
-}
 // xử lý nút sử dụng Bom, nếu chưa chọn thì cho người chơi chọn vị trí phá còn nếu đang chọn thì bấm lần nữa để hủy Bom và chỉ được sử dụng khi còn Bom và chỉ được sử dụng nếu từ level 2 trở lên
 useBombButton.addEventListener("click", function () {
   if (isPaused === true) {
@@ -2905,13 +2886,7 @@ useBombButton.addEventListener("click", function () {
     useBombButton.querySelector("span").textContent = "Dùng Bom";
     return;
   }
-  if (
-    level < 2 ||
-    bomb <= 0 ||
-    gameover === true ||
-    mathShowing === true ||
-    selectHammer === true
-  ) {
+  if (level < 2 || bomb <= 0 || gameover === true || mathShowing === true) {
     return;
   }
   selectBom = true;
@@ -2922,14 +2897,10 @@ board.addEventListener("click", function (event) {
   if (isPaused === true) {
     return;
   }
-  if (selectBom === true || selectHammer === true) {
+  if (selectBom === true) {
     for (let i = 0; i < matrixs.length; i++) {
       if (matrixs[i] === event.target) {
-        if (selectBom === true) {
-          pump(i);
-        } else if (selectHammer === true) {
-          bang(i);
-        }
+        pump(i);
         break;
       }
     }
@@ -3011,15 +2982,14 @@ function moveWorm() {
     // kiểm tra ô mà con sâu vừa di chuyển tới có chứa khối fixed hay ko vd sâu đang ở ô 184 và random được hướng "right" thì worm.position = 185 nếu ô 185 có fixed thì con sâu sẽ ăn ô 185(chuyển thành matrix) còn nếu ô 185 đang trống hoặc chỉ có khối Tetris đang rơi thì ko xóa vì khối đang rơi chưa có class fixed
     if (matrixs[worm.position].classList.contains("fixed")) {
       matrixs[worm.position].className = "matrix";
-      // chỉ lv3 mới được nhận búa khi sâu ăn khối fixed
+      // chỉ lv3 mới có cơ hội nhận Mắt khi con sâu ăn khối fixed
       if (level === 3) {
-        // random = 0 là nhận búa,1 là ko nhận(tỉ lệ 50/50)
-        let randomHammer = Math.floor(Math.random() * 2);
-        // nếu random = 0 thì +1 búa
-        if (randomHammer === 0) {
-          hammer++;
-          // hiển thị số bứa lên giao diện
-          hammerElement.textContent = "Búa: " + hammer;
+        // random từ 0->1, nếu bằng 0 thì nhận Mắt với xác suất 50%
+        let randomEye = Math.floor(Math.random() * 2);
+        // chỉ cộng Mắt khi random = 0 và chưa có đủ 3 Mắt
+        if (randomEye === 0) {
+          eye++;
+          eyeElement.textContent = "Mắt: " + eye;
         }
       }
     }
@@ -3033,7 +3003,6 @@ setInterval(function () {
     gameover === false &&
     isPaused === false &&
     selectBom === false &&
-    selectHammer === false &&
     worms.length > 0
   ) {
     // gọi phương thức cho từng con sâu di chuyển ngẫu nhiên 1 ô
@@ -3047,8 +3016,7 @@ setInterval(function () {
     level === 4 &&
     gameover === false &&
     isPaused === false &&
-    selectBom === false &&
-    selectHammer === false
+    selectBom === false
   ) {
     // sau mỗi 1 giây thì giảm thời gian còn lại của đèn đi 1 vd lightSeconds = 5 -> 4
     lightSeconds--;
@@ -3106,20 +3074,26 @@ setInterval(function () {
     }
   }
 }, 1000);
-useHammerButton.addEventListener("click", function () {
-  if (isPaused === true) {
+// xử lý nút khi người chơi bấm nút sử dụng Mắt ở lv5
+useEyeButton.addEventListener("click", function () {
+  // chỉ được dùng Mắt ở lv5 và phải còn ít nhất 1 Mắt khi đang dùng Mắt, Pause, Game Over hoặc chọn Bom thì ko cho dùng
+  if (
+    level !== 5 ||
+    eye <= 0 ||
+    gameover === true ||
+    isPaused === true ||
+    selectBom === true
+  ) {
     return;
   }
-  if (selectHammer === true) {
-    selectHammer = false;
-    useHammerButton.querySelector("span").textContent = "Dùng Búa";
-    return;
-  }
-  if (level < 3 || hammer <= 0 || gameover === true || selectBom === true) {
-    return;
-  }
-  selectHammer = true;
-  useHammerButton.querySelector("span").textContent = "Hủy Búa";
+  // khi sử dụng thì trừ 1 Mắt và cho hiệu lực trong 5 giây và cập nhật số Mắt còn lại và thời gian lên giao diện
+  eye--;
+  eyeSeconds = 10;
+  eyeElement.textContent = "Mắt: " + eye;
+  useEyeButton.querySelector("span").textContent =
+    "Mắt thần: " + eyeSeconds + " giây";
+  // cập nhật lại board để hiện toàn bộ các khối đã nằm
+  updateLight();
 });
 // phương thức này để xác định vị trí trung tâm của khối đang rơi và kiểm tra các khối fixed xung quanh trong phạm vi 5x5
 function updateLight() {

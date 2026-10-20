@@ -4,9 +4,202 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="./fontawesome/css/all.min.css">
   <title>Tetris</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #ddd;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .game-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .game-container h1 {
+      text-align: center;
+    }
+
+    .game-layout {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 30px;
+    }
+
+    .board {
+      width: 300px;
+      height: 600px;
+      background-color: #111;
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(20, 1fr);
+      border: 2px solid #333;
+      position: relative;
+    }
+
+    .game-info {
+      width: 180px;
+      font-size: 20px;
+    }
+
+    .level,
+    .line,
+    .next {
+      margin-bottom: 15px;
+    }
+
+    .matrix {
+      border: 1px solid #333;
+    }
+
+    .block {
+      border: 1px solid #222;
+    }
+
+    .block-square {
+      background-color: yellow;
+    }
+
+    .block-i {
+      background-color: cyan;
+    }
+
+    .block-t {
+      background-color: purple;
+    }
+
+    .block-s {
+      background-color: green;
+    }
+
+    .block-z {
+      background-color: red;
+    }
+
+    .block-j {
+      background-color: blue;
+    }
+
+    .block-l {
+      background-color: orange;
+    }
+
+    .block-garbage {
+      background-color: gray;
+    }
+
+    .hope-star {
+      background: none;
+      border: 1px solid #333;
+      border-radius: 4px;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+
+    .hope-star i {
+      font-size: 22px;
+    }
+
+    .hope-star:hover i {
+      color: #ffc107;
+      font-weight: 900;
+    }
+
+    .math-question {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      width: 230px;
+      box-sizing: border-box;
+      padding: 12px;
+      background-color: #eee;
+      border: 1px solid #333;
+      text-align: center;
+    }
+
+    .math-text,
+    .math-time {
+      margin-bottom: 10px;
+    }
+
+    .math-answer {
+      width: 100px;
+    }
+
+    .bomb-count {
+      display: block;
+      margin-bottom: 15px;
+    }
+
+    .eye-count {
+      display: block;
+      margin-bottom: 15px;
+    }
+
+    .use-bomb,
+    .use-eye {
+      display: block;
+      margin-bottom: 15px;
+      padding: 8px 15px;
+      cursor: pointer;
+    }
+
+    .worm {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .traffic-light {
+      display: none;
+      background-color: green;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+    }
+
+    .traffic-light.red {
+      background-color: red;
+    }
+
+    .bomb-count i,
+    .eye-count i,
+    .use-bomb i,
+    .use-eye i {
+      margin-right: 6px;
+    }
+
+    .board .matrix.hidden-block {
+      background-color: #111;
+      border: 1px solid #333;
+    }
+
+    .pause {
+      display: block;
+      padding: 8px 15px;
+      margin-bottom: 15px;
+      cursor: pointer;
+    }
+
+    .back,
+    .next,
+    .pause {
+      padding: 8px;
+      margin-top: 15px;
+    }
+  </style>
 </head>
 
 <body>
@@ -30,17 +223,17 @@
           <i class="fa-solid fa-bomb"></i>
           <span class="bomb-text">Bom: 0</span>
         </span>
-        <span class="hammer-count">
-          <i class="fa-solid fa-hammer"></i>
-          <span class="hammer-text">Búa: 0</span>
+        <span class="eye-count">
+          <i class="fa-solid fa-eye"></i>
+          <span class="eye-text">Mắt: 0</span>
         </span>
         <button class="use-bomb">
           <i class="fa-solid fa-bomb"></i>
           <span>Dùng Bom</span>
         </button>
-        <button class="use-hammer">
-          <i class="fa-solid fa-hammer"></i>
-          <span>Dùng Búa</span>
+        <button class="use-eye">
+          <i class="fa-solid fa-eye"></i>
+          <span>Dùng Mắt</span>
         </button>
         <button class="hope-star">
           <i class="fa-regular fa-star"></i>
@@ -50,79 +243,12 @@
           <i class="fa-solid fa-pause"></i>
           <span>Tạm dừng</span>
         </button>
-        <button class="back">Back</button>
-        <button class="next">Next</button>
-      </div>
-
-      <div class="game-help">
-        <h2>HƯỚNG DẪN CHƠI TETRIS</h2>
-        <h3>1) Cách điều khiển</h3>
-        <p>ArrowLeft : Di chuyển khối sang trái</p>
-        <p>ArrowRight : Di chuyển khối sang phải</p>
-        <p>ArrowDown : Cho khối rơi nhanh hơn</p>
-        <p>ArrowUp : Xoay khối Tetris</p>
-        <p>Người chơi phải fill đủ 10 ô trên một hàng để xóa hàng đó</p>
-        <h3>2) Các nút chức năng</h3>
-        <p><strong>Back:</strong> Quay lại level trước và chơi lại màn đó</p>
-        <p><strong>Next:</strong> Chuyển sang level tiếp theo và chơi lại màn đó</p>
-        <p>
-          <strong>Ngôi sao hy vọng:</strong>
-          Khi sử dụng, mỗi hàng thường được xóa sẽ được tính gấp đôi(1 hàng = 2 Line) tức chỉ cần xóa 5 hàng để đạt 10
-          Line
-          riêng lv1 phải dọn xong 3 hàng rác trước khi các hàng thường được tính điểm còn hàng rác không được nhân đôi
-        </p>
-        <p>
-          <strong>Bom:</strong>
-          Nhận được khi trả lời đúng câu hỏi toán ở Lv2 mỗi lần sử dụng có thể phá các khối đã nằm trong vùng 3x3 xung
-          quanh
-          ô được chọn và chỉ trừ 1 Bom khi phá thành công ít nhất 1 ô
-        </p>
-        <p>
-          <strong>Búa:</strong>
-          Có cơ hội nhận được ở lv3 khi con sâu ăn một khối đã nằm(xác suất 50%) mỗi <strong>Búa</strong> có thể phá 1 ô
-          đã
-          nằm do người chơi chọn
-        </p>
-        <h3>3) Luật chơi từng level</h3>
-        <h4>Level 0 - Tetris cơ bản</h4>
-        <p>
-          Chơi Tetris bình thường di chuyển và xoay các khối để ghép kín từng hàng Xóa đủ 10 line thì tự động qua Lv1
-        </p>
-        <h4>Level 1 - Hàng rác</h4>
-        <p>
-          Khi bắt đầu sẽ có sẵn 3 hàng rác ở phía dưới thì mỗi hàng có 2 lỗ trống ngẫu nhiên và người chơi phải ghép
-          khối vào các lỗ để xóa hết 3 hàng rác và sau khi dọn hết rác, tiếp tục xóa các hàng thường để đạt 10 Line
-        </p>
-        <h4>Level 2 - Câu hỏi toán và Bom</h4>
-        <p>
-          Cứ sau 15 giây sẽ xuất hiện một câu hỏi toán ngẫu nhiên gồm cộng, trừ, nhân, chia và người chơi có 5 giây để
-          trả lời, nếu trả lời đúng sẽ nhận được 1 Bom còn trả lời sai hoặc hết thời gian thì các khối đã nằm sẽ bị nâng
-          lên 1 hàng và người chơi có thể sử dụng Bom để phá các khối đã nằm trong phạm vi 3x3, đạt 10 line để qua màn
-        </p>
-        <h4>Level 3 - Con sâu và Búa</h4>
-        <p>
-          Khi bắt đầu sẽ xuất hiện 1 con sâu di chuyển ngẫu nhiên mỗi 3 giây và khi con sâu di chuyển vào ô có khối đã
-          nằm thì nó sẽ ăn ô đó, mỗi lần ăn thành công sẽ có 50% cơ hội nhận được 1 Búa và người chơi có thể sử dụng búa
-          để phá 1 ô đã nằm bất kỳ trên board ăn đủ 10 line để qua màn
-        </p>
-        <h4>Level 4 - Đèn xanh đèn đỏ</h4>
-        <p>
-          Khi bắt đầu sẽ xuất hiện đèn xanh kéo dài ngẫu nhiên từ 3 đến 7 giây và đèn đỏ từ 2 đến 4 giây, khi đèn đỏ
-          người chơi không được sử dụng các phím mũi tên và nếu vi phạm thì khi đèn chuyển sang xanh sẽ nhận ngẫu nhiên
-          1 trong 3 hình phạt gồm 50% nâng các khối đã nằm lên 1 hàng, 30% nâng các khối đã nằm lên 1 hàng và tạo thêm 1
-          hàng rác nếu hàng cuối không có khối đang rơi, 20% tạo thêm 1 con sâu và các con sâu ở level này sẽ không cho
-          búa khi ăn khối đã nằm ăn 10 line để qua màn
-        </p>
-        <h4>Level 5 - Board bị mù</h4>
-        <p>
-          Khi bắt đầu, các khối đã nằm sẽ bị che khuất và người chơi chỉ có thể nhìn thấy các khối đã nằm trong vùng 5x5
-          xung quanh trung tâm của khối Tetris đang rơi,các khối bị ẩn vẫn tồn tại và có thể cản đường di chuyển, đạt 10
-          Line để qua màn
-        </p>
+        <button class="back">Back Level</button>
+        <button class="next">Next Level</button>
       </div>
     </div>
   </div>
-  <script src="gamepad.js"></script>
+  <script src="game.js"></script>
 </body>
 
 </html>
