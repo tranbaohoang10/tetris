@@ -1143,7 +1143,7 @@ nextButton.addEventListener("click", function () {
   // level cuối là level 7 nên nếu đang nhỏ hơn 7 thì mới cho qua tiếp
   if (level < 5) {
     level++;
-    levelElement.textContent = "Level " + level;
+    levelElement.textContent = "Level " + (level + 1);
     // qua level mới thì chơi lại board từ đầu
     restart();
   }
@@ -1153,7 +1153,7 @@ backButton.addEventListener("click", function () {
   // level đầu tiên là level 0 nên nếu đang lớn hơn 0 thì mới cho quay lại
   if (level > 0) {
     level--;
-    levelElement.textContent = "Level " + level;
+    levelElement.textContent = "Level " + (level + 1);
     // trở về level trước thì chơi lại board từ đầu
     restart();
   }
@@ -2500,7 +2500,7 @@ function checkRow() {
       if (line >= 10) {
         if (level < 5) {
           level++;
-          levelElement.textContent = "Level " + level;
+          levelElement.textContent = "Level " + (level + 1);
           restart();
           return true;
         } else if (level === 5) {
@@ -3080,6 +3080,7 @@ useEyeButton.addEventListener("click", function () {
   if (
     level !== 5 ||
     eye <= 0 ||
+    eyeSeconds > 0 ||
     gameover === true ||
     isPaused === true ||
     selectBom === true
@@ -3095,9 +3096,35 @@ useEyeButton.addEventListener("click", function () {
   // cập nhật lại board để hiện toàn bộ các khối đã nằm
   updateLight();
 });
+// mỗi 1 giây kiểm tra thời gian còn lại của Mắt
+setInterval(function () {
+  if (
+    level === 5 &&
+    gameover === false &&
+    isPaused === false &&
+    eyeSeconds > 0
+  ) {
+    eyeSeconds--;
+    // nếu hết 10 giây thì trở về nút Dùng Mắt
+    if (eyeSeconds === 0) {
+      useEyeButton.querySelector("span").textContent = "Dùng Mắt";
+    } else {
+      useEyeButton.querySelector("span").textContent =
+        "Mắt thần: " + eyeSeconds + " giây";
+    }
+
+    updateLight();
+  }
+}, 1000);
 // phương thức này để xác định vị trí trung tâm của khối đang rơi và kiểm tra các khối fixed xung quanh trong phạm vi 5x5
 function updateLight() {
   if (level !== 5) {
+    return;
+  }
+  if (eyeSeconds > 0) {
+    for (let matrix of matrixs) {
+      matrix.classList.remove("hidden-block");
+    }
     return;
   }
   sumRow = 0;
