@@ -2920,8 +2920,8 @@ function createWorm() {
   let randomWorm = Math.floor(Math.random() * 3);
   wormImage.src = wormImages[randomWorm];
   wormImage.classList.add("worm");
-  // random vị trí từ 0->199 vì board có 200 ô
-  let wormPosition = Math.floor(Math.random() * row * col);
+  // random vị trí từ ô 180->199(20 ô cuối)
+  let wormPosition = Math.floor(Math.random() * 20) + 180;
   // mỗi ô có kích thước 30px vd vị trí 184 thì cột = 184%10 = 4, hàng = Math.floor(184/10) = 18 ,left = 4*30 = 120px tính từ trái sang thì kết thúc ô số 4 bắt đầu ô số 5, top = 18*30 = 540px kết thục ô số 18 bắt đầu ô số 19
   wormImage.style.left = (wormPosition % col) * 30 + "px";
   wormImage.style.top = Math.floor(wormPosition / col) * 30 + "px";
